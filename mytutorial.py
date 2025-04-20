@@ -227,13 +227,15 @@ class Fire(Object):
 
 class Flag(Checkpoints):
     ANIMATION_DELAY = 3
+    SPRITES = load_sprite_3dir("Items", "Checkpoints", "Checkpoint", 64, 64)
 
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height, "flag")
-        self.end = load_sprite_3dir("Items", "Checkpoints", "Checkpoint", width, height)
-        self.image = self.end["Checkpoint (Flag Idle)(64x64)"][0]
+        self.flag = load_sprite_3dir("Items", "Checkpoints", "Checkpoint", width, height)
+        self.image = self.flag["Checkpoint (Flag Idle)(64x64)"][0]
         self.mask = pygame.mask.from_surface(self.image)
         self.animation_count = 0
+        self.hit = False
         self.animation_name = "Checkpoint (Flag Idle)(64x64)"
 
     def on(self):
@@ -241,9 +243,24 @@ class Flag(Checkpoints):
 
     def off(self):
         self.animation_name = "Checkpoint (Flag Out) (64x64)"
+    
+    def make_hit(self):
+        self.hit = True
 
+    def update_sprite(self):
+        sprite_sheet = "Checkpoint (Flag Idle)(64x64)"
+        if self.hit:
+            sprite_sheet = "Checkpoint (Flag Out) (64x64)"
+
+        sprites = self.SPRITES[sprite_sheet]
+        sprite_index = (self.animation_count //
+                        self.ANIMATION_DELAY) % len(sprites)
+        self.sprite = sprites[sprite_index]
+        self.animation_count += 1
+        self.update()
+        
     def loop(self):
-        sprites = self.end[self.animation_name]
+        sprites = self.flag[self.animation_name]
         sprite_index = (self.animation_count //
                         self.ANIMATION_DELAY) % len(sprites)
         self.image = sprites[sprite_index]
@@ -254,7 +271,9 @@ class Flag(Checkpoints):
 
         if self.animation_count // self.ANIMATION_DELAY > len(sprites):
             self.animation_count = 0
-
+        
+        self.update_sprite()
+        
 def get_background(name):
     image = pygame.image.load(join("assets", "Background", name))
     _, _, width, height = image.get_rect()
@@ -309,24 +328,46 @@ def collide(player, objects, dx):
     player.update()
     return collided_object
 
-def handle_move(player, objects):
+def check_point(player, checkpoints, dx):
+    player.move(dx, 0)
+    player.update()
+    collided_object = None
+    for chk in checkpoints:
+        if pygame.sprite.collide_mask(player, chk):
+            collided_object = chk
+            break
+
+    player.move(-dx, 0)
+    player.update()
+    return collided_object
+
+def handle_move(player, objects, checkpoints, flag):
     keys = pygame.key.get_pressed()
 
     player.x_vel = 0
     collide_left = collide(player, objects, -PLAYER_VEL * 2)
     collide_right = collide(player, objects, PLAYER_VEL * 2)
+    chk_left = check_point(player, checkpoints, -PLAYER_VEL * 2)
+    chk_right = check_point(player, checkpoints, PLAYER_VEL * 2)
 
     if keys[pygame.K_LEFT] and not collide_left:
         player.move_left(PLAYER_VEL)
     if keys[pygame.K_RIGHT] and not collide_right:
         player.move_right(PLAYER_VEL)
+    if keys[pygame.K_LEFT] and not chk_left:
+        player.move_left(PLAYER_VEL)
+    if keys[pygame.K_RIGHT] and not chk_right:
+        player.move_right(PLAYER_VEL)
 
     vertical_collide = handle_vertical_collision(player, objects, player.y_vel)
-    to_check = [collide_left, collide_right, *vertical_collide]
+    to_check = [collide_left, collide_right, *vertical_collide, chk_left, chk_right]
 
     for obj in to_check:
         if obj and obj.name == "fire":
             player.make_hit()
+        elif obj and obj.name == "flag":
+            flag.make_hit()
+            flag.off()
 
 def main(window):
     clock = pygame.time.Clock()
@@ -393,7 +434,7 @@ def main(window):
         fire6.loop()
         flag.loop()
 
-        handle_move(player, objects)
+        handle_move(player, objects, checkpoints, flag)
 
         draw(window, background, bg_image, player, objects, checkpoints, offset_x)
 
