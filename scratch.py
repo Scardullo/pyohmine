@@ -38,3 +38,15 @@ def handle_move(player, objects, checkpoints):
     for chk in to_check:
         if chk and chk.name == "flag":
             flag.off(flag)
+            
+    def update_sprite(self):
+        sprite_sheet = "Checkpoint (Flag Idle)(64x64)"
+        if self.hit:
+            sprite_sheet = "Checkpoint (Flag Out) (64x64)"
+
+        sprites = self.SPRITES[sprite_sheet]
+        sprite_index = (self.animation_count //
+                        self.ANIMATION_DELAY) % len(sprites)
+        self.sprite = sprites[sprite_index]
+        self.animation_count += 1
+        self.update()
