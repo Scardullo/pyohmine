@@ -390,7 +390,7 @@ def main(window):
     fire6 = Fire(block_size * 7 + 35, HEIGHT - block_size - 64, 16, 32)
     fire6.on()
 
-    flag = Flag((WIDTH * 2) + (block_size * 5), block_size * 4 - 130, 64, 64)
+    flag = Flag((WIDTH * 2) + (block_size * 6), block_size * 4 - 130, 64, 64)
     flag.on()
 
     floor = [Block(i * block_size, HEIGHT - block_size, block_size)
@@ -400,10 +400,10 @@ def main(window):
 
     objects = [*floor, *floor2, Block(0, HEIGHT - block_size * 2, block_size),
                Block(block_size * 3, HEIGHT - block_size * 4, block_size),
-               Block(block_size * 7, HEIGHT - block_size * 6 , block_size), 
-               Block((WIDTH * 2) + (block_size * 3), block_size * 4 , block_size),
+               Block(block_size * 7, HEIGHT - block_size * 6 , block_size),
                Block((WIDTH * 2) + (block_size * 4), block_size * 4 , block_size),
-               Block((WIDTH * 2) + (block_size * 5), block_size * 4 , block_size), fire, fire2,
+               Block((WIDTH * 2) + (block_size * 5), block_size * 4 , block_size),
+               Block((WIDTH * 2) + (block_size * 6), block_size * 4 , block_size),fire, fire2,
                fire3, fire4, fire5, fire6]
 
     checkpoints = [flag]
