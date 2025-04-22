@@ -273,7 +273,44 @@ class Flag(Checkpoints):
             self.animation_count = 0
         
         self.update_sprite()
-        
+
+class RockHead(Object):
+    ANIMATION_DELAY = 3
+
+    def __init__(self, x, y, width, height, y_stop):
+        super().__init__(x, y, width, height, "rockhead")
+        self.rockhead = load_sprite_sheets("Traps", "rockhead", width, height)
+        self.image = self.rockhead["Blink (42x42)"][0]
+        self.mask = pygame.mask.from_surface(self.image)
+        self.animation_count = 0
+        self.animation_name = "Blink (42x42)"
+        self.y_vel = 1
+        self.y_stop = y_stop
+
+    def move_down(self):
+        self.rect.y += self.y_vel
+
+    def move_up(self):
+        self.rect.y -= self.y_vel
+
+    def loop(self):
+        sprites = self.rockhead[self.animation_name]
+        sprite_index = (self.animation_count //
+                        self.ANIMATION_DELAY) % len(sprites)
+        self.image = sprites[sprite_index]
+        self.animation_count += 1
+
+        self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
+        self.mask = pygame.mask.from_surface(self.image)
+
+        if self.animation_count // self.ANIMATION_DELAY > len(sprites):
+            self.animation_count = 0
+        self.move_down()
+        if self.rect.y >= HEIGHT - self.y_stop:
+            self.move_up()
+        elif self.rect.y <= 0:
+            self.move_down()
+
 def get_background(name):
     image = pygame.image.load(join("assets", "Background", name))
     _, _, width, height = image.get_rect()
@@ -297,7 +334,6 @@ def draw(window, background, bg_image, player, objects, checkpoints, offset_x):
         check.draw(window, offset_x)
 
     player.draw(window, offset_x)
-
     pygame.display.update()
 
 def handle_vertical_collision(player, objects, dy):
@@ -365,6 +401,8 @@ def handle_move(player, objects, checkpoints, flag):
     for obj in to_check:
         if obj and obj.name == "fire":
             player.make_hit()
+        elif obj and obj.name == "rockhead":
+            player.make_hit()
         elif obj and obj.name == "flag":
             flag.make_hit()
             flag.off()
@@ -376,19 +414,17 @@ def main(window):
     block_size = 96
 
     player = Player(100, 100, 50, 50)
+    rockhead = RockHead(10, block_size * 2, 42, 42, 270)
+    rockhead2 = RockHead( block_size * 3 , 0, 42, 42, 460)
 
-    fire = Fire(170 , HEIGHT - block_size - 64, 16, 32)
-    fire.on()
-    fire2 = Fire(205, HEIGHT - block_size - 64, 16, 32)
+    fire1 = Fire(block_size * 7, HEIGHT - block_size - 64, 16, 32)
+    fire1.on()
+    fire2 = Fire(block_size * 7 - 35, HEIGHT - block_size - 64, 16, 32)
     fire2.on()
-    fire3 = Fire(block_size * 7, HEIGHT - block_size - 64, 16, 32)
+    fire3 = Fire(block_size * 7 - 70, HEIGHT - block_size - 64, 16, 32)
     fire3.on()
-    fire4 = Fire(block_size * 7 - 35, HEIGHT - block_size - 64, 16, 32)
+    fire4 = Fire(block_size * 7 + 35, HEIGHT - block_size - 64, 16, 32)
     fire4.on()
-    fire5 = Fire(block_size * 7 - 70, HEIGHT - block_size - 64, 16, 32)
-    fire5.on()
-    fire6 = Fire(block_size * 7 + 35, HEIGHT - block_size - 64, 16, 32)
-    fire6.on()
 
     flag = Flag((WIDTH * 2) + (block_size * 6), block_size * 4 - 130, 64, 64)
     flag.on()
@@ -397,14 +433,16 @@ def main(window):
              for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
     floor2 = [Block(i * block_size, block_size, block_size)
              for i in range((block_size * 11) // block_size, (WIDTH * 2) // block_size)]
+    floor3 = [Block(i * block_size, HEIGHT - block_size, block_size)
+              for i in range((block_size * 33) // block_size, WIDTH * 5 // block_size)]
 
-    objects = [*floor, *floor2, Block(0, HEIGHT - block_size * 2, block_size),
+    objects = [*floor, *floor2, *floor3, Block(0, HEIGHT - block_size * 2, block_size),
                Block(block_size * 3, HEIGHT - block_size * 4, block_size),
-               Block(block_size * 7, HEIGHT - block_size * 6 , block_size),
+               Block(block_size * 7, HEIGHT - block_size * 6 , block_size), 
                Block((WIDTH * 2) + (block_size * 4), block_size * 4 , block_size),
                Block((WIDTH * 2) + (block_size * 5), block_size * 4 , block_size),
-               Block((WIDTH * 2) + (block_size * 6), block_size * 4 , block_size),fire, fire2,
-               fire3, fire4, fire5, fire6]
+               Block((WIDTH * 2) + (block_size * 6), block_size * 4 , block_size),
+               fire1, fire2, fire3, fire4, rockhead, rockhead2]
 
     checkpoints = [flag]
 
@@ -426,14 +464,13 @@ def main(window):
 
         player.loop(FPS)
 
-        fire.loop()
+        fire1.loop()
         fire2.loop()
         fire3.loop()
         fire4.loop()
-        fire5.loop()
-        fire6.loop()
         flag.loop()
-
+        rockhead.loop()
+        rockhead2.loop()
         handle_move(player, objects, checkpoints, flag)
 
         draw(window, background, bg_image, player, objects, checkpoints, offset_x)
