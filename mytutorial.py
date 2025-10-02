@@ -4,7 +4,12 @@ import math
 import pygame
 from os import listdir
 from os.path import isfile, join
+from pygame import mixer
+
 pygame.init()
+
+mixer.music.load('upbeat_loop.ogg')
+mixer.music.play(-1)
 
 pygame.display.set_caption("Platformer")
 
