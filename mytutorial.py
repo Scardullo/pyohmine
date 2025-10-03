@@ -142,7 +142,6 @@ class Player(pygame.sprite.Sprite):
         self.jump_count = 0
 
     def hit_head(self):
-        self.count = 0
         self.y_vel *= -1
 
     def update_sprite(self):
@@ -334,6 +333,52 @@ class RockHead(Object):
         elif self.rect.y <= self.y_stop and self.direction == "up":
             self.move_up()
 
+class Saw(Object):
+    ANIMATION_DELAY = 3
+
+    def __init__(self, x, y, width, height, x_right, x_left):
+        super().__init__(x, y, width, height, "saw")
+        self.saw = load_sprite_sheets("Traps", "Saw", width, height)
+        self.image = self.saw["on"][0]
+        self.mask = pygame.mask.from_surface(self.image)
+        self.animation_count = 0
+        self.animation_name = "on"
+        self.x_vel = 3
+        self.x_right = x_right
+        self.x_left = x_left
+        self.direction = "right"
+
+    def move_right(self):
+        self.rect.x += self.x_vel
+
+    def move_left(self):
+        self.rect.x -= self.x_vel
+
+    def loop(self):
+        sprites = self.saw[self.animation_name]
+        sprite_index = (self.animation_count //
+                        self.ANIMATION_DELAY) % len(sprites)
+        self.image = sprites[sprite_index]
+        self.animation_count += 1
+
+        self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
+        self.mask = pygame.mask.from_surface(self.image)
+
+        if self.animation_count // self.ANIMATION_DELAY > len(sprites):
+            self.animation_count = 0
+
+        if self.rect.x <= self.x_right and self.direction == "right":
+            self.move_right()
+        elif self.rect.x >= self.x_right and self.direction == "right":
+            self.direction = "left"
+            self.move_left()
+
+        if self.rect.x >= self.x_left and self.direction == "left":
+            self.move_left()
+        elif self.rect.x <= self.x_left and self.direction == "left":
+            self.direction = "right"
+            self.move_right()
+
 
 
 def get_background(name):
@@ -433,6 +478,8 @@ def handle_move(player, objects, checkpoints, flag):
             player.make_hit()
         elif obj and obj.name == "rockhead":
             player.make_hit()
+        elif obj and obj.name == "saw":
+            player.make_hit()
         elif obj and obj.name == "flag":
             flag.make_hit()
             flag.off()
@@ -445,6 +492,8 @@ def main(window):
     block_size = 96
 
     player = Player(100, 100, 50, 50)
+
+    saw = Saw((block_size * 11), 0, 38, 42, (WIDTH * 2) - 90, block_size * 11)
 
     rockhead = RockHead(7, block_size * 2, 42, 42, 530)
     rockhead2 = RockHead(block_size * 3 + 3, 0, 42, 42, 340)
@@ -475,7 +524,7 @@ def main(window):
                Block((WIDTH * 2) + (block_size * 4), block_size * 4, block_size),
                Block((WIDTH * 2) + (block_size * 5), block_size * 4, block_size),
                Block((WIDTH * 2) + (block_size * 6), block_size * 4, block_size),
-               fire1, fire2, fire3, fire4, rockhead, rockhead2, rockhead3 ]
+               fire1, fire2, fire3, fire4, rockhead, rockhead2, rockhead3, saw]
 
     checkpoints = [flag]
 
@@ -501,11 +550,14 @@ def main(window):
         fire2.loop()
         fire3.loop()
         fire4.loop()
+
         flag.loop()
 
         rockhead.loop()
         rockhead2.loop()
         rockhead3.loop()
+
+        saw.loop()
 
         handle_move(player, objects, checkpoints, flag)
 
