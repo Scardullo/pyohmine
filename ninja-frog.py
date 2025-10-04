@@ -245,7 +245,8 @@ class Flag(Checkpoints):
 
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height, "flag")
-        self.flag = load_sprite_3dir("Items", "Checkpoints", "Checkpoint", width, height)
+        self.flag = load_sprite_3dir("Items", "Checkpoints", "Checkpoint",
+                                     width, height)
         self.image = self.flag["Checkpoint (Flag Idle)(64x64)"][0]
         self.mask = pygame.mask.from_surface(self.image)
         self.animation_count = 0
@@ -333,6 +334,7 @@ class RockHead(Object):
         elif self.rect.y <= self.y_stop and self.direction == "up":
             self.move_up()
 
+
 class Saw(Object):
     ANIMATION_DELAY = 3
 
@@ -378,7 +380,6 @@ class Saw(Object):
         elif self.rect.x <= self.x_left and self.direction == "left":
             self.direction = "right"
             self.move_right()
-
 
 
 def get_background(name):
@@ -471,7 +472,8 @@ def handle_move(player, objects, checkpoints, flag):
         player.move_right(PLAYER_VEL)
 
     vertical_collide = handle_vertical_collision(player, objects, player.y_vel)
-    to_check = [collide_left, collide_right, *vertical_collide, chk_left, chk_right]
+    to_check = [collide_left, collide_right, *vertical_collide, chk_left,
+                chk_right]
 
     for obj in to_check:
         if obj and obj.name == "fire":
@@ -514,16 +516,22 @@ def main(window):
     floor = [Block(i * block_size, HEIGHT - block_size, block_size)
              for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
     floor2 = [Block(i * block_size, block_size, block_size)
-              for i in range((block_size * 11) // block_size, (WIDTH * 2) // block_size)]
+              for i in range((block_size * 11) // block_size,
+                             (WIDTH * 2) // block_size)]
     floor3 = [Block(i * block_size, HEIGHT - block_size, block_size)
-              for i in range((block_size * 33) // block_size, WIDTH * 5 // block_size)]
+              for i in range((block_size * 33) // block_size,
+                             WIDTH * 5 // block_size)]
 
-    objects = [*floor, *floor2, *floor3, Block(0, HEIGHT - block_size * 2, block_size),
+    objects = [*floor, *floor2, *floor3, Block(0, HEIGHT - block_size * 2,
+                                               block_size),
                Block(block_size * 3, HEIGHT - block_size * 4, block_size),
                Block(block_size * 7, HEIGHT - block_size * 6, block_size),
-               Block((WIDTH * 2) + (block_size * 4), block_size * 4, block_size),
-               Block((WIDTH * 2) + (block_size * 5), block_size * 4, block_size),
-               Block((WIDTH * 2) + (block_size * 6), block_size * 4, block_size),
+               Block((WIDTH * 2) + (block_size * 4), block_size * 4,
+                     block_size),
+               Block((WIDTH * 2) + (block_size * 5), block_size * 4,
+                     block_size),
+               Block((WIDTH * 2) + (block_size * 6), block_size * 4,
+                     block_size),
                fire1, fire2, fire3, fire4, rockhead, rockhead2, rockhead3, saw]
 
     checkpoints = [flag]
@@ -561,10 +569,13 @@ def main(window):
 
         handle_move(player, objects, checkpoints, flag)
 
-        draw(window, background, bg_image, player, objects, checkpoints, offset_x)
+        draw(window, background, bg_image, player, objects, checkpoints,
+             offset_x)
 
-        if ((player.rect.right - offset_x >= WIDTH - scroll_area_width) and player.x_vel > 0) or (
-                (player.rect.left - offset_x <= scroll_area_width) and player.x_vel < 0):
+        if ((player.rect.right - offset_x >= WIDTH - scroll_area_width) and
+            player.x_vel > 0) or (
+                (player.rect.left - offset_x <= scroll_area_width) and
+                player.x_vel < 0):
             offset_x += player.x_vel
 
     pygame.quit()
