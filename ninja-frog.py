@@ -382,6 +382,54 @@ class Saw(Object):
             self.move_right()
 
 
+class Spikehead_x(Object):
+    ANIMATION_DELAY = 3
+
+    def __init__(self, x, y, width, height, x_right, x_left):
+        super().__init__(x, y, width, height, "spikehead_x")
+        self.spikehead_x = load_sprite_sheets("Traps", "spikehead", width,
+                                              height)
+        self.image = self.spikehead_x["Idle"][0]
+        self.mask = pygame.mask.from_surface(self.image)
+        self.animation_count = 0
+        self.animation_name = "Idle"
+        self.x_vel = 3
+        self.x_right = x_right
+        self.x_left = x_left
+        self.direction = "right"
+
+    def move_right(self):
+        self.rect.x += self.x_vel
+
+    def move_left(self):
+        self.rect.x -= self.x_vel
+
+    def loop(self):
+        sprites = self.spikehead_x[self.animation_name]
+        sprite_index = (self.animation_count //
+                        self.ANIMATION_DELAY) % len(sprites)
+        self.image = sprites[sprite_index]
+        self.animation_count += 1
+
+        self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
+        self.mask = pygame.mask.from_surface(self.image)
+
+        if self.animation_count // self.ANIMATION_DELAY > len(sprites):
+            self.animation_count = 0
+
+        if self.rect.x <= self.x_right and self.direction == "right":
+            self.move_right()
+        elif self.rect.x >= self.x_right and self.direction == "right":
+            self.direction = "left"
+            self.move_left()
+
+        if self.rect.x >= self.x_left and self.direction == "left":
+            self.move_left()
+        elif self.rect.x <= self.x_left and self.direction == "left":
+            self.direction = "right"
+            self.move_right()
+
+
 def get_background(name):
     image = pygame.image.load(join("assets", "Background", name))
     _, _, width, height = image.get_rect()
@@ -482,6 +530,8 @@ def handle_move(player, objects, checkpoints, flag):
             player.make_hit()
         elif obj and obj.name == "saw":
             player.make_hit()
+        elif obj and obj.name == "spikehead_x":
+            player.make_hit()
         elif obj and obj.name == "flag":
             flag.make_hit()
             flag.off()
@@ -500,6 +550,9 @@ def main(window):
     rockhead = RockHead(7, block_size * 2, 42, 42, 530)
     rockhead2 = RockHead(block_size * 3 + 3, 0, 42, 42, 340)
     rockhead3 = RockHead(block_size * 7 + 4, -200, 42, 42, 150)
+
+    spikehead_x = Spikehead_x(block_size * 37, HEIGHT - (block_size * 2), 54,
+                              52, block_size * 41, block_size * 36)
 
     fire1 = Fire(block_size * 7, HEIGHT - block_size - 64, 16, 32)
     fire1.on()
@@ -532,7 +585,10 @@ def main(window):
                      block_size),
                Block((WIDTH * 2) + (block_size * 6), block_size * 4,
                      block_size),
-               fire1, fire2, fire3, fire4, rockhead, rockhead2, rockhead3, saw]
+               Block(block_size * 35, HEIGHT - (block_size * 2), block_size),
+               Block(block_size * 42, HEIGHT - (block_size * 2), block_size),
+               fire1, fire2, fire3, fire4, rockhead, rockhead2, rockhead3, saw,
+               spikehead_x]
 
     checkpoints = [flag]
 
@@ -566,6 +622,8 @@ def main(window):
         rockhead3.loop()
 
         saw.loop()
+
+        spikehead_x.loop()
 
         handle_move(player, objects, checkpoints, flag)
 
