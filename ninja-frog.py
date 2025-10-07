@@ -96,6 +96,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_count = 0
         self.hit = False
         self.hit_count = 0
+        self.player_hit = 0
 
     def jump(self):
         self.y_vel = -self.GRAVITY * 8
@@ -110,6 +111,7 @@ class Player(pygame.sprite.Sprite):
 
     def make_hit(self):
         self.hit = True
+        self.player_hit += 1
 
     def move_left(self, vel):
         self.x_vel = -vel
@@ -238,54 +240,39 @@ class Fire(Object):
         if self.animation_count // self.ANIMATION_DELAY > len(sprites):
             self.animation_count = 0
 
-class Cherry(Checkpoints):
+
+class Fruits(Object):
     ANIMATION_DELAY = 3
     SPRITES = load_sprite_sheets("Items", "Fruits", 32, 32)
 
-    def __init__(self, x, y, width, height):
-        super().__init__(x, y, width, height, "cherry")
-        self.cherry = load_sprite_sheets("Items", "Fruits", width, height)
-        self.image = self.cherry["Cherries"][0]
+    def __init__(self, x, y, width, height, animation_name):
+        super().__init__(x, y, width, height, "fruits")
+        self.fruits = self.SPRITES
+        self.animation_name = animation_name
+        self.image = self.fruits[self.animation_name][0]
         self.mask = pygame.mask.from_surface(self.image)
         self.animation_count = 0
         self.hit = False
-        self.animation_name = "Cherries"
 
     def on(self):
-        self.animation_name = "Cherries"
+        self.animation_name = self.animation_name
 
     def off(self):
         self.animation_name = "Collected"
 
-    def make_hit(self):
-        self.hit = True
-
     def update_sprite(self):
-        sprite_sheet = "Cherries"
-        if self.hit:
-            sprite_sheet = "Collected"
-
-        sprites = self.SPRITES[sprite_sheet]
-        sprite_index = (self.animation_count //
-                        self.ANIMATION_DELAY) % len(sprites)
-        self.sprite = sprites[sprite_index]
-        self.animation_count += 1
-        self.update()
-
-    def loop(self):
-        sprites = self.cherry[self.animation_name]
-        sprite_index = (self.animation_count //
-                        self.ANIMATION_DELAY) % len(sprites)
+        sprites = self.fruits[self.animation_name]
+        sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
         self.image = sprites[sprite_index]
-        self.animation_count += 1
-
         self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
         self.mask = pygame.mask.from_surface(self.image)
 
-        if self.animation_count // self.ANIMATION_DELAY > len(sprites):
-            self.animation_count = 0
-
+    def loop(self):
         self.update_sprite()
+        self.animation_count += 1
+
+        if self.animation_count // self.ANIMATION_DELAY > len(self.fruits[self.animation_name]):
+            self.animation_count = 0
 
 
 class Flag(Checkpoints):
@@ -299,7 +286,6 @@ class Flag(Checkpoints):
         self.image = self.flag["Checkpoint (Flag Idle)(64x64)"][0]
         self.mask = pygame.mask.from_surface(self.image)
         self.animation_count = 0
-        self.hit = False
         self.animation_name = "Checkpoint (Flag Idle)(64x64)"
 
     def on(self):
@@ -308,14 +294,8 @@ class Flag(Checkpoints):
     def off(self):
         self.animation_name = "Checkpoint (Flag Out) (64x64)"
 
-    def make_hit(self):
-        self.hit = True
-
     def update_sprite(self):
         sprite_sheet = "Checkpoint (Flag Idle)(64x64)"
-        if self.hit:
-            sprite_sheet = "Checkpoint (Flag Out) (64x64)"
-
         sprites = self.SPRITES[sprite_sheet]
         sprite_index = (self.animation_count //
                         self.ANIMATION_DELAY) % len(sprites)
@@ -550,7 +530,7 @@ def check_point(player, checkpoints, dx):
     return collided_object
 
 
-def handle_move(player, objects, checkpoints, flag, cherry):
+def handle_move(player, objects, checkpoints, flag, cherry, bananas):
     keys = pygame.key.get_pressed()
 
     player.x_vel = 0
@@ -582,11 +562,12 @@ def handle_move(player, objects, checkpoints, flag, cherry):
         elif obj and obj.name == "spikehead_x":
             player.make_hit()
         elif obj and obj.name == "flag":
-            flag.make_hit()
             flag.off()
-        elif obj and obj.name == "cherry":
-            cherry.make_hit()
-            cherry.off()
+        elif obj and obj.name == "fruits":
+            if obj.animation_name == "Cherries":
+                cherry.off()
+            elif obj.animation_name == "Bananas":
+                bananas.off()
 
 
 def main(window):
@@ -597,8 +578,10 @@ def main(window):
 
     player = Player(100, 100, 50, 50)
 
-    cherry = Cherry((block_size * 39) - 44, HEIGHT - (block_size + 60), 32, 32)
+    cherry = Fruits((block_size * 39) - 44, HEIGHT - (block_size + 60), 32, 32, "Cherries")
     cherry.on()
+    bananas = Fruits(WIDTH * 2 + (block_size * 5), block_size * 3, 32, 32, "Bananas")
+    bananas.on()
 
     saw = Saw((block_size * 11), 0, 38, 42, (WIDTH * 2) - 90, block_size * 11)
 
@@ -620,7 +603,8 @@ def main(window):
     fire4 = Fire(block_size * 7 + 35, HEIGHT - block_size - 64, 16, 32)
     fire4.on()
 
-    flag = Flag((WIDTH * 5) - (block_size * 4), HEIGHT - (block_size * 2 + 30), 64, 64)
+    flag = Flag((WIDTH * 5) - (block_size * 4), HEIGHT - (block_size * 2 + 30),
+                64, 64)
     flag.on()
 
     floor = [Block(i * block_size, HEIGHT - block_size, block_size)
@@ -649,9 +633,9 @@ def main(window):
                Block(block_size * 39, HEIGHT - (block_size * 3), block_size),
                Block(block_size * 40, HEIGHT - (block_size * 3), block_size),
                fire1, fire2, fire3, fire4, rockhead, rockhead2, rockhead3, saw,
-               spikehead_x, spikehead_x2]
+               spikehead_x, spikehead_x2, cherry, bananas]
 
-    checkpoints = [flag, cherry]
+    checkpoints = [flag]
 
     offset_x = 0
     scroll_area_width = 200
@@ -688,8 +672,9 @@ def main(window):
         spikehead_x2.loop()
 
         cherry.loop()
+        bananas.loop()
 
-        handle_move(player, objects, checkpoints, flag, cherry)
+        handle_move(player, objects, checkpoints, flag, cherry, bananas)
 
         draw(window, background, bg_image, player, objects, checkpoints,
              offset_x)
