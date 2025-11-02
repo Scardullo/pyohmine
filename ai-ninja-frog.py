@@ -110,8 +110,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += dy
 
     def make_hit(self):
-        self.hit = True
-        self.player_hit += 1
+        if not self.hit:  # Only count a new hit if not already in 'hit' state
+            self.hit = True
+            self.player_hit += 1
+            self.hit_count = 0  # reset hit timer
 
     def move_left(self, vel):
         self.x_vel = -vel
@@ -667,6 +669,9 @@ def main(window):
     block_size = 96
     player = Player(100, 100, 50, 50)
 
+    font = pygame.font.SysFont("Arial", 64)
+    game_over = False
+
     # === Load Game Objects ===
     fruits = create_fruits(block_size)
     fires, rockheads, spikeheads, saw = create_hazards(block_size)
@@ -714,11 +719,26 @@ def main(window):
 
         saw.loop()
 
+        # --- Check for Game Over ---
+        if player.player_hit >= 2:
+            game_over = True
+
         # --- Movement, Collision, Checkpoints ---
         handle_move(player, objects, checkpoints, flag, *fruits)
 
         # --- Drawing ---
         draw(window, background, bg_image, player, objects, checkpoints, offset_x)
+
+        if game_over:
+            game_over_text = font.render("GAME OVER", True, (161, 3, 252))
+            text_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+            window.blit(game_over_text, text_rect)
+            pygame.display.update()
+
+            # Pause and then quit
+            pygame.time.delay(3000)
+            run = False
+            continue
 
         # --- Camera Scrolling ---
         if (
