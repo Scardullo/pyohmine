@@ -355,4 +355,93 @@ class RawEthernetTCPClient:
         return None
     
     def handshake(self):
-        
+        options = struct.pack('!BBH', 2, 4, 1460)
+        options += b'\x01' * ((4 - (len(options) % 4)) % 4)
+        syn_flags = {'SYN': True, 'ACK': False, 'RST': False, 'FIN': False, 'PSH': False, 'URG': False}
+        tcp_hdr_syn = build_tcp_header(self.src_ip, self.dst_ip, self.src_port, self.dest_port,
+                                       seq=self.snd_seq, ack=0, flags=syn_flags, window=5840, payload=b'', options=options)
+        print(f"[+] Sending Ethernet/IPv4 SYN seq={self.snd_seq}")
+        self.send_ip_tcp_frame(tcp_hdr_syn)
+
+        start = time.time()
+        while True:
+            remaining = max(0, self.timeout - (time.time() - start))
+            pkt = self.receive_matching_packet(timeout=remaining)
+            if pkt is None:
+                print("[-] Timeout waiting for SYN-ACK")
+                return False
+            if pkt['flags']['SYN'] and pkt['flags']['ACK']:
+                print(f"[+] Received SYN-ACK seq={pkt['seq']} ack={pkt['ack']}")
+                self.rcv_seq = pkt['seq']
+                self.snd_seq += 1
+                ack_num = self.rcv_seq + 1
+                ack_flags = {'SYN': False, 'ACK': True, 'RST': False, 'FIN': False, 'PSH': False, 'URG': False}
+                tcp_hdr_ack = build_tcp_header(self.src_ip, self.dst_ip, self.src_port, self.dst_port,
+                                               seq=self.snd_seq, ack=ack_num, flags=ack_flags, window=5840, payload=b'')
+                print(f"[+] Sending ACK seq={self.snd_seq} ack={ack_num}")
+                self.send_ip_tcp_frame(tcp_hdr_ack)
+                return True
+            if pkt['flags']['RST']:
+                print("[-] Received RST; connection refused/reset")
+                return False
+            
+    def send_data(self, data: bytes):
+        payload = data
+        flags = {'PSH': True, 'ACK': True, 'SYN': False, 'RST': False, 'FIN': False, 'URG': False}
+        tcp_hdr = build_tcp_header(self.src_ip, self.dst_ip, self.src_port, self.dst_port,
+                                   seq=self.snd_seq, ack=self.rcv_seq+1, flags=flags, payload=payload)
+        print(f"[+] Sending DATA seq={self.snd_seq} len={len(payload)}")
+        self.send_ip_tcp_frame(tcp_hdr, payload=payload)
+        self.snd_seq += len(payload)
+        start = time.time()
+        while True:
+            remaining = max(0, self.timeout - (time.time() - start))
+            pkt = self.receive_matching_packet(timeout=remaining)
+            if pkt is None:
+                print("[-] Timeout waiting for ACK to data")
+                return False
+            if pkt['flags']['ACK']:
+                if pkt['ack'] >= self.snd_seq:
+                    print(f"[+] Data acknowledged ack={pkt['ack']}")
+                    return True
+            if pkt['flags']['RST']:
+                print("[-] Received RST after data")
+                return False
+            
+    def close(self):
+        fin_flags = {'FIN': True, 'ACK': True, 'SYN': False, 'RST': False, 'PSH': False, 'URG': False}
+        tcp_hdr_fin = build_tcp_header(self.src_ip, self.dst_ip, self.src_port, self.dst_port,
+                                       seq=self.snd_seq, ack=self.rcv_seq+1, flags=fin_flags, payload=b'')
+        print(f"[+] Sending FIN seq={self.snd_seq}")
+        self.send_ip_tcp_frame(tcp_hdr_fin)
+        self.snd_seq += 1
+        start = time.time()
+        while True:
+            remaining = max(0, self.timeout - (time.time() - start))
+            pkt = self.receive_matching_packet(timeout=remaining)
+            if pkt is None:
+                print("[-] Timeout waiting for FIN/ACK")
+                return False
+            if pkt['flags']['ACK'] and pkt['ack'] >= self.snd_seq:
+                print(f"[+] FIN acknowledged ack={pkt['ack']}")
+            if pkt['flags']['FIN']:
+                ack_for_them = pkt['seq'] + 1
+                ack_flags = {'ACK': True, 'SYN': False, 'RST': False, 'FIN': False, 'PSH': False, 'URG': False}
+                tcp_hdr_final_ack = build_tcp_header(self.src_ip, self.dst_ip, self.src_port, self.dst_port,
+                                                     seq=self.snd_seq, ack=ack_for_them, flags=ack_flags, payload=b'')
+                print(f"[+] Received FIN from remote seq={pkt['seq']}; sending final ack={ack_for_them}")
+                self.send_ip_tcp_frame(tcp_hdr_final_ack)
+                return True
+            
+def get_default_src_ip_for_dst(dst_ip):
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect((dst_ip, 80))
+        src_ip = s.getsockname()[0]
+        s.close()
+        return src_ip
+    except Exception:
+        return None
+
+
+                
