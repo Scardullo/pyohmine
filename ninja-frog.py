@@ -110,8 +110,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += dy
 
     def make_hit(self):
-        self.hit = True
-        self.player_hit += 1
+        if not self.hit:  # Only count a new hit if not already in 'hit' state
+            self.hit = True
+            self.player_hit += 1
+            self.hit_count = 0  # reset hit timer
 
     def move_left(self, vel):
         self.x_vel = -vel
@@ -569,120 +571,180 @@ def handle_move(player, objects, checkpoints, flag, cherry, bananas):
             elif obj.animation_name == "Bananas":
                 bananas.off()
 
+# ==============================
+#   OBJECT CREATION FUNCTIONS
+# ==============================
+
+def create_fruits(block_size):
+    """Create fruit collectibles."""
+    cherry = Fruits((block_size * 39) - 44, HEIGHT - (block_size + 60), 32, 32, "Cherries")
+    bananas = Fruits(WIDTH * 2 + (block_size * 5), block_size * 3, 32, 32, "Bananas")
+
+    cherry.on()
+    bananas.on()
+
+    return [cherry, bananas]
+
+
+def create_hazards(block_size):
+    """Create hazards like fires, rockheads, saws, and spikeheads."""
+    # Fires
+    fire_positions = [block_size * 7 - 70, block_size * 7 - 35, block_size * 7, block_size * 7 + 35]
+    fires = []
+    for pos in fire_positions:
+        f = Fire(pos, HEIGHT - block_size - 64, 16, 32)
+        f.on()
+        fires.append(f)
+
+    # RockHeads (vertical traps)
+    rockheads = [
+        RockHead(7, block_size * 2, 42, 42, 530),
+        RockHead(block_size * 3 + 3, 0, 42, 42, 340),
+        RockHead(block_size * 7 + 4, -200, 42, 42, 150)
+    ]
+
+    # Spikeheads (horizontal traps)
+    spikeheads = [
+        Spikehead_x(block_size * 37, HEIGHT - (block_size * 2), 54, 52, block_size * 41, block_size * 36),
+        Spikehead_x(block_size * 38, HEIGHT - (block_size * 4), 54, 52, block_size * 40, block_size * 37)
+    ]
+
+    # Saw (moving hazard)
+    saw = Saw((block_size * 11), 0, 38, 42, (WIDTH * 2) - 90, block_size * 11)
+
+    return fires, rockheads, spikeheads, saw
+
+
+def create_flag(block_size):
+    """Create the checkpoint flag."""
+    flag = Flag((WIDTH * 5) - (block_size * 4), HEIGHT - (block_size * 2 + 30), 64, 64)
+    flag.on()
+    return flag
+
+
+def create_floors(block_size):
+    """Create floor and platforms."""
+    floor = [
+        Block(i * block_size, HEIGHT - block_size, block_size)
+        for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)
+    ]
+
+    floor2 = [
+        Block(i * block_size, block_size, block_size)
+        for i in range((block_size * 11) // block_size, (WIDTH * 2) // block_size)
+    ]
+
+    floor3 = [
+        Block(i * block_size, HEIGHT - block_size, block_size)
+        for i in range((block_size * 33) // block_size, WIDTH * 5 // block_size)
+    ]
+
+    # Custom platform blocks
+    extra_blocks = [
+        Block(0, HEIGHT - block_size * 2, block_size),
+        Block(block_size * 3, HEIGHT - block_size * 4, block_size),
+        Block(block_size * 7, HEIGHT - block_size * 6, block_size),
+        Block((WIDTH * 2) + (block_size * 4), block_size * 4, block_size),
+        Block((WIDTH * 2) + (block_size * 5), block_size * 4, block_size),
+        Block((WIDTH * 2) + (block_size * 6), block_size * 4, block_size),
+        Block(block_size * 35, HEIGHT - (block_size * 2), block_size),
+        Block(block_size * 42, HEIGHT - (block_size * 2), block_size),
+        Block(block_size * 37, HEIGHT - (block_size * 3), block_size),
+        Block(block_size * 38, HEIGHT - (block_size * 3), block_size),
+        Block(block_size * 39, HEIGHT - (block_size * 3), block_size),
+        Block(block_size * 40, HEIGHT - (block_size * 3), block_size),
+    ]
+
+    return [*floor, *floor2, *floor3, *extra_blocks]
+
+
+# ==============================
+#   MAIN GAME LOOP
+# ==============================
 
 def main(window):
     clock = pygame.time.Clock()
     background, bg_image = get_background("Purple.png")
 
     block_size = 96
-
     player = Player(100, 100, 50, 50)
 
-    cherry = Fruits((block_size * 39) - 44, HEIGHT - (block_size + 60), 32, 32, "Cherries")
-    cherry.on()
-    bananas = Fruits(WIDTH * 2 + (block_size * 5), block_size * 3, 32, 32, "Bananas")
-    bananas.on()
+    font = pygame.font.SysFont("Arial", 64)
+    game_over = False
 
-    saw = Saw((block_size * 11), 0, 38, 42, (WIDTH * 2) - 90, block_size * 11)
+    # === Load Game Objects ===
+    fruits = create_fruits(block_size)
+    fires, rockheads, spikeheads, saw = create_hazards(block_size)
+    flag = create_flag(block_size)
+    floors = create_floors(block_size)
 
-    rockhead = RockHead(7, block_size * 2, 42, 42, 530)
-    rockhead2 = RockHead(block_size * 3 + 3, 0, 42, 42, 340)
-    rockhead3 = RockHead(block_size * 7 + 4, -200, 42, 42, 150)
-
-    spikehead_x = Spikehead_x(block_size * 37, HEIGHT - (block_size * 2), 54,
-                              52, block_size * 41, block_size * 36)
-    spikehead_x2 = Spikehead_x(block_size * 38, HEIGHT - (block_size * 4), 54,
-                               52, block_size * 40, block_size * 37)
-
-    fire1 = Fire(block_size * 7, HEIGHT - block_size - 64, 16, 32)
-    fire1.on()
-    fire2 = Fire(block_size * 7 - 35, HEIGHT - block_size - 64, 16, 32)
-    fire2.on()
-    fire3 = Fire(block_size * 7 - 70, HEIGHT - block_size - 64, 16, 32)
-    fire3.on()
-    fire4 = Fire(block_size * 7 + 35, HEIGHT - block_size - 64, 16, 32)
-    fire4.on()
-
-    flag = Flag((WIDTH * 5) - (block_size * 4), HEIGHT - (block_size * 2 + 30),
-                64, 64)
-    flag.on()
-
-    floor = [Block(i * block_size, HEIGHT - block_size, block_size)
-             for i in range(-WIDTH // block_size, (WIDTH * 2) // block_size)]
-    floor2 = [Block(i * block_size, block_size, block_size)
-              for i in range((block_size * 11) // block_size,
-                             (WIDTH * 2) // block_size)]
-    floor3 = [Block(i * block_size, HEIGHT - block_size, block_size)
-              for i in range((block_size * 33) // block_size,
-                             WIDTH * 5 // block_size)]
-
-    objects = [*floor, *floor2, *floor3, Block(0, HEIGHT - block_size * 2,
-                                               block_size),
-               Block(block_size * 3, HEIGHT - block_size * 4, block_size),
-               Block(block_size * 7, HEIGHT - block_size * 6, block_size),
-               Block((WIDTH * 2) + (block_size * 4), block_size * 4,
-                     block_size),
-               Block((WIDTH * 2) + (block_size * 5), block_size * 4,
-                     block_size),
-               Block((WIDTH * 2) + (block_size * 6), block_size * 4,
-                     block_size),
-               Block(block_size * 35, HEIGHT - (block_size * 2), block_size),
-               Block(block_size * 42, HEIGHT - (block_size * 2), block_size),
-               Block(block_size * 37, HEIGHT - (block_size * 3), block_size),
-               Block(block_size * 38, HEIGHT - (block_size * 3), block_size),
-               Block(block_size * 39, HEIGHT - (block_size * 3), block_size),
-               Block(block_size * 40, HEIGHT - (block_size * 3), block_size),
-               fire1, fire2, fire3, fire4, rockhead, rockhead2, rockhead3, saw,
-               spikehead_x, spikehead_x2, cherry, bananas]
+    # Combine everything into one list for rendering/collision
+    objects = [
+        *floors, *fires, *rockheads, *spikeheads,
+        saw, *fruits
+    ]
 
     checkpoints = [flag]
 
+    # === Camera Setup ===
     offset_x = 0
     scroll_area_width = 200
 
+    # === Main Game Loop ===
     run = True
     while run:
         clock.tick(FPS)
 
+        # --- Event Handling ---
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 break
-
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and player.jump_count < 2:
                     player.jump()
 
+        # --- Update Entities ---
         player.loop(FPS)
-
-        fire1.loop()
-        fire2.loop()
-        fire3.loop()
-        fire4.loop()
-
         flag.loop()
 
-        rockhead.loop()
-        rockhead2.loop()
-        rockhead3.loop()
+        for f in fires:
+            f.loop()
+        for r in rockheads:
+            r.loop()
+        for s in spikeheads:
+            s.loop()
+        for fruit in fruits:
+            fruit.loop()
 
         saw.loop()
 
-        spikehead_x.loop()
-        spikehead_x2.loop()
+        # --- Check for Game Over ---
+        if player.player_hit >= 2:
+            game_over = True
 
-        cherry.loop()
-        bananas.loop()
+        # --- Movement, Collision, Checkpoints ---
+        handle_move(player, objects, checkpoints, flag, *fruits)
 
-        handle_move(player, objects, checkpoints, flag, cherry, bananas)
+        # --- Drawing ---
+        draw(window, background, bg_image, player, objects, checkpoints, offset_x)
 
-        draw(window, background, bg_image, player, objects, checkpoints,
-             offset_x)
+        if game_over:
+            game_over_text = font.render("GAME OVER", True, (161, 3, 252))
+            text_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+            window.blit(game_over_text, text_rect)
+            pygame.display.update()
 
-        if ((player.rect.right - offset_x >= WIDTH - scroll_area_width) and
-            player.x_vel > 0) or (
-                (player.rect.left - offset_x <= scroll_area_width) and
-                player.x_vel < 0):
+            # Pause and then quit
+            pygame.time.delay(3000)
+            run = False
+            continue
+
+        # --- Camera Scrolling ---
+        if (
+            (player.rect.right - offset_x >= WIDTH - scroll_area_width and player.x_vel > 0)
+            or (player.rect.left - offset_x <= scroll_area_width and player.x_vel < 0)
+        ):
             offset_x += player.x_vel
 
     pygame.quit()
