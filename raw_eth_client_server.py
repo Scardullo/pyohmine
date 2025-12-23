@@ -210,3 +210,149 @@ def build_tcp_header(src_ip: str, dst_ip: str, src_port: int, dst_port: int, seq
     tcp_header = tcp_header + options_padded
 
     return tcp_header
+
+def parse_ipv4_packet(packet: bytes):
+    if len(packet) < 20:
+        return None
+    vihl, tos, total_lenght, identification, flags_fragment, ttl, proto, checksum, src, dst, = struct.unpack('!BBHHHBBH4s4s', packet[:20])
+    version = vihl >> 4
+    ihl = (vihl & 0x0f) * 4
+    src_ip = socket.inet_ntoa(src)
+    dst_ip = socket.inet_ntoa(dst)
+    payload = packet[ihl:total_length]
+    return (ihl, proto, src_ip, dst_ip, payload, total_length, identification, flags_fragment, ttl)
+
+def parse_tcp_segment(segment: bytes):
+    if len(segment) < 20:
+        return None
+    src_port, dst_port, seq, ack, offset_reserved_flags, window, checksum, urg_ptr = struct.unpack('!HHLLHHHH', segment[:20])
+    data_offset = (offset_reserved_flags >> 12) * 4
+    flag_bits = offset_reserved_flags & 0x01FF
+    flags = {
+        'FIN': bool(flag_bits & 0x001),
+        'SYN': bool(flag_bits & 0x002),
+        'RST': bool(flag_bits & 0x004),
+        'PSH': bool(flag_bits & 0x008),
+        'ACK': bool(flag_bits & 0x010),
+        'URG': bool(flag_bits & 0x020),
+    }
+    payload = segment[data_offset:]
+    return (src_port, dst_port, seq, ack, data_offset, flags, window, checksum, urg_ptr, payload)
+
+def create_af_packet_socket(ifname: str):
+    s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.htons(ETH_P_ALL))
+    s.bind((ifname, 0))
+    return s
+
+
+class EthernetDriver:
+    def __init__(self, ifname: str, my_mac: str=None, my_ip: str=None, timeout=5.0):
+        self.ifname = ifname
+        self.timeout = timeout
+        self.sock = create_af_packet_socket(ifname)
+        self.ifindex = get_iface_index(ifname)
+        self.my_mac_str = my_mac if my_mac else get_iface_mac(ifname)
+        self.my_ip = my_ip if my_ip else get_iface_ip(ifname)
+        self.my_mac = mac_str_to_bytes(self.my_mac_str)
+        if not self.my_ip:
+            raise RuntimeError(f"Could not determine IP of interface {ifname}.")
+        self.arp_cache = {}
+
+    def send_frame(self, dst_mac_bytes: bytes, ethertype: int, payload: bytes):
+        eth = build_ethernet_header(dst_mac_bytes, self.my_mac, ethertype)
+        frame = eth + payload
+        self.sock.send(frame)
+
+    def recv_frame(self, timeout=None):
+        timeout = timeout if timeout is not None else self.timeout
+        rlist, _, _ = select.select([self.sock], [], [], timeout)
+        if not rlist:
+            return None
+        frame = self.sock.recv(65535)
+        parsed = parse_ethernet_frame(frame)
+        return parsed
+    
+    def resolve_arp(self, target_ip: str, retry=3, wait=2.0):
+        if target_ip in self.arp_cache:
+            return self.arp_cache[target_ip]
+        
+        dst_mac = b'\xff'*6
+        arp_req = build_arp_request(self.my_mac, self.my_ip, target_ip)
+        eth = build_ethernet_header(dst_mac, self.my_mac, ETH_P_ARP)
+        pkt = eth + arp_req
+        for attempt in range(retry):
+            self.sock.send(pkt)
+            print(f"[+] ARP request sent for {target_ip} (attempt {attempt+1})")
+            t_end = time.time() + wait
+            while time.time() < t_end:
+                parsed = self.recv_frame(timeout=t_end - time.time())
+                if not parsed:
+                    continue
+                dst, src, ethertype, payload = parsed
+                if ethertype == ETH_P_ARP:
+                    arp = parse_arp_packet(payload)
+                    if arp and arp['opcode'] == 2 and arp['spa'] == target_ip:
+                        mac = arp['sha']
+                        self.arp_cache[target_ip] = mac
+                        print(f"[+] ARP reply: {target_ip} is at {mac_bytes_to_str(mac)}")
+                        return mac
+        print("[-] ARP resolution failed")
+        return None
+    
+
+class RawEthernetTCPClient:
+    def __init__(self, ifname: str, src_ip: str, dst_ip: str, src_port: int, dst_port: int, timeout=5.0):
+        self.ifname = ifname
+        self.dst_ip = dst_ip
+        self.src_ip = src_ip
+        self.src_port = src_port
+        self.dst_port = dst_port
+        self.timeout = timeout
+        self.eth = EthernetDriver(ifname, my_ip=src_ip, timeout=timeout)
+        self.dst_mac = None
+        self.isn = random.randrange(0, 0xffffffff)
+        self.snd_seq = self.isn
+        self.rcv_seq = None
+
+    def ensure_dst_mac(self):
+        if self.dst_mac:
+            return self.dst_mac
+        mac = self.eth.resolve_arp(self.dst_ip)
+        if mac is None:
+            raise RuntimeError("Could not resolve destination MAC via ARP")
+        self.dst_mac = mac
+        return mac
+    
+    def send_ip_tcp_frame(self, tcp_hdr: bytes, payload: bytes=b''):
+        ip_hdr = build_ip_header(self.src_ip, self.dst_ip, len(tcp_hdr) + len(payload))
+        eth_payload = ip_hdr + tcp_hdr + payload
+        dst_mac = self.ensure_dst_mac()
+        self.eth.send_frame(dst_mac, ETH_P_IP, eth_payload)
+
+    def receive_matching_packet(self, timeout=None):
+        timeout = timeout if timeout is not None else self.timeout
+        t_end = time.time() + timeout
+        while time.time() < t_end:
+            parsed = self.eth.recv_frame(timeout=t_end - time.time())
+            if not parsed:
+                continue
+            dst, src, ethertype, payload = parsed
+            if ethertype != ETH_P_IP:
+                continue
+            ip_parsed = parse_ipv4_packet(payload)
+            if not ip_parsed:
+                continue
+            ihl, proto, src_ip, dst_ip, ip_payload, total_length, identification, flags_fragment, ttl = ip_parsed
+            if src_ip != self.dst_ip or dst_ip != self.src_ip:
+                continue
+            tcp = parse_tcp_segment(ip_payload)
+            if not tcp:
+                continue
+            src_port, dst_port, seq, ack, data_off, flags, window, checksum, urg_ptr, payload_data = tcp
+            if src_port != self.dst_port or dst_port != self.src_port:
+                continue
+            return {'seq': seq, 'ack': ack, 'flags': flags, 'payload': payload_data, 'window': window}
+        return None
+    
+    def handshake(self):
+        
