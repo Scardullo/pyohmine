@@ -81,3 +81,93 @@ void arp(int s,int ifi,uint8_t mm[6],char *mi,char *ti,uint8_t dm[6]){
 }
 
 
+struct pkt{
+    uint32_t seq;
+    int len;
+    uint64_t t;
+    uint8_t data[MSS];
+};
+
+int main(int c,char **v){
+    if(c<4){printf("use: %s <iface> <dst_ip> <dst_port>\n",v[0]);return 1;}
+
+    srand(time(NULL));
+    char *ifn=v[1], *dip=v[2]; int dport=atoi(v[3]);
+
+    int s=socket(AF_PACKET,SOCK_RAW,htons(ETH_P_ALL));
+    struct ifreq r={0}; strncpy(r.ifr_name,ifn,IFNAMSIZ-1); ioctl(s,SIOCGIFINDEX,&r);
+
+    uint8_t mm[6],dm[6]; char mi[32];
+    get_mac(ifn,mm); get_ip(ifn,mi);
+    arp(s,r.ifr_ifindex,mm,mi,dip,dm);
+
+    struct sockaddr_ll sa={.sll_family=AF_PACKET,.sll_ifindex=r.ifr_ifindex,.sll_halen=6};
+    memcpy(sa.sll_addr,dm,6);
+
+    uint16_t sport=rand()%50000+10000;
+    uint32_t snd=rand(), rcv=0;
+
+    send_tcp(s,&sa,mm,dm,mi,dip,sport,dport,snd,0,TH_SYN,NULL,0); snd++;
+    uint8_t b[BUF_SIZE];
+    while(1){
+        recv(s,b,sizeof(b),0); struct iphdr *ip=(void*)(b+14);
+        if(ip->protocol!=IPPROTO_TCP) continue;
+        struct tcphdr *t=(void*)(b+14+ip->ihl*4);
+        if(ntohs(t->dest)!=sport) continue;
+        if(t->syn&&t->ack){ rcv=ntohl(t->seq)+1; break; }
+    }
+    send_tcp(s,&sa,mm,dm,mi,dip,sport,dport,snd,rcv,TH_ACK,NULL,0);
+
+    char msg[]="ECHO_FROM_USERSPACE";
+    int total=strlen(msg), sent=0;
+
+    struct pkt win[MAX_INFLIGHT];
+    int win_used=0;
+    double cwnd=1, ssthresh=16, srtt=300, rto=600;
+
+    while(sent<total || win_used>0){
+
+        while(sent<total && win_used < (int)cwnd){
+            struct pkt *p=&win[win_used];
+            p->seq=snd;
+            p->len= (total-sent>MSS?MSS:total-sent);
+            memcpy(p->data,msg+sent,p->len);
+            p->t=now_ms();
+
+            send_tcp(s,&sa,mm,dm,mi,dip,sport,dport,p->seq,rcv,TH_ACK|TH_PUSH,p->data,p->len);
+
+            snd+=p->len; sent+=p->len; win_used++;
+        }
+
+        fd_set f; FD_ZERO(&f); FD_SET(s,&f);
+        struct timeval tv={.tv_sec=0,.tv_usec=(int)(rto*1000)};
+        int rv=select(s+1,&f,NULL,NULL,&tv);
+
+        if(rv==0){
+            printf("[LOSS] timeout -> slow start\n");
+            ssthresh=cwnd/2; cwnd=1; win_used=0; continue;
+        }
+
+        recv(s,b,sizeof(b),0);
+        struct iphdr *ip=(void*)(b+14);
+        if(ip->protocol!=IPPROTO_TCP) continue;
+        struct tcphdr *t=(void*)(b+14+ip->ihl*4);
+        if(ntohs(t->dest)!=sport || !t->ack) continue;
+
+        uint32_t ack=ntohl(t->ack_seq);
+        if(ack>win[0].seq){
+            double rtt=now_ms()-win[0].t;
+            srtt=0.875*srtt+0.125*rtt; rto=srtt*2;
+
+            memmove(&win[0],&win[1],sizeof(win[0])*(win_used-1));
+            win_used--;
+
+            if(cwnd<ssthresh) cwnd++;
+            else cwnd+=1.0/cwnd;
+        }
+    }
+
+    printf("[+] Transfer complete\n");
+    close(s);
+
+}

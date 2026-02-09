@@ -8,7 +8,7 @@ from pygame import mixer
 
 pygame.init()
 
-mixer.music.load('upbeat_loop.ogg')
+mixer.music.load('assets/upbeat_loop.ogg')
 mixer.music.play(-1)
 
 pygame.display.set_caption("Platformer")
