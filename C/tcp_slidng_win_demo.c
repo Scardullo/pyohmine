@@ -81,6 +81,33 @@ void arp(int s,int ifi,uint8_t mm[6],char *mi,char *ti,uint8_t dm[6]){
 }
 
 
+void send_tcp(int s,struct sockaddr_ll *sa,uint8_t *mm,uint8_t *dm,
+              char *mi,char *di,uint16_t sp,uint16_t dp,
+              uint32_t seq,uint32_t ack,uint8_t fl,uint8_t *pl,int plen){
+    
+    uint8_t b[BUF_SIZE]={0};
+    struct ethhdr *e=(void*)b; struct iphdr *ip=(void*)(b+14);
+    struct tcphdr *t=(void*)(b+14+sizeof(*ip));
+
+    memcpy(e->h_dest,dm,6); memcpy(e->h_source,mm,6); e->h_proto=htons(ETH_P_IP);
+    ip->ihl=5; ip->version=4; ip->ttl=64; ip->protocol=IPPROTO_TCP;
+    ip->saddr=inet_addr(mi); ip->daddr=inet_addr(di);
+
+    t->source=htons(sp); t->dest=htons(dp);
+    t->seq=htonl(seq); t->ack_seq=htonl(ack);
+    t->doff=5; t->window=htons(64240);
+    t->fin=fl&TH_FIN; t->syn=fl&TH_SYN; t->rst=fl&TH_RST; t->psh=fl&TH_PUSH; t->ack=fl&TH_ACK;
+
+    if(plen) memcpy(b+14+sizeof(*ip)+sizeof(*t),pl,plen);
+
+    ip->tot_len=htons(sizeof(*ip)+sizeof(*t)+plen);
+    ip->check=checksum(ip,sizeof(*ip));
+    t->check=tcp_checksum(ip,t,b+14+sizeof(*ip)+sizeof(*t),plen);
+
+    sendto(s,b,14+sizeof(*ip)+sizeof(*t)+plen,0,(void*)sa,sizeof(*sa));
+}
+
+
 struct pkt{
     uint32_t seq;
     int len;
