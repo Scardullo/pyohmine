@@ -1,0 +1,8 @@
+
+Using the GlassIt-VSC Extension:
+
+    Install the Extension:
+    Open the Extensions view in VS Code (Ctrl+Shift+X) and search for "GlassIt-VSC" by hikarin522. Install it.
+    Adjust Transparency:
+        Press Ctrl+Alt+Z to increase transparency.
+        Press Ctrl+Alt+C to decrease transparency.

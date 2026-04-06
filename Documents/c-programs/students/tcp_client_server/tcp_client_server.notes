@@ -1,0 +1,117 @@
+1️⃣ From libraries / standard headers
+From ncurses (#include <ncurses.h>)
+
+Types
+
+WINDOW — opaque window struct
+
+KEY_UP, KEY_DOWN — special key codes
+
+A_REVERSE — attribute for reverse video
+
+Functions
+
+initscr() — initialize ncurses
+
+noecho() — don’t echo typed characters
+
+cbreak() — disable line buffering, so keys are sent immeadiately to program
+
+newwin() — create a new window
+
+keypad() — enable function keys / arrows
+
+box() — draw a border around a window
+
+wattron() — turn on an attribute in a window
+
+wattroff() — turn off an attribute in a window
+
+mvwprintw() — move cursor + print formatted text in a window
+
+wgetch() — get character input from a window
+
+mvprintw() — move cursor + print formatted text on stdscr
+
+printw() — print formatted text on stdscr
+
+clrtoeol() — clear from cursor to end of line
+
+refresh() — refresh stdscr
+
+getch() — get a key from stdscr
+
+echo() / noecho() — turn on/off input echoing
+
+endwin() — exit ncurses mode
+
+getnstr() - Reads a string from the user via the terminal up to n characters
+
+From standard C (#include <stdio.h>, <stdlib.h>, <string.h>)
+
+printf family is indirectly used (mvprintw, printw, scanw, getnstr internally call them)
+
+scanf family used via scanw
+
+char, int, float — built-in types
+
+sizeof — operator used for arrays (if used)
+
+2️⃣ From your own code / student.h
+Functions
+
+loadFromCSV()
+
+saveToCSV()
+
+addStudent(char *name, float grade)
+
+listStudents()
+
+deleteStudent(int id)
+
+editStudent(int id, char *name, float grade)
+
+sortByName()
+
+sortByGrade()
+
+exportToJSON()
+
+drawMenu(WINDOW *win, int highlight) — you defined this yourself
+
+Variables (local / program-defined)
+
+In drawMenu
+
+choices — array of menu strings
+
+n — number of menu items
+
+i — loop counter
+
+highlight — parameter
+
+In main
+
+startx, starty — window position
+
+width, height — window size
+
+menuwin — pointer to WINDOW
+
+choice — selected menu option
+
+highlight — currently highlighted menu item
+
+name, grade — used when adding/editing a student
+
+id — student ID for delete/edit
+
+✅ Notes / tips
+
+Anything starting with mvwprintw, wgetch, keypad, box, wattron, wattroff, mvprintw, etc. is ncurses.
+
+Anything related to students (addStudent, editStudent, listStudents, etc.) is your own code.
+
+Local variables inside your functions (i, choice, highlight, name, grade) are also yours.

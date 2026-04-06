@@ -1,0 +1,4 @@
+Arch linux
+Linux LTS
+Proxmox
+Ubuntu server

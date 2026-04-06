@@ -1,0 +1,13 @@
+| Key            | Action                               |
+| -------------- | ------------------------------------ |
+| SUPER + RETURN | Launch terminal                      |
+| SUPER + X      | Kill active window                   |
+| SUPER + M      | Shutdown / exit Hyprland             |
+| SUPER + E      | File manager                         |
+| SUPER + V      | Toggle floating (currently)          |
+| SUPER + R      | Launch menu                          |
+| SUPER + P      | Pseudotile toggle                    |
+| SUPER + J      | Layout toggle                        |
+| SUPER + D      | Wofi launcher                        |
+| SUPER + B      | Firefox                              |
+| SUPER + V      | **currently also listed as VS Code** |

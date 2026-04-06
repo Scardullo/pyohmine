@@ -1,0 +1,48 @@
+Variable Type	  Example Variable	Size (bytes)	printf Format Specifier	Notes
+int		  x			4		%d	Signed decimal integer
+unsigned int	  src, dst		4		%u	Unsigned decimal integer
+float		  f			4		%f	Single-precision decimal
+double		  d			8		%lf	Double-precision decimal
+char		  c			1		%c	Single character
+char[]		  name[]		varies		%s	String (null-terminated)
+bool		  flag			1		%d or %s	Use %d to print 0/1; %s with conditional "true"/"false"
+unsigned char	  proto, zero		1		%hhu	hh = char, u = unsigned
+unsigned short	  tcp_len, htype, ptype 2		%hu	h = short, u = unsigned
+unsigned char[4]  spa, tpa		4		%u.%u.%u.%u	Print as IPv4: spa[0],spa[1],spa[2],spa[3]
+unsigned char[6]  sha, tha		6		%02x:%02x:%02x:%02x:%02x:%02x	Print as MAC address
+
+
+📊 Common C Format Specifiers
+Specifier       Type (printf)                   Type (scanf)            Example Output / Notes
+%d              signed int (decimal)            int*                    -42, 123
+%i              signed int (decimal/hex/oct)    int*                    -42, 123
+%u              unsigned int (decimal)          unsigned int*           42, 4294967295
+%o              unsigned int (octal)            unsigned int*           52 (octal for 42)
+%x              unsigned int (hex, lowercase)   unsigned int*           2a
+%X              unsigned int (hex, uppercase)   unsigned int*           2A
+%ld             signed long int                 long*                   -12345678
+%lu             unsigned long int               unsigned long*          12345678
+%lx             unsigned long int (hex)         unsigned long*          abcdef
+%lld            signed long long int            long long*              -123456789012
+%llu            unsigned long long int          unsigned long long*     123456789012
+%f              float / double (decimal)        float*/double*          3.141593
+%lf             double (decimal)                double*                 3.141593
+%e              float/double in scientific not. float*/double*          3.141593e+00
+%E              float/double in scientific      float*/double*          3.141593E+00
+%g              float/double (shortest form)    float*/double*          3.14159
+%G              float/double (shortest, caps)   float*/double*          3.14159
+%c              char                            char*                   A
+%s              string (null-terminated)        char*                   "hello"
+%p              pointer (void*)                 void*                   0x7ffdeadbeef
+%%              literal %                       —                       %
+
+
+
+3️⃣ Quick reference for integer format specifiers
+Specifier       Type                    Example output
+%d              signed int              -42, 123
+%i              signed int (same as %d) -42, 123
+%u              unsigned int            42, 4294967295
+%x              unsigned int, hex       0x2a
+%lx             unsigned long, hex      0x12345678
+%llu            unsigned long long      123456789012

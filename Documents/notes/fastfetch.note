@@ -1,0 +1,19 @@
+{
+  "logo": {
+    "type": "file",
+    "source": "/path/to/your/image.png",
+    "width": 65,
+    "height": 35,
+    "padding": {
+      "top": 2,
+      "left": 5,
+      "right": 5
+    }
+  }
+}
+
+
+(padding example)^
+
+
+/usr/share/fastfetch/presets/examples   (fastfetch templates)

@@ -1,0 +1,21 @@
+#
+# ~/.bashrc
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+#alias ls='ls --color=auto'
+alias ls='eza --icons --group-directories-first'
+alias la='eza -a --icons --group-directories-first'
+
+alias grep='grep --color=auto'
+alias dfree='df -hTx tmpfs'
+alias nerds='kitty +list-fonts --configured'
+
+PS1='\[\e[1;33m\]\w\[\e[0m\]\n\[\e[1;37m\]❯ \[\e[0m\]'
+
+PROMPT_COMMAND='echo;'
+
+fastfetch
+#nerdfetch

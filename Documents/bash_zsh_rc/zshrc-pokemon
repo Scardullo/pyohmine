@@ -1,0 +1,75 @@
+# ------------------------------
+# Powerlevel10k Instant Prompt
+# Must stay at the top
+# ------------------------------
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# ------------------------------
+# Path & Environment
+# ------------------------------
+export PATH="$HOME/.cargo/bin:$PATH"
+export ZSH="$HOME/.oh-my-zsh"
+
+# ------------------------------
+# Plugins
+# ------------------------------
+plugins=(
+    git
+    dnf
+    zsh-autosuggestions
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# Syntax highlighting must come last
+if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+# ------------------------------
+# Powerlevel10k Theme
+# ------------------------------
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+# Run `p10k configure` to generate ~/.p10k.zsh if it doesn't exist
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# ------------------------------
+# Aliases
+# ------------------------------
+alias ls='eza --icons --group-directories-first'
+alias ll='eza -l --icons --group-directories-first'
+alias la='eza -la --icons --group-directories-first'
+alias lt='eza -T --icons --group-directories-first'
+alias dfree='df -hTx tmpfs'
+alias nerds='kitty +list-fonts --configured'
+
+# ------------------------------
+# History
+# ------------------------------
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory
+
+# ------------------------------
+# FZF key bindings
+# ------------------------------
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# or if installed via package:
+# source <(fzf --completion --key-bindings --no-completion)
+
+# ------------------------------
+# Pokemon Colorscripts + Fastfetch
+# ------------------------------
+# Project page: https://gitlab.com/phoneybadger/pokemon-colorscripts#on-other-distros-and-macos
+pokemon-colorscripts --no-title -s -r | fastfetch -c $HOME/.config/fastfetch/config-pokemon.jsonc --logo-type file-raw --logo-height 10 --logo-width 5 --logo -
+
+# fallback fastfetch if above not used
+# fastfetch -c $HOME/.config/fastfetch/config-compact.jsonc
+
+# ------------------------------
+# End of ~/.zshrc
+# ------------------------------
+

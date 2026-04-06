@@ -1,0 +1,14 @@
+CTRL+WIN+B  = [Extra Arrow]  				gruvbox
+WIN+ALT+B   = [TOP] Default (old v1)  			gruvbox
+
+CTRL+WIN+B  = [Catpuccin] Mocha				nord
+WIN+ALT+B   = [TOP] Default (old v1)    		nord
+
+
+CTRL+WIN+B  = [Dark] Latte-Wallust combined          	dark-dracula
+WIN+ALT+B   = [TOP] Default (old v1)    		dark-dracula
+
+CTRL+WIN+B  = [Dark] Latte-Wallust combined             teal-purple
+WIN+ALT+B   = [TOP] Default (old v1)                    teal-purple
+
+color8 is color that is sometimes hidden in htop   

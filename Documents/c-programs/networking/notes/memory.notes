@@ -1,0 +1,339 @@
+1. Stack memory (C)
+
+What it is
+
+Memory used for function calls
+
+Automatically managed (you don’t allocate/free it manually)
+
+What lives on the stack
+
+Local variables
+
+Function parameters
+
+Return addresses
+
+void foo() {
+    int x = 5;   // stack
+}
+
+
+Key properties
+
+Fast
+
+Automatically freed when the function returns
+
+Limited size
+
+Lifetime = scope of the function
+
+Think of it as:
+
+“Temporary working memory for functions”
+
+2. The “other memory”: Heap
+
+Heap memory
+
+Dynamically allocated at runtime
+
+Managed manually with malloc, calloc, realloc, free
+
+int *p = malloc(sizeof(int)); // heap
+*p = 5;
+free(p);
+
+
+Key properties
+
+Slower than stack
+
+Much larger
+
+Lifetime = until you free it
+
+Shared across functions
+
+Think of it as:
+
+“Long-lived memory you explicitly manage”
+
+3. Static / Global memory (often forgotten)
+
+This is neither stack nor heap.
+
+What lives here
+
+Global variables
+
+static variables
+
+String literals
+
+static int counter = 0;  // static storage
+int global = 10;         // global storage
+
+
+Key properties
+
+Exists for the entire program runtime
+
+Allocated at program load time
+
+4. ROM / Read-Only Memory (important for const char *)
+
+In C, ROM is not a keyword, but a concept.
+
+String literals
+const char *s = "hello";
+
+
+"hello" is stored in read-only memory (or read-only segment)
+
+s (the pointer) is usually on the stack
+
+The characters themselves are not writable
+
+s[0] = 'H';  // ❌ undefined behavior (often segfault)
+
+
+This memory is typically called:
+
+RODATA
+
+Read-only data segment
+
+Backed by ROM/flash on embedded systems
+
+Compare with writable array
+char s[] = "hello";
+
+
+The array is stored on the stack (if local)
+
+Contents are copied from ROM
+
+Writable
+
+s[0] = 'H';  // ✅ OK
+
+5. Quick summary table
+Memory 	Type		Managed By		Lifetime		Writable	Example
+===============================================================================================
+Stack			CompilerFunction 	scope			Yes		int x;
+Heap			Programmer		Until free()		Yes		malloc()
+Static/Global		Program loader		Entire program		Yes		static int x;
+ROM / RODATA		Program image		Entire program		❌ No		"hello"
+
+
+
+
+
+calloc
+void *calloc(size_t nmemb, size_t size);
+
+
+What it does
+
+Allocates memory for nmemb elements
+
+Initializes all bytes to zero
+
+int *a = calloc(10, sizeof(int));  // 10 ints, all = 0
+
+
+Key points
+
+Zero-initialized (0, NULL, '\0')
+
+Slightly slower than malloc (because of clearing)
+
+Good when you need clean/known initial state
+
+
+How calloc really works
+void *calloc(size_t nmemb, size_t size);
+
+
+Internally, it does roughly this:
+
+total_bytes = nmemb * size;
+ptr = malloc(total_bytes);
+memset(ptr, 0, total_bytes);
+
+
+So:
+
+nmemb → how many items
+
+size → how big each item is (in bytes)
+
+Concrete examples
+Allocate 10 integers
+int *a = calloc(10, sizeof(int));
+
+
+nmemb = 10
+
+size = 4 (typically)
+
+Total bytes = 10 * 4 = 40
+
+Allocate 256 bytes
+void *buf = calloc(256, 1);
+
+
+256 elements
+
+each 1 byte
+
+total = 256 bytes
+
+Allocate a struct array
+struct node *nodes = calloc(100, sizeof(struct node));
+
+
+100 nodes
+
+each node = sizeof(struct node) bytes
+
+Why not just pass bytes?
+
+Because calloc:
+
+Understands arrays
+
+Can check for overflow in nmemb * size
+
+Makes intent clearer: “allocate N things”
+
+This is safer than:
+
+malloc(nmemb * size); // overflow risk if not careful
+
+Key pitfall to remember
+
+❌ Wrong:
+
+calloc(sizeof(int), 10);   // swapped — allocates wrong amount
+
+
+✅ Right:
+
+calloc(10, sizeof(int));
+
+One-liner mental model
+
+calloc(n, size) = allocate space for n objects of size bytes each, all set to zero
+
+
+
+
+
+
+realloc
+void *realloc(void *ptr, size_t new_size);
+
+
+What it does
+
+Resizes an existing heap allocation
+
+May move the block to a new location
+
+Preserves existing data (up to min(old, new))
+
+int *a = malloc(5 * sizeof(int));
+a = realloc(a, 10 * sizeof(int));  // grow
+
+
+Important rules
+
+If it moves, the old pointer becomes invalid
+
+If it fails, returns NULL and original block is unchanged
+
+New memory (if grown) is uninitialized
+
+Safe pattern
+
+int *tmp = realloc(a, 10 * sizeof(int));
+if (tmp) {
+    a = tmp;
+}
+
+Special realloc cases
+realloc(NULL, size)   // same as malloc(size)
+realloc(ptr, 0)       // frees ptr (implementation-defined return)
+
+Quick comparison
+Function	Allocates    Resizes	  Zeroes memory
+malloc		✅	     ❌		  ❌
+calloc		✅	     ❌		  ✅
+realloc		❌	     ✅		  ❌
+One-sentence memory model
+
+calloc = allocate + zero
+realloc = resize while keeping old data
+
+
+
+
+MEMORY LEAK:
+
+Definition (C-centric)
+
+A memory leak in C is when dynamically allocated memory becomes unreachable (you lose the pointer to it) before it is freed.
+
+Important correction to your statement ❌
+
+“Is it when allocated memory is not freed after a program has finished running?”
+
+Not quite.
+
+When a program exits, the OS reclaims all memory anyway
+
+That alone is not what defines a memory leak in C
+
+What actually makes it a leak
+Classic leak
+void f(void) {
+    int *p = malloc(sizeof(int));
+    p = NULL;   // leak: original pointer lost
+}
+
+
+Memory is still allocated
+
+Program can never free it
+
+Leak occurs while the program is running
+
+Another leak example
+int *p = malloc(100);
+p = realloc(p, 200);
+if (!p) {
+    // original pointer lost → leak
+}
+
+What is NOT a memory leak
+Memory freed correctly
+int *p = malloc(100);
+free(p);
+
+Program exits without freeing (OS cleanup)
+int *p = malloc(100);
+// program ends
+
+
+Bad style
+
+But not a leak in the strict sense
+
+Leak detectors may still warn, but OS reclaims memory
+
+One-sentence rule to remember
+
+A memory leak happens when allocated memory is still allocated but no longer reachable by the program.

@@ -1,0 +1,6 @@
+postgres -fstype=nfs4,rw 10.0.0.75:/home/anthony/postgres
+vmisos -fstype=nfs4,rw 10.0.0.75:/home/anthony/vmisos
+bashscripts -fstype=nfs4,rw 10.0.0.75:/home/anthony/bashscripts
+python -fstype=nfs4,rw 10.0.0.75:/home/anthony/python
+mediaplex -fstype=nfs4,rw 10.0.0.75:/home/anthony/mediaplex
+Documents -fstype=nfs4,rw 10.0.0.75:/home/anthony/Documents

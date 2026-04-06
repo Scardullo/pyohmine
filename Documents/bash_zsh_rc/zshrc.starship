@@ -1,0 +1,37 @@
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+export ZSH="$HOME/.oh-my-zsh"
+
+ZSH_THEME=""   # ← disable OMZ theme (Starship replaces it)
+
+plugins=( 
+    git
+    dnf
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# Pokemon colorscripts + fastfetch
+pokemon-colorscripts --no-title -s -r | fastfetch -c $HOME/.config/fastfetch/config-pokemon.jsonc --logo-type file-raw --logo-height 10 --logo-width 5 --logo -
+
+# FZF key bindings
+source <(fzf --zsh)
+
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory
+
+# lsd aliases
+alias ls='lsd --group-dirs first'
+alias l='lsd --group-dirs first --blocks permission,user,group,size,name'
+alias la='lsd --group-dirs first -a'
+alias lla='lsd --group-dirs first -a --blocks permission,user,group,size,name'
+alias lt='lsd --group-dirs first --tree'
+alias dfree='df -hTx tmpfs'
+
+#  Starship prompt (must be last)
+eval "$(starship init zsh)"

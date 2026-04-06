@@ -1,0 +1,5 @@
+# jellyfin uses port 8096 by default (HTTP)     8920(HTTPS)
+
+# ran this command to map mediplex to /media on the conatiner 
+
+docker run -d -p 8091:8096 --name jellyfin -v /home/anthony/mediaplex:/media --restart=always jellyfin/jellyfin:latest /bin/bash

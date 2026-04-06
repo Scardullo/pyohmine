@@ -1,0 +1,164 @@
+1️⃣ Function parameter: int* age vs int age
+
+When you declare a function:
+
+void birthday(int* age) { ... }
+
+
+int* age means: “age is a pointer to an int.”
+
+int age would mean: “age is a normal integer value.”
+
+Why use a pointer here?
+
+C passes arguments by value. That means the function gets a copy of whatever you pass.
+
+If you pass int age and increment it inside the function, the original age in main does not change.
+
+By passing a pointer (int* age), you give the function the address of the variable, so it can modify the original.
+
+2️⃣ The * in int* age vs *age
+
+C uses * in two related but different ways:
+
+Context	Meaning
+int *age (in declaration)	age is a pointer to an int.
+*age (in expression)	Dereference the pointer: get or modify the value it points to.
+
+So in your code:
+
+void birthday(int* age){
+    (*age)++;  // increment the value at the memory address
+}
+
+
+*age accesses the value stored at the pointer.
+
+(*age)++ increments that value.
+
+Without the parentheses:
+
+*age++   // increments the pointer itself (moves to next memory location), not the value!
+
+
+Parentheses ensure you increment the value and not the pointer.
+
+3️⃣ Why sometimes int* age and sometimes int *age
+
+Both are syntactically correct:
+
+int* age;   // style 1: “age is a pointer to int”
+int *age;   // style 2: same meaning
+
+
+In C, * binds to the variable, not the type. So:
+
+int* a, b;  // a is a pointer, b is a normal int!
+int *a, b;  // same meaning
+
+
+Most people use int *a to remind themselves that *a must be used to access the value.
+
+4️⃣ In main(), why &age?
+
+& is the address-of operator.
+
+birthday(&age);  // pass the address of age
+
+
+birthday(pAge); would also work because pAge already stores the address:
+
+int *pAge = &age;
+birthday(pAge);  // same thing
+
+
+Both are equivalent; it’s just a matter of whether you want a separate pointer variable (pAge) or pass the address directly.
+
+✅ Summary Table
+
+Concept			Example			Meaning
+Pointer declaration	int* pAge		pAge is a pointer to an int
+Pointer dereference	*pAge			Access or modify the int value it points to
+Address-of operator	&age			Gives the memory address of age
+Pass pointer to func    birthday(&age)		Function can modify original value
+
+
+1️⃣ Two different uses of *
+
+In C, the * operator is context-sensitive:
+
+Declaration of a pointer
+
+int *p;  // p is a pointer to an int
+
+
+Here, * tells the compiler: "this variable is a pointer."
+
+Dereferencing a pointer
+
+*p = 5; // write 5 to the memory location p points to
+int x = *p; // read the value stored at p
+
+
+Here, * means: "follow the pointer to get the value."
+
+Notice: these are not the same — one is telling the compiler “this variable is a pointer,” the other is an operator that gets the value it points to.
+
+2️⃣ Passing a pointer to a function
+
+When you call a function, the * is not used in the call, because you are passing the pointer itself, not dereferencing it:
+
+int age = 25;
+int *pAge = &age;
+
+birthday(pAge);   // pass the pointer
+birthday(&age);   // pass the pointer directly
+
+
+pAge already stores an address, so you don’t put *pAge here — that would dereference it and pass the value 25, not the address.
+
+&age computes the address of age, which is exactly what the function needs.
+
+3️⃣ Inside the function: using *
+
+Inside the function, you do need * to access the value:
+
+void birthday(int* age) {
+    (*age)++;  // increment the value at the pointer
+}
+
+
+age is a pointer to int.
+
+*age is the value it points to.
+
+If you didn’t use *:
+
+age++;  
+
+
+That would move the pointer itself in memory, not increment the actual age.
+
+4️⃣ General rule of thumb
+
+Think in terms of what type you have:
+
+Situation			What you have	What you want		Do you need *?
+Declare a pointer		variable	N/A			* in declaration
+Pass pointer to function	pointer		just pass address	no *
+Access the value pointed to	pointer		the actual value	yes *
+Take address of variable	variable	address			use &
+
+
+
+
+
+
+========================================
+
+int x = 42;
+int *p = &x;
+
+    p stores the address of x.
+
+    *p accesses the value stored at that address.

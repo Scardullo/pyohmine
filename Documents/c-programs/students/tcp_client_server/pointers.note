@@ -1,0 +1,132 @@
+Step 1: What h is
+
+When you do:
+
+mergeSort(&head, 0);
+
+
+&head = address of the caller’s pointer variable (head)
+
+Inside mergeSort, h = &head
+
+h ──► head (pointer variable)
+
+Step 2: What *h is
+*h
+
+
+*h dereferences h → reads what head stores → 0x100
+
+That value (0x100) is the address of node1
+
+*h ──► node1
+
+
+Important: *h is the pointer stored in head
+
+You can do:
+
+*h = merge(a, b, byGrade);
+
+
+This changes head in the caller to point to the new node
+
+Step 3: What **h is
+**h
+
+
+**h dereferences the pointer again → looks at what *h points to → the actual struct node1
+
+**h ──► { name="Alice", grade=90, next=0x200 }
+
+
+Changing **h would overwrite the fields inside node1
+
+**h = someOtherStudent;  // replaces all fields in node1
+
+
+This does not change head; it just changes the contents of the first node
+
+Step 4: Why they’re “not the same”
+
+*h = pointer stored in head → you can reassign it to point somewhere else
+
+**h = the actual node → you can only modify its contents
+
+Think:
+
+Name	What it is						Can I reassign to change the caller’s pointer?
+h	pointer to head (address of pointer variable)		❌ (changing h itself does nothing outside)
+*h	the pointer stored in head (address of first node)	✅ (changing *h updates caller’s head)
+**h	the struct node itself (contents at *h)			❌ (changing **h overwrites node fields, not pointer)
+
+
+
+Tiny analogy
+
+head = a mailbox that holds the address of a house
+
+*h = the address inside the mailbox
+
+**h = the house itself
+
+You want to move the mailbox to point to a different house → change *h
+
+You don’t want to destroy the house itself → **h
+
+💡 Bottom line:
+
+*h = the pointer stored in head → this is what you reassign to update the caller
+
+**h = the actual Student struct → you don’t use this to update the head pointer
+
+
+
+
+
+
+
+Step 1: The variables
+int x = 42;
+int *p = &x;      // p stores the address of x
+int **pp = &p;    // pp stores the address of p
+
+
+Memory layout (simplified):
+
+x   (at 0x100)  = 42
+p   (at 0x200)  = 0x100  (address of x)
+pp  (at 0x300)  = 0x200  (address of p)
+
+
+Step 2: What pp is
+
+pp itself is a pointer
+
+It stores the address of p (0x200)
+
+So pp points to p
+
+pp ──► p ──► x
+
+
+Step 3: What *pp is
+
+*pp means: follow pp one step (dereference once)
+
+pp points to p, so *pp = p = 0x100 (the value stored in p)
+
+💡 In words:
+
+“If I follow pp one step, I get what’s stored in p” → the address of x
+
+
+Step 4: What **pp is
+
+**pp means: dereference twice
+
+*pp → p → 0x100
+
+*p → x → 42
+
+So **pp = 42

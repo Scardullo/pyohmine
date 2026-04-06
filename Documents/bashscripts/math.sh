@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "Give me a number:"
+read first
+echo "Give me another:"
+read second
+
+if [[ $first -eq $second ]]
+# -eq == | ge >= | le <= \ !=
+then
+	echo "Those are the same!"
+else
+	echo "Those are nice numbers"
+fi

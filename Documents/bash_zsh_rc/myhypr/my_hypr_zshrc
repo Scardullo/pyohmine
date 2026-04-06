@@ -1,0 +1,37 @@
+# Enable Powerlevel10k instant prompt. Keep near top.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+
+alias dfree='df -hTx tmpfs'
+
+
+# Use eza instead of ls
+alias ls='eza -a --group-directories-first --icons --color=auto'
+alias ll='eza -la --group-directories-first --icons --color=auto'
+alias la='eza -la --group-directories-first --icons --color=auto'
+alias nerds='kitty +list-fonts --configured'
+
+
+# Powerlevel10k theme (only if installed in that path)
+if [[ -f /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]]; then
+  source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+fi
+
+# p10k config
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+
+# p10k config
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Pokémon greeting without names
+if command -v pokemon-colorscripts &>/dev/null; then
+    pokemon-colorscripts -r --no-title
+fi
+
+

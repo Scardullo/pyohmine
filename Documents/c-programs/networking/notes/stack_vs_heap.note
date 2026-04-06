@@ -1,0 +1,97 @@
+1️⃣ Stack vs Heap in C
+Stack
+
+Memory automatically managed by the compiler.
+
+Used for local variables inside functions.
+
+Allocated when the function is called, freed automatically when it returns.
+
+Fast access.
+
+Size usually limited (~1–8 MB per thread).
+
+Example:
+
+void foo() {
+    int x;                // 4 bytes on stack
+    char buffer[100];     // 100 bytes on stack
+    struct sockaddr_ll device; // entire struct on stack
+}
+
+
+device here exists only while foo() runs.
+
+No malloc needed.
+
+Access is direct: device.sll_ifindex = 2;
+
+Heap
+
+Memory manually managed via malloc() / free().
+
+Used for dynamic allocation — you decide how long it lives.
+
+Can allocate large amounts (limited by system memory).
+
+Slightly slower access.
+
+Example:
+
+struct sockaddr_ll *device_ptr = malloc(sizeof(struct sockaddr_ll));
+device_ptr->sll_ifindex = 2;
+free(device_ptr);
+
+
+Must free it manually, otherwise memory leaks.
+
+You access fields with -> because it’s a pointer.
+
+2️⃣ “On the stack, not a pointer yet”
+
+In your ARP code:
+
+struct sockaddr_ll device;  // declared as local variable
+
+
+device is on the stack — memory is automatically allocated by the compiler.
+
+It is not a pointer. Its type is:
+
+struct sockaddr_ll
+
+
+You can access members with the dot . operator:
+
+device.sll_ifindex = if_nametoindex(iface);
+
+
+Because it’s not a pointer, you cannot use -> here.
+
+Why &device in memset?
+memset(&device, 0, sizeof(device));
+
+
+memset wants a pointer: void *ptr
+
+device itself is not a pointer, just a struct
+
+&device = address of the struct → gives memset the pointer it needs
+
+Contrast with a heap allocation:
+struct sockaddr_ll *dev_ptr = malloc(sizeof(struct sockaddr_ll));
+memset(dev_ptr, 0, sizeof(struct sockaddr_ll)); // already a pointer
+dev_ptr->sll_ifindex = if_nametoindex(iface);    // use -> for pointer
+
+
+No & needed in memset because dev_ptr is already a pointer.
+
+3️⃣ Summary Table
+Allocation	Syntax			Access					        Lifetime	memset use
+Stack		struct sockaddr_ll 	device;	device.sll_ifindex			function call	&device
+Heap		struct sockaddr_ll 	*dev_ptr = malloc(...);	dev_ptr->sll_ifindex	until free()	dev_ptr
+
+💡 Mnemonic
+
+Stack = local variable → use dot (.), & for pointers
+Heap = pointer → use arrow (->), no & needed

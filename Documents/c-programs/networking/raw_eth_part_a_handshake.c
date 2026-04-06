@@ -1,0 +1,324 @@
+/*
+ raw_eth_tcp_handshake.c
+ Part A: Full TCP 3-way handshake over raw Ethernet
+
+ Build:
+   gcc raw_eth_tcp_handshake.c -o raw_eth_tcp_handshake
+
+ Run:
+   sudo ./raw_eth_tcp_handshake eth0 <dst_ip> <dst_port>
+*/
+
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <unistd.h>
+#include <errno.h>
+#include <time.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <sys/select.h>
+#include <linux/if_packet.h>
+#include <linux/if_ether.h>
+#include <linux/if_arp.h>
+#include <linux/if.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+
+#define BUF_SIZE 65536
+#define ARP_TIMEOUT 2
+#define TCP_TIMEOUT 5
+
+// checksums
+
+uint16_t checksum(void *data, int len) {
+    uint32_t sum = 0;
+    uint16_t *p = data;
+    while (len > 1) {
+        sum += *p++;
+        if (sum & 0x80000000)
+            sum = (sum & 0xFFFF) + (sum >> 16);
+        len -= 2;
+    }
+    if (len) sum += *(uint8_t*)p;
+    while (sum >> 16)
+        sum = (sum & 0xFFFF) + (sum >> 16);
+    return ~sum;
+}
+
+uint16_t tcp_checksum(struct iphdr *ip, struct tcphdr *tcp, uint8_t *payload, int plen) {
+    struct pseudo {
+        uint32_t src, dst;
+        uint8_t zero, proto;
+        uint16_t len;
+    } ph;
+
+    ph.src = ip->saddr;
+    ph.dst = ip->daddr;
+    ph.zero = 0;
+    ph.proto = IPPROTO_TCP;
+    ph.len = htons(sizeof(struct tcphdr) + plen);
+
+    int total = sizeof(ph) + sizeof(struct tcphdr) + plen;
+    uint8_t *buf = calloc(1, total);
+
+    memcpy(buf, &ph, sizeof(ph));
+    memcpy(buf + sizeof(ph), tcp, sizeof(struct tcphdr));
+    if (plen) memcpy(buf + sizeof(ph) + sizeof(struct tcphdr), payload, plen);
+
+    uint16_t sum = checksum(buf, total);
+    free(buf);
+    return sum;
+}
+
+// inetrface helpers
+
+void get_iface_mac(const char *ifname, uint8_t mac[6]) {
+    int fd = socket(AF_INET, SOCK_DGRAM, 0);
+    struct ifreq ifr = {0};
+    strncpy(ifr.ifr_name, ifname, IFNAMSIZ-1);
+    ioctl(fd, SIOCGIFHWADDR, &ifr);
+    memcpy(mac, ifr.ifr_hwaddr.sa_data, 6);
+    close(fd);
+}
+
+void get_iface_ip(const char *ifname, char *ipbuf) {
+    int fd = socket(AF_INET, SOCK_DGRAM, 0);
+    struct ifreq ifr = {0};
+    strncpy(ifr.ifr_name, ifname, IFNAMSIZ-1);
+    ioctl(fd, SIOCGIFADDR, &ifr);
+    struct sockaddr_in *ip = (struct sockaddr_in*)&ifr.ifr_addr;
+    strcpy(ipbuf, inet_ntoa(ip->sin_addr));
+    close(fd);
+}
+
+// arp
+
+struct arp_packet {
+    uint16_t htype;
+    uint16_t ptype;
+    uint8_t hlen;
+    uint8_t plen;
+    uint16_t oper;
+    uint8_t sha[6];
+    uint8_t spa[4];
+    uint8_t tha[6];
+    uint8_t tpa[4];
+} __attribute__((packed));
+
+int arp_resolve(int sock, int ifindex, uint8_t my_mac[6], char *my_ip,
+                char *target_ip, uint8_t out_mac[6]) {
+
+    uint8_t buf[60];
+    struct ethhdr *eth = (struct ethhdr*)buf;
+    struct arp_packet *arp = (struct arp_packet*)(buf + 14);
+    memset(buf, 0, sizeof(buf));
+
+    memset(eth->h_dest, 0xff, 6);
+    memcpy(eth->h_source, my_mac, 6);
+    eth->h_proto = htons(ETH_P_ARP);
+
+    arp->htype = htons(1);
+    arp->ptype = htons(ETH_P_IP);
+    arp->hlen = 6;
+    arp->plen = 4;
+    arp->oper = htons(1);
+    memcpy(arp->sha, my_mac, 6);
+    inet_pton(AF_INET, my_ip, arp->spa);
+    inet_pton(AF_INET, target_ip, arp->tpa);
+
+    struct sockaddr_ll addr = {0};
+    addr.sll_family = AF_PACKET;
+    addr.sll_ifindex = ifindex;
+    addr.sll_halen = 6;
+    memset(addr.sll_addr, 0xff, 6);
+
+    sendto(sock, buf, 42, 0, (struct sockaddr*)&addr, sizeof(addr));
+
+    fd_set fds;
+    struct timeval tv;
+
+    while (1) {
+        FD_ZERO(&fds);
+        FD_SET(sock, &fds);
+        tv.tv_sec = ARP_TIMEOUT;
+        tv.tv_usec = 0;
+
+        if (select(sock+1, &fds, NULL, NULL, &tv) <= 0)
+            return -1;
+
+        uint8_t rbuf[BUF_SIZE];
+        recv(sock, rbuf, sizeof(rbuf), 0);
+
+        struct ethhdr *reth = (struct ethhdr*)rbuf;
+        if (ntohs(reth->h_proto) != ETH_P_ARP) continue;
+
+        struct arp_packet *rarp = (struct arp_packet*)(rbuf + 14);
+        if (ntohs(rarp->oper) == 2 &&
+            memcmp(rarp->spa, arp->tpa, 4) == 0) {
+
+            memcpy(out_mac, rarp->sha, 6);
+            return 0;
+        }
+    }
+}
+
+// main
+
+int main(int argc, char *argv[]) {
+    if (argc < 4) {
+        printf("usage: %s <iface> <dst_ip> <dst_port>\n", argv[0]);
+        return 1;
+    }
+
+    char *ifname = argv[1];
+    char *dst_ip = argv[2];
+    int dst_port = atoi(argv[3]);
+
+    srand(time(NULL));
+    uint32_t snd_seq = rand();
+    uint32_t rcv_seq = 0;
+
+    int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+
+    struct ifreq ifr = {0};
+    strncpy(ifr.ifr_name, ifname, IFNAMSIZ-1);
+    ioctl(sock, SIOCGIFINDEX, &ifr);
+    int ifindex = ifr.ifr_ifindex;
+
+    uint8_t my_mac[6], dst_mac[6];
+    char my_ip[32];
+
+    get_iface_mac(ifname, my_mac);
+    get_iface_ip(ifname, my_ip);
+
+    printf("[+] My IP %s\n", my_ip);
+
+    if (arp_resolve(sock, ifindex, my_mac, my_ip, dst_ip, dst_mac) < 0) {
+        printf("[-] ARP failed\n");
+        return 1;
+    }
+
+    printf("[+] ARP resolved\n");
+
+    uint8_t buf[BUF_SIZE];
+
+    struct sockaddr_ll addr = {0};
+    addr.sll_family = AF_PACKET;
+    addr.sll_ifindex = ifindex;
+    addr.sll_halen = 6;
+    memcpy(addr.sll_addr, dst_mac, 6);
+
+    uint16_t src_port = rand()%50000 + 10000;
+
+    // send syn
+
+    memset(buf, 0, sizeof(buf));
+    struct ethhdr *eth = (struct ethhdr*)buf;
+    struct iphdr *ip = (struct iphdr*)(buf + 14);
+    struct tcphdr *tcp = (struct tcphdr*)(buf + 14 + sizeof(struct iphdr));
+
+    memcpy(eth->h_dest, dst_mac, 6);
+    memcpy(eth->h_source, my_mac, 6);
+    eth->h_proto = htons(ETH_P_IP);
+
+    ip->ihl = 5;
+    ip->version = 4;
+    ip->ttl = 64;
+    ip->protocol = IPPROTO_TCP;
+    ip->saddr = inet_addr(my_ip);
+    ip->daddr = inet_addr(dst_ip);
+
+    tcp->source = htons(src_port);
+    tcp->dest = htons(dst_port);
+    tcp->seq = htonl(snd_seq);
+    tcp->doff = 5;
+    tcp->syn = 1;
+    tcp->window = htons(5840);
+
+    ip->tot_len = htons(sizeof(struct iphdr) + sizeof(struct tcphdr));
+    ip->check = checksum(ip, sizeof(struct iphdr));
+    tcp->check = tcp_checksum(ip, tcp, NULL, 0);
+
+    printf("[+] Sending SYN seq=%u\n", snd_seq);
+    sendto(sock, buf, 14 + sizeof(struct iphdr) + sizeof(struct tcphdr),
+           0, (struct sockaddr*)&addr, sizeof(addr));
+
+    // wait for syn-ack
+
+    fd_set fds;
+    struct timeval tv;
+
+    while (1) {
+        FD_ZERO(&fds);
+        FD_SET(sock, &fds);
+        tv.tv_sec = TCP_TIMEOUT;
+        tv.tv_usec = 0;
+
+        if (select(sock+1, &fds, NULL, NULL, &tv) <= 0) {
+            printf("[-] Timeout waiting for SYN-ACK\n");
+            return 1;
+        }
+
+        int n = recv(sock, buf, sizeof(buf), 0);
+        struct ethhdr *reth = (struct ethhdr*)buf;
+        if (ntohs(reth->h_proto) != ETH_P_IP) continue;
+
+        struct iphdr *rip = (struct iphdr*)(buf + 14);
+        if (rip->protocol != IPPROTO_TCP) continue;
+        if (rip->saddr != inet_addr(dst_ip)) continue;
+
+        struct tcphdr *rtcp = (struct tcphdr*)(buf + 14 + rip->ihl*4);
+        if (ntohs(rtcp->dest) != src_port) continue;
+
+        if (rtcp->syn && rtcp->ack) {
+            rcv_seq = ntohl(rtcp->seq);
+            uint32_t ack = ntohl(rtcp->ack);
+            printf("[+] Got SYN-ACK seq=%u ack=%u\n", rcv_seq, ack);
+            snd_seq++;
+            break;
+        }
+    }
+
+    // send final ack
+
+    memset(buf, 0, sizeof(buf));
+    eth = (struct ethhdr*)buf;
+    ip = (struct iphdr*)(buf + 14);
+    tcp = (struct tcphdr*)(buf + 14 + sizeof(struct iphdr));
+
+    memcpy(eth->h_dest, dst_mac, 6);
+    memcpy(eth->h_source, my_mac, 6);
+    eth->h_proto = htons(ETH_P_IP);
+
+    ip->ihl = 5;
+    ip->version = 4;
+    ip->ttl = 64;
+    ip->protocol = IPPROTO_TCP;
+    ip->saddr = inet_addr(my_ip);
+    ip->daddr = inet_addr(dst_ip);
+
+    tcp->source = htons(src_port);
+    tcp->dest = htons(dst_port);
+    tcp->seq = htonl(snd_seq);
+    tcp->ack_seq = htonl(rcv_seq + 1);
+    tcp->doff = 5;
+    tcp->ack = 1;
+    tcp->window = htons(5840);
+
+    ip->tot_len = htons(sizeof(struct iphdr) + sizeof(struct tcphdr));
+    ip->check = checksum(ip, sizeof(struct iphdr));
+    tcp->check = tcp_checksum(ip, tcp, NULL, 0);
+
+    printf("[+] Sending final ACK seq=%u ack=%u\n", snd_seq, rcv_seq+1);
+    sendto(sock, buf, 14 + sizeof(struct iphdr) + sizeof(struct tcphdr),
+           0, (struct sockaddr*)&addr, sizeof(addr));
+
+    printf("\n TCP HANDSHAKE COMPLETE IN USER SPACE \n");
+
+    close(sock);
+    return 0;
+}

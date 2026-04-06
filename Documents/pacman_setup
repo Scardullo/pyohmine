@@ -1,0 +1,30 @@
+sudo pacman -S yay
+yay autofs
+sudo pacman -S nfs-utils
+sudo pacman -S dnsutils
+sudo pacman -S net-tools
+sudo pacman -S ipcalc
+sudo pacman -U zsh-theme-powerlevel10k-1.20.15-1-x86_64.pkg.tar.zst
+sudo pacman -S bpytop
+sudo pacman -S fastfetch
+sudo pacman -S plocate
+sudo pacman -S pfetch
+sudo pacman -S cmatrix
+sudo pacman -U pycharm-community-jre-2025.2.1.1-1-x86_64.pkg.tar.zst
+sudo pacman -S tk
+sudo pacman -U visual-studio-code-bin-1.104.1-1-x86_64.pkg.tar.zst
+sudo pacman -S imagemagick
+sudo pacman -U nerdfetch-8.4.2-1-any.pkg.tar.zst
+sudo pacman -U cbonsai-1.4.2-1-any.pkg.tar.zst
+sudo pacman -S ncdu
+sudo pacman -S mc
+sudo pacman -S less
+sudo pacman -S man
+sudo pacman -S speedtest-cli
+sudo pacman -S tor
+sudo pacman -S proxychains
+sudo pacman -S nmap
+sudo pacman -S tree
+	       nerd-fonts
+	       eza
+

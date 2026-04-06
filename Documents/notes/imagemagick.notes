@@ -1,0 +1,3 @@
+identify -format "%wx%h" image.jpg      (identify)
+
+magick convert -resize 800x600 input.png output.png   (resize)

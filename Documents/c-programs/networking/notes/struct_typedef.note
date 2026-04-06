@@ -1,0 +1,58 @@
+✅ Two different typedef styles in C
+✅ Style 1 — typedef after struct is already defined
+struct in_addr {
+    uint32_t s_addr;
+};
+
+typedef struct in_addr in_addr_t;
+
+
+Meaning:
+
+First line defines the struct type: struct in_addr
+
+Second line creates an alias: in_addr_t → same type as struct in_addr
+
+So now both are valid and identical:
+
+struct in_addr a;
+in_addr_t b;
+
+
+Same type, different names.
+
+✅ Style 2 — typedef while defining the struct (what you wrote)
+typedef struct in_addr {
+    uint32_t s_addr;
+} in_addr_t;
+
+
+Meaning:
+
+Defines struct in_addr
+
+AND creates alias in_addr_t at the same time
+
+
+❗ Third style — anonymous struct (no struct name)
+
+Sometimes you’ll see:
+
+typedef struct {
+    uint32_t s_addr;
+} in_addr_t;
+
+
+Now:
+
+There is NO struct in_addr type
+
+Only in_addr_t exists
+
+You must use:
+
+in_addr_t x;   // valid
+struct in_addr y; // ❌ invalid
+
+
+This is common in APIs that don’t want users to rely on the struct tag.

@@ -1,0 +1,177 @@
+-- ============================================
+-- init.lua - Modern Neovim Setup (Fedora 43 / Hyprland)
+-- ============================================
+
+-- Enable true colors
+vim.opt.termguicolors = true
+
+-- Enable line numbers (absolute + relative)
+vim.opt.number = true
+vim.opt.relativenumber = true
+
+-- Set leader key
+vim.g.mapleader = " "
+
+-- ============================================
+-- Bootstrap lazy.nvim
+-- ============================================
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- ============================================
+-- Plugins
+-- ============================================
+require("lazy").setup({
+  -- Color schemes
+  { "catppuccin/nvim", name = "catppuccin" },
+  { "rebelot/kanagawa.nvim" },
+  { "morhetz/gruvbox" },
+
+  -- Treesitter for syntax highlighting
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = { "c", "lua", "python", "javascript", "typescript" },
+        highlight = {
+          enable = true,
+          additional_vim_regex_highlighting = false,
+        },
+        auto_install = true,
+      })
+    end
+  },
+
+  -- LSP Config
+  { "neovim/nvim-lspconfig" },
+
+  -- Autocompletion
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "saadparwaiz1/cmp_luasnip",
+      "L3MON4D3/LuaSnip",
+    },
+    config = function()
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert({
+          ['<C-n>'] = cmp.mapping.select_next_item(),
+          ['<C-p>'] = cmp.mapping.select_prev_item(),
+          ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        }),
+        sources = cmp.config.sources({
+          { name = 'nvim_lsp' },
+          { name = 'luasnip' },
+        }, {
+          { name = 'buffer' },
+        }),
+      })
+    end
+  },
+
+  -- Lualine statusline with icons
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("lualine").setup({
+        options = { theme = "auto", section_separators = "", component_separators = "|" }
+      })
+    end
+  },
+
+  -- Hex color highlighting
+  {
+    "norcalli/nvim-colorizer.lua",
+    config = function()
+      require("colorizer").setup({"*"}, {RGB = true, RRGGBB = true, names = true, css = true})
+    end
+  },
+
+  -- Indent guides (v3)
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    config = function()
+      require("indent_blankline").setup({
+        char = "│",
+        show_trailing_blankline_indent = false,
+        show_current_context = true,
+        show_current_context_start = true,
+        context_patterns = { "class", "function", "method", "for", "while", "if", "switch", "case" },
+        buftype_exclude = { "terminal" },
+        filetype_exclude = { "help", "alpha", "dashboard", "packer" },
+      })
+    end
+  },
+
+  -- Git signs
+  {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require("gitsigns").setup()
+    end
+  },
+})
+
+-- ============================================
+-- Colorscheme
+-- ============================================
+vim.cmd.colorscheme("catppuccin") -- change to "kanagawa" or "gruvbox" if you like
+
+-- ============================================
+-- Modern LSP Setup & Keymaps (safe if LS not installed)
+-- ============================================
+local lspconfig = require("lspconfig")
+
+-- Helper function to safely setup servers
+local function safe_setup(server_name, opts)
+  local ok, server = pcall(function() return lspconfig[server_name] end)
+  if ok and server then
+    server.setup(opts or {})
+  else
+    vim.notify("LSP '" .. server_name .. "' not found, skipping setup", vim.log.levels.WARN)
+  end
+end
+
+-- Python
+safe_setup("pyright")
+
+-- TypeScript / JS
+safe_setup("tsserver") -- modern LSP name is tsserver, not ts_ls
+
+-- LSP keymaps
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = "Go to definition" })
+vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = "Hover info" })
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = "Rename symbol" })
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = "Code action" })
+
+vim.diagnostic.config({ signs = false })
+
+-- ============================================
+-- Disable LSP visual diagnostics (clean look)
+-- ============================================
+vim.diagnostic.config({
+  signs = false,       -- no 'E' or 'W' in the gutter
+  underline = false,   -- remove red squiggly lines
+  virtual_text = false -- remove inline error messages
+})

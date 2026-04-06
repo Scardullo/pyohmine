@@ -1,0 +1,33 @@
+Step-by-step with 10 students
+
+mergeSort(&head, 1) — called on full list [A B C D E F G H I J]
+
+Split → [A B C D E] and [F G H I J]
+
+Recurse left → [A B C D E]
+
+Split → [A B] and [C D E]
+
+Recurse [A B] → [A] and [B]
+
+Merge → mergeByGrade([A], [B]) → [A B]
+
+Recurse [C D E] → [C] and [D E]
+
+Recurse [D E] → [D] and [E]
+
+Merge → mergeByGrade([D], [E]) → [D E]
+
+Merge [C] and [D E] → [C D E]
+
+Merge [A B] and [C D E] → [A B C D E]
+
+Recurse right → [F G H I J]
+
+Same splitting and merging → [F G H I J]
+
+.............................
+.............................
+.............................
+
+Final merge → mergeByGrade([A B C D E], [F G H I J]) → [A B C D E F G H I J]

@@ -1,0 +1,44 @@
+When to use scanf():
+
+You’re reading numbers (int, float, etc.)
+
+You’re reading a single word (no spaces)
+
+You want to parse input that follows a specific pattern (e.g., "%d,%f")
+
+
+Limitations:
+
+Stops reading at whitespace (space, tab, newline) — so it cannot read strings with spaces.
+
+Leaves the newline (\n) in the input buffer, which can cause issues if you later use fgets().
+
+Easy to misuse and cause buffer overflows if not careful with string sizes.
+
+________________________________________
+
+When to use fgets():
+
+You want to read an entire line of text
+
+You want to include spaces
+
+You want safe input (it prevents buffer overflow)
+
+You plan to process the input string manually later (e.g., using sscanf, atoi, etc.)
+
+
+
+
+
+
+Feature				scanf()			fgets()
+=====================================================================================
+Reads numbers easily		✅			❌ (need atoi, sscanf, etc.)
+Reads strings with spaces	❌			✅
+Prevents buffer overflow	❌			✅
+Reads until whitespace		✅			❌ (reads until newline or buffer full)
+Good for mixed text/numbers     ⚠️ (tricky)		✅ (with parsing)
+Leaves newline in buffer	✅			❌ (reads it in, can remove manually)
+
+

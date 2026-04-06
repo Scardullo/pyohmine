@@ -1,0 +1,5 @@
+1,Anthony,4.00
+2,Popeye,3.20
+3,Lisa,3.70
+4,Maggie,3.89
+5,Bart,2.98

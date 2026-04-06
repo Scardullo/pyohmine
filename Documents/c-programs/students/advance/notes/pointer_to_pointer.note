@@ -1,0 +1,55 @@
+# refer to student.c (line 243)
+
+
+
+
+** is necessary because the function needs to MODIFY variables that belong to the calling function, and those variables are pointers.
+
+The “caller” part matters — but only because of modification, not because of calling itself.
+
+The core rule (this is the real rule)
+
+In C, a function can only change a caller’s variable if it receives that variable’s address.
+
+Nothing else causes * or **.
+
+Apply that rule step by step
+1️⃣ What variables belong to the caller?
+
+In mergeSort:
+
+Student *a;
+Student *b;
+
+
+These are pointer variables owned by mergeSort.
+
+2️⃣ Does frontBackSplit need to change them?
+
+Yes. It must assign:
+
+a = source;
+b = slow->next;
+
+
+So it needs access to the variables themselves, not copies.
+
+3️⃣ How do you give a function access to a variable?
+
+You pass its address:
+
+&a
+&b
+
+4️⃣ What is the type of &a?
+
+a is Student *
+
+&a is pointer to Student *
+
+That is:
+
+Student **
+
+
+That’s where ** comes from.

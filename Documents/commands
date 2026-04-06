@@ -1,0 +1,24 @@
+parted -l	lvdisplay	speedtest	ip a		
+fdisk -l	pvdisplay	dig		iostat
+lspci		vgdisplay	lsof -i		vmstat
+lsusb		ps au		last		nslookup
+lscpu		df -h		head/tail	netstat
+free -h		w		ifconfig	journalctl 
+pidstat		uname -a	systemctl *     smartctl -A /dev/???
+lsblk		uptime		date		cal
+ip neigh show	arp		ip route	dmesg
+ipcalc		locate		ncdu		resolvectl status 
+time		traceroute      watch		networkctl list
+file		stat		ping		whatis
+blkid		env(printenv)	pstree		mc
+hostnamectl	duf		ip link show
+# pr --columns=N
+# cat /etc/os-release
+# ip -s link show [intf]
+# hdparm -i /dev/[devicename]	
+# hdparm -iT /dev/[devicename]
+# badblocks -s /dev/[devicename]
+# nmcli device wifi list
+# bat /etc/fstab
+# kitty +list-fonts --configured
+# grep -r "text to search" (dir)

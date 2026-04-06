@@ -1,0 +1,59 @@
+# gruvbox dark by morhetz, https://github.com/morhetz/gruvbox
+# This work is licensed under the terms of the MIT license.
+# For a copy, see https://opensource.org/licenses/MIT.
+# font_family JetBrainsMono Nerd Font
+font_size 14.0
+
+background  #02011f
+foreground  #ffffff
+
+cursor                #8656e3
+
+selection_foreground  #afb1db
+selection_background  #8656e3
+
+color0  #ffffff
+color8  #97a9cf
+
+# red
+color1                #f50555
+# light red
+color9                #f50555
+
+# green
+color2                #f25e6b
+# light green
+color10               #f25e6b
+
+# yellow
+color3                #ffb964
+# light yellow
+color11               #ffb964
+
+# blue
+color4                #5884d4
+# light blue
+color12               #5f90ea
+
+# magenta
+color5                #7a44e3
+# light magenta
+color13               #8656e3
+
+# cyan
+color6                #1bb0fa
+# lighy cyan
+color14               #1bb0fa
+
+# light gray
+color7                #afb1db
+# dark gray
+color15               #afb1db
+
+
+# BEGIN_KITTY_FONTS
+font_family      family="0xProto Nerd Font Mono"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+# END_KITTY_FONTS

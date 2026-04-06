@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# ~/.bashrc
+
+# Run only for interactive shells
+if [[ $- == *i* ]]; then
+    # Show system info before prompt
+    if command -v fastfetch &>/dev/null; then
+        fastfetch
+    fi
+
+    # Initialize Starship prompt
+    eval "$(starship init bash)"
+
+    # Optional: directory jumper
+    eval "$(zoxide init bash)"
+fi
+
+# Aliases
+alias ls='eza --icons --group-directories-first'
+alias la='eza -a --icons --group-directories-first'
+alias grep='grep --color=auto'
+alias dfree='df -hTx tmpfs'
+alias nerds='kitty +list-fonts --configured'

@@ -1,0 +1,4 @@
+# filepath is /etc/auto.master
+
+# puth this on bottom
+/mnt/nfs /etc/auto.nfs --ghost --timeout=60

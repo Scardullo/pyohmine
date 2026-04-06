@@ -1,0 +1,3 @@
+# Set wallpapers with swaybg
+sleep 2 && swaybg -o DP-1 -i /home/anthony/Pictures/wallpaper/japanese_dracula.webp -m fill \
+                  -o HDMI-A-1 -i /home/anthony/Pictures/wallpaper/japanese_dracula.webp -m fill &
