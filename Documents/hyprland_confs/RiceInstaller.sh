@@ -23,14 +23,15 @@ WALL_DIR="$HOME/Pictures/wallpaper"
 
 echo "[*] Installing required packages..."
 
-sudo pacman -S --needed 
-hyprland kitty dolphin rofi swaybg 
-brightnessctl playerctl 
-pipewire wireplumber 
-firefox code 
-qt5ct ttf-fantasque-sans-mono 
-noto-fonts noto-fonts-emoji
-
+sudo pacman -S --needed \
+hyprland kitty dolphin rofi swaybg \
+brightnessctl playerctl \
+pipewire wireplumber \
+firefox code \
+qt5ct ttf-fantasque-sans-mono \
+noto-fonts noto-fonts-emoji \
+zsh zsh-autosuggestions zsh-syntax-highlighting \
+eza
 # -----------------------------
 
 # CREATE DIRECTORIES
@@ -394,6 +395,10 @@ bind = $mainMod, B, exec, firefox
 
 # Launch Visual Studio Code with SUPER + V
 bind = $mainMod, C, exec, code
+
+# Swap windows (left/right)
+bind = $mainMod SHIFT, H, movewindow, l
+bind = $mainMod SHIFT, L, movewindow, r
 
 ##############################
 ### WINDOWS AND WORKSPACES ###
@@ -780,6 +785,10 @@ bind = $mainMod, B, exec, firefox
 # Launch Visual Studio Code with SUPER + V
 bind = $mainMod, C, exec, code
 
+# Swap windows (left/right)
+bind = $mainMod SHIFT, H, movewindow, l
+bind = $mainMod SHIFT, L, movewindow, r
+
 ##############################
 ### WINDOWS AND WORKSPACES ###
 ##############################
@@ -1165,6 +1174,10 @@ bind = $mainMod, B, exec, firefox
 
 # Launch Visual Studio Code with SUPER + V
 bind = $mainMod, C, exec, code
+
+# Swap windows (left/right)
+bind = $mainMod SHIFT, H, movewindow, l
+bind = $mainMod SHIFT, L, movewindow, r
 
 ##############################
 ### WINDOWS AND WORKSPACES ###
@@ -1768,12 +1781,86 @@ EOF
 
 chmod +x "$HYPR_DIR/autostart"
 
+echo "[*] Setting Zsh as default shell..."
 
+chsh -s /bin/zsh "$USER"
 
 # -----------------------------
+# ZSH CONFIG
+# -----------------------------
 
+echo "[*] Writing .zshrc..."
+
+cat <<'EOF' > "$HOME/.zshrc"
+# -------------------------------
+# Powerlevel10k instant prompt
+# -------------------------------
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# -------------------------------
+# Powerlevel10k theme
+# -------------------------------
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# Source Powerlevel10k theme if installed system-wide
+[[ -f /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]] && \
+    source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+
+# -------------------------------
+# zsh-autosuggestions
+# -------------------------------
+# Adjust this path if installed somewhere else
+[[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && \
+    source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Optional: gray color for suggestions
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+
+# -------------------------------
+# History settings (shared across terminals)
+# -------------------------------
+HISTSIZE=10000          # in-memory history
+SAVEHIST=10000          # saved to file
+HISTFILE=~/.zsh_history
+
+setopt INC_APPEND_HISTORY    # append commands as typed
+setopt SHARE_HISTORY         # share history across all open shells
+setopt HIST_IGNORE_DUPS      # ignore duplicates
+setopt HIST_IGNORE_ALL_DUPS  # remove older duplicates
+setopt HIST_REDUCE_BLANKS    # remove empty lines
+
+# -------------------------------
+# Aliases
+# -------------------------------
+alias dfree='df -hTx tmpfs'
+alias ls='eza -a --group-directories-first --icons --color=auto'
+alias ll='eza -la --group-directories-first --icons --color=auto'
+alias la='eza -la --group-directories-first --icons --color=auto'
+alias nerds='kitty +list-fonts --configured'
+
+# -------------------------------
+# Node / Python / other optional envs
+# -------------------------------
+# export PATH="$HOME/.local/bin:$PATH"
+
+# -------------------------------
+# Powerlevel10k config
+# -------------------------------
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+
+# -------------------------------
+# Pokémon greeting
+# -------------------------------
+if command -v pokemon-colorscripts &>/dev/null; then
+    pokemon-colorscripts -r --no-title
+fi
+EOF
+
+# -----------------------------
 # DONE
-
 # -----------------------------
 
 echo "[✓] Setup complete!"

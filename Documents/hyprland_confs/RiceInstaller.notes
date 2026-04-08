@@ -1,0 +1,29 @@
+⚠️ IMPORTANT NOTES (read this)
+1. You still need to copy wallpapers
+
+Your script expects this directory populated:
+
+~/Pictures/wallpaper/
+
+
+👉 Easiest way:
+
+cp -r your_backup/wallpaper ~/Pictures/
+
+2. You still need zsh-powerlevel10k and pokemon-colorscripts
+
+
+3. Monitor names may differ
+
+You hardcoded:
+
+DP-1
+HDMI-A-1
+
+
+If it breaks:
+
+hyprctl monitors
+
+
+Then update wallpp.

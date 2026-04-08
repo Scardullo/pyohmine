@@ -1,0 +1,121 @@
+---------HyDE hyprland------------------------
+waybar style.css located @ .config/waybar/
+
+fastfetch.sh.bak is fastfetch.sh @ ~/.local/lib/hyde/
+
+/usr/share/sddm/themes/Corners/backgrounds/bg.png    #file for sddm background
+
+/.config/fastfetch/logo/  #location of fastfetch logos
+
+-------platform ypos block(s)
+Python Platformer Terrain.png row 2 y=65
+
+
+---------nixos-------------
+sudo nix-channel --list
+sudo nix-channel --update
+sudo nano configuration.nix
+sudo nixos-rebuild switch
+
+sudo nix-env -i python3
+
+
+-------------------misc------------------------------
+killall firefox <--kills all firefox processes by name    
+
+try nala on debian(bookworm)
+
+bottles (linux app for running windows software)
+
+------------------nextcloud----------
+
+nextcloud_config.php.bak   # /var/www/nextcloud
+
+----ubuntu server static ip-------------
+50-cloud-init.yaml.bak  # /etc/netplan/
+
+
+-------this allowed \i--------(postgres)
+ALTER USER anthony WITH SUPERUSER;
+
+
+-------git commands-------
+
+git add .
+git commit -m "message here" 
+git push origin main
+
+--------pyohmine token--------
+
+
+--------error: failed to commit transaction (invalid or corrupted package) archlinux--------
+
+sudo pacman -Sy archlinux-keyring
+sudo pacman -S --overwrite '*' archlinux-keyring
+
+sudo rm -r /etc/pacman.d/gnupg
+sudo pacman-key --init
+sudo pacman-key --populate
+
+-----------error: failed to commit transaction (conflicting files)
+ linux-firmware-nvidia: /usr/lib/firmware/nvidia/ad103 exists in
+ filesystem archlinux-----------------
+
+sudo pacman -Rdd linux-firmware
+sudo pacman -Syu linux-firmware
+ 
+--------Describe table postgres--------
+\d+ tablename
+
+------------nerd-fonts-search-----------
+kitty +list-fonts --configured
+
+
+------------Fedora Pycharm fixes-------------
+
+# for pygame
+
+You don’t have the compiler installed (gcc missing).
+
+You don’t have SDL2 development libraries (sdl2-config missing).
+
+You are missing freetype development libraries and possibly other graphics dependencies.
+
+sudo dnf install gcc python3-devel SDL2-devel SDL2_image-devel SDL2_mixer-devel SDL2_ttf-devel \
+                 libpng-devel freetype-devel
+
+# for tkinter
+
+sudo dnf install python3-tkinter
+
+-------------nvim numbers on the left too wide(fix)----------------
+in command mode:
+
+:set signcolumn=no
+
+---------------------------rsync directories only(no hidden) -----------------------------
+
+rsync -av --exclude='.*' ~/ /path/to/backup/
+
+
+
+----------------------app password-----------------------
+wlao gotr cjin nwwh 
+
+------------------copy to file with date---------------
+
+cp source.txt "backup_$(date +%d-%m-%Y).txt"
+
+cp ~/.zshrc "zshrc_gh0stzk_$(date +%d-%m-%Y)"
+
+
+----------------------change wallpaper------------------
+# change mountain.jpg to your wallpaper
+
+swaybg -o DP-1 -i /home/anthony/Pictures/wallpaper/mountain.jpg -m fill \
+       -o HDMI-A-1 -i /home/anthony/Pictures/wallpaper/mountain.jpg -m fill &
+
+
+--------------------debian server ip address------------------
+
+10.0.0.139
