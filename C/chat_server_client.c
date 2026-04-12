@@ -1,0 +1,173 @@
+#define _POSIX_C_SOURCE 200112L
+
+#include <netdb.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <errno.h>
+#include <signal.h>
+#include <pthread.h>
+#include <arpa/inet>
+#include <netdb.h>
+#include <sys/socket.h>
+
+#define MAX_CLIENTS 32
+#define MAX_DATA    1024
+#define PORT        5555
+
+void err(const char *msg) {
+    perror(msg);
+    exit(1);
+}
+
+void trim_newline(char *s) {
+    size_t n = strlen(s);
+    if (n && s[n - 1] == '\n')
+	s[n - 1] = 0;
+}
+
+enum {
+    MSG_NAME = 1;
+    MSG_CHAT = 2;
+    MSG_SYS  = 3
+};
+
+typedef struct {
+    uint16_t len;
+    uint8_t  type;
+    char     data[MAX_DATA];
+} Packet;
+
+int send_all(int fd, const void *buf, size_t len) {
+    size_t sent = 0;
+    const char *p = buf;
+
+    while (sent < len) {
+        ssize_t n = write(fd, p + sent, len - sent);
+	if (n <= 0)
+	    return -1;
+	sent += n;
+    }
+    return 0;
+}
+
+int recv_all(int fd, void *buf, size_t len) {
+    size_t recvd = 0;
+    char *p = buf;
+
+    while (recvd < len) {
+        ssize_t n = read(fd, p + recvd, len - recvd);
+	if (n <= 0)
+	    return -1;
+	recvd += n;
+    }
+    return 0;
+}
+
+int tcp_listen(uint16_t port) {
+    ind fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd < 0) err("socket");
+
+    int yes =1;
+    setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
+
+    struct sockaddr_in addr = {0};
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = INADDR_ANY;
+    addr.sin_port = htons(port);
+
+    if (bind(fd, (struct sockaddr *)&addr, sizeof addr) < 0)
+	err("bind");
+
+    if (listen(fd, 16) < 0)
+	    err("listen");
+
+    return fd;
+}
+
+int tcp_connect(const char *host, uint16_t port) {
+    struct addrinfo hints = {0}, *res;
+    char p[16];
+
+    snprintf(p, sizeof p, "%u", port);
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+
+    if (getaddrinfo(host, p, &hints, &res) != 0)
+	err("getaddrinfo");
+
+    int fd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    if (fd < 0) err("socket");
+
+    if (connect(fd, res->ai_addr, res->ai_addrlen) < 0)
+	err("connect");
+
+    freeaddrinfo(res);
+    return fd;
+}
+
+typedef struct {
+    int fd;
+    char username[64];
+} Client;
+
+Clients clients[MAX_CLIENTS];
+
+pthread_mutex_t clients_lock = PTHREAD_MUTEX_INITIALIZER;
+
+void broadcast(Packet *pkt, int except_fd) {
+    uint16_t net_len = htons(pkt->len);
+
+    pthread_mutex_lock(&clients_lock);
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+	if (clients[i].fd > 0 && clients[i].fd != except_fd) {
+	    send_all(clients[i].fd, &net_len, 2);
+	    send_all(clients[i].fd, &pkt->type, 1);
+	    send_all(clients[i].fd, pkt->data, pkt->len);
+	}
+    }
+    pthread_mutex_unlock(&clients_lock);
+}
+
+void *client_thread(void *arg) {
+    Client *c = arg;
+    Packet pkt;
+
+    uint16_t netlen;
+    if (recv_all(c->fd, &netlen, 2) < 0) goto done;
+    pkt.len = ntohs(netlen);
+    recv_all(c->fd, &pkt.type, 1);
+    recv_all(c->fd, pkt.data, pkt.len);
+
+    strncpy(c->username, pkt.data, sizeof c->username - 1);
+
+    snprintf(pkt.data, MAX_DATA, "*** %s joined ***", c->username);
+    pkt.len = strlen(pkt.data) + 1;
+    pkt.type = MSG_SYS;
+    broadcast(&pkt, -1);
+    
+    while(1) {
+	if (recv_all(c->fd, &netlen, 2) < 0) break;
+	pkt.len = ntohs(netlen);
+	if (pkt.len >= MAX_DATA) break;
+
+	recv_all(c->fd, &pkt.type, 1);
+	recv_all(c->fd, pkt.data, pkt.len);
+
+	pkt.type = MSG_CHAT;
+	snprintf(pkt.data, MAX_DATA, "[%s] %s", c->username, pkt.data);
+	pkt.len = strlen(pkt.data) + 1;
+	broadcast(&pkt, -1);
+    }
+
+done:
+    close(c->fd);
+
+    pthread_mutex_lock(&clients_lock);
+    c->fd = 0;
+    pthread_mutex_unlock(&clients_lock);
+
+
+}
