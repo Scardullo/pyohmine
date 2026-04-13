@@ -216,3 +216,55 @@ void *recv_thread(void *arg) {
     }
     return NULL;
 }
+
+void run_client(void) {
+    sock = tcp_connect("127.0.0.1", PORT);
+
+    char username[64];
+    printf("username: ");
+    fgets(username, sizeof username, stdin);
+    trim_newline(username);
+
+    Packet pkt;
+    pkt.type = MSG_NAME;
+    strncpy(pkt.data, username, MAX_DATA - 1);
+    pkt.len = strlen(pkt.data) + 1;
+
+    uint16_t netlen = htons(pkt.len);
+    send_all(sock, &netlen, 2);
+    send_all(sock, &pkt.type, 1);
+    send_all(sock, pkt.data, pkt.len);
+
+    pthread_t t;
+    pthread_create(&t, NULL, recv_thread, NULL);
+    pthread_detach(t);
+
+    char line[MAX_DATA];
+    while (fgets(line, sizeof line, stdin)) {
+	trim_newline(line);
+	pkt.type = MSG_CHAT;
+	strncpy(pkt.data, line, MAX_DATA - 1);
+	pkt.len = strlen(pkt.data) + 1;
+
+	netlen = htons(pkt.len);
+	send_all(sock, &netlen, 2);
+	send_all(sock, &pkt.type, 1);
+	send_all(sock, pkt.data, pkt.len);
+    }
+}
+
+int main(int argc, char **argv) {
+    if (argc != 2) {
+	fprintf(stderr, "usage: %s server|client\n", argv[0]);
+	return 1;
+    }
+
+    if (!strcmp(argv[1], "server"))
+	run_server();
+    else if (!strcmp(argv[1], "client"))
+	run_client();
+    else
+	fprintf(stderr, "unknown mode\n");
+
+    return 0;
+}
