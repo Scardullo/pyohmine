@@ -169,5 +169,50 @@ done:
     c->fd = 0;
     pthread_mutex_unlock(&clients_lock);
 
+    snprintf(pkt.data, MAX_DATA, "*** %s left **", c->username);
+    pkt.len = strlen(pkt.data) + 1;
+    pkt.type = MSG_SYS;
+    broadcast(&pkt, -1);
 
+    return NULL;
+}
+
+void run_server(void) {
+    int listenfd = tcp_listen(PORT);
+    printf("Server listening on %d\n", PORT);
+    
+    while (1) {
+	int fd = accept(listenfd, NULL, NULL);
+	if (fd < 0) continue;
+
+	pthread_mutex_lock(&clients_lock);
+	for (int i = 0; i < MAX_CLIENTS; i++) {
+	    if (clients[i].fd == 0) {
+		clients[i].fd = fd;
+		pthread_t t;
+		pthread_create(&t, NULL, client_thread, &clients[i]);
+		pthread_detach(t);
+		break;
+	    }
+	}
+	pthread_mutex_unlock(&clients_lock);
+    }
+}
+
+static int sock;
+
+void *recv_thread(void *arg) {
+    Packet pkt;
+    uint16_t netlen;
+
+    while (1) {
+	if (recv_all(sock, & netlen, 2) < 0) break;
+	pkt.len = ntohs(netlen);
+
+	recv_all(sock, &pkt.type, 1);
+	recv_all(sock, pkt.data, pkt.len);
+
+	printf("%s\n", pkt.data);
+    }
+    return NULL;
 }
