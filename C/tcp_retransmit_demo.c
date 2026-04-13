@@ -55,4 +55,27 @@ void get_ip(const char *i,char *b){
 }
 
 
+struct arp_pkt{
+    uint16_t h,p; uint8_t hl,pl; uint16_t op;
+    uint8_t sha[6],spa[4],tha[6],tpa[4];
+}__attribute__((packed));
+
+void arp(int s,int ifi,uint8_t mm[6],char *mi,char *ti,uint8_t dm[6]){
+    uint8_t b[60]={0};
+    struct ethhdr *e=(struct ethhdr*)b; struct arp_pkt *a=(struct arp_pkt*)(b+14);
+    memset(e->h_dest,0xff,6); memcpy(e->h_source,mm,6); e->h_proto=htons(ETH_P_ARP);
+    a->h=htons(1); a->p=htons(ETH_P_IP); a->hl=6; a->pl=4; a->op=htons(1);
+    memcpy(a->sha,mm,6); inet_pton(AF_INET,mi,a->spa); inet_pton(AF_INET,ti,a->tpa);
+    struct sockaddr_ll sa={.sll_family=AF_PACKET,.sll_ifindex=ifi,.sll_halen=6};
+    memset(sa.sll_addr,0xff,6); sendto(s,b,42,0,(struct socckaddr*)&sa,sizeof(sa));
+    while(1){
+	recv(s,b,sizeof(b),0); struct ethhdr *re=(void*)b;
+	if(ntohs(re->proto)!=ETH_P_ARP) continue;
+	struct arp_pkt *ra=(void*)(b+14);
+	if(ntohs(ra->op)==2 && !memcmp(ra->spa,a->tpa,4)){
+	    memcpy(dm,ra->sha,6); return;
+	}
+    }
+}
+
 

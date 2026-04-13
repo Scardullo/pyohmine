@@ -1,3 +1,1 @@
-# pyohmine
-
-Its jenk ... but its my jenk
+Its jenk but its my jenk
