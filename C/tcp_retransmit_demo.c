@@ -156,5 +156,22 @@ resend:
 
 	int rv=select(s+1,&f,NULL,NULL,&tv);
 	if(rv==0){ printf("[!] Timeout, retransmitting\n"); goto resend; }
+	
+	int n=recv(s,b,sizeof(b),0);
+	struct iphdr *ip=(void*)(b+14)
+	if(ip->protocol!=IPPROTO_TCP) continue;
+	struct tcphdr *t=(void*)(b+14+ip->ihl*4);
+	if(ntohs(t->dest)!=sport) continue;
+
+	if(t->ack && ntohl(t->ack_seq)>=snd+len){
+	    double rtt=now_ms()-sent_time;
+	    srtt=0.875*srtt + 0.125*rtt;
+	    rto=srtt*2;
+	    printf("[+] ACK received RTT=%.0f ms\n",rtt);
+	    snd+=len;
+	    break;
+	}
     }
+    printf("[+] Reliable send complete\n");
+    close(s);
 }
