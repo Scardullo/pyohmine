@@ -78,4 +78,83 @@ void arp(int s,int ifi,uint8_t mm[6],char *mi,char *ti,uint8_t dm[6]){
     }
 }
 
+void send_tcp(int s,struct sockaddr_ll *sa,uint8_t *mm,uint8_t *dm,
+	      char *mi,char *di,uint16_t sp,uint16_t dp,
+	      uint32_t seq,uint32_t ack,uint8_t fl,uint8_t *pl,int plen){
+    
+    uint8_t b[BUF_SIZE]=(0);
 
+    struct ethhdr *e=(void*)b;
+    struct iphdr *ip=(void*)(b+14);
+    struct tcphdr *t=(void*)(b+14+sizeof(*ip));
+
+    memcpy(e->h_dest,dm,6); memcpy(e->h_source,mm,6); e->h_proto=htons(ETH_P_IP);
+    ip->ihl=5; ip->version=4; ip->ttl=64; ip->protocol=IPPROTO_TCP;
+    ip->saddr=inet_addr(mi); ip->daddr=inet_addr(di);
+
+    t->source=htons(sp); t->dest=htons(dp);
+    t->seq=htonl(seq); t->ack_seq=htonl(ack);
+    t->doff=5; t->window=htons(64240);
+    t->fin=fl&TH_FIN; t->syn=fl&TH_SYN; t->rst=fl&TH_RST; t->psh=fl&TH_PUSH; t->ack=fl&TH_ACK;
+
+    if(plen) memcpy(b+14+sizeof(*ip)+sizeof(*t),pl,plen);
+
+    ip->tot_len=htons(sizeof(*ip)+sizeof(*t)+plen);
+    ip->check=checksum(ip,sizeof(*ip));
+    t->check=tcp_checksum(ip,t,b+14+sizeof(*ip)+sizeof(*t),plen);
+
+    sendto(s,b,14+sizeof(*ip)+sizeof(*t)+plen,0,(void*)sa,sizeof(*sa));
+}
+
+int main(int c,char c**v){
+    if(c<4){printf("use: %s <iface> <dst_ip>\n",v[0]);return 1;}
+    
+    srand(time(NULL));
+    uint32_t snd=rand(), rcv=0;
+    double srtt=300, rto=500;
+
+    char *ifn=v[1], *dip=v[2]; int dport=atoi(v[3]);
+
+    int s=socket(AF_PACKET,SOCK_RAW,htons(ETH_P_ALL));
+    struct ifreq r={0}; strncpy(r.ifr_name,ifn,IFNAMSIZ-1); ioctl(s,SIOCGIFINDEX,&r);
+
+    uint8_t mm[6],dm[6]; char mi[32];
+    get_mac(ifn,mm); get_ip(ifn,mi);
+    arp(s,r.ifr_ifindex,mm,mi,dip,dm);
+
+    struct sockaddr_ll sa={.sll_family=AF_PACKET,.sll_ifindex=r.ifr_ifindex,.sll_halen=6};
+    memcpy(sa.sll_addr,dm,6);
+
+    uint16_t sport=rand()%50000+10000;
+
+    send_tcp(s,&sa,mm,dm,mi,dip,sport,dport,snd,0,TH_SYN,NULL,0); snd++;
+
+    uint*_t b[BUF_SIZE];
+
+    while(1){
+	recv(s,b,sizeof(b),0); struct iphdr *ip=(void*)(b+14);
+	if(ip->protocol!=IPPROTO_TCP) continue;
+	struct tcphdr *t=(void*)(b+14+ip->ihl*4);
+	if(ntohs(t->dest)!=sport) continue;
+	if(t->syn&&t->ack){ rcv=ntohl(t->seq)+1; break; }
+    }
+
+    send_tcp(s,&sa,mm,dm,mi,dip,spoprt,dport,snd,rcv,TH_ACK,NULL,0);
+
+    char msg[]="GET / HTTP/1.1\r\nHost: test\r\nConnection: close\r\n\r\n";
+    int len=strlen(msg);
+
+    uint64_t sent_time=0;
+resend:
+    printf("[>] Sending data (rto%.0f ms)\n",rto);
+    send_tcp(s,&sa,mm,dm,mi,dip,sport,dport,snd,rcv,TH_ACK|TH_PUSH,(uint8_t*)msg,len);
+    sent_time=now_ms();
+
+    while(1){
+	fd_set f; FD_ZERO(&f); FD_SET(s,&f);
+	struct timeval tv={.tv_sec=(int)(rto/1000),.tv_usec=(int)((int)rto%1000)*1000};
+
+	int rv=select(s+1,&f,NULL,NULL,&tv);
+	if(rv==0){ printf("[!] Timeout, retransmitting\n"); goto resend; }
+    }
+}
