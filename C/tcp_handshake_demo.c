@@ -168,4 +168,109 @@ int main(int argc, char *argv[]) {
 
     uint8_t my_mac[6], dst_mac[6];
     char my_ip[32];
+
+    get_iface_mac(ifname, my_mac);
+    get_iface_ip(ifname, my_ip);
+
+    printf("[+] My IP %s\n", my_ip);
+
+    if (arp_resolve(sock, ifindex, my_mac, my_ip, dst_ip, dst_mac) < 0) {
+	printf("[-] ARP failed\n");
+	return 1;
+    }
+
+    printf("[+] ARP resolved\n");
+
+    uint8_t buf[BUF_SIZE];
+
+    struct sockaddr_ll addr = {0};
+    add.sll_family = AF_PACKET;
+    addr.sll_ifindex = ifindex;
+    addr.sll_halen = 6;
+    memcpy(addr.sll_addr, dst_mac, 6);
+
+    uint16_t src_port = rand()%50000 + 10000;
+
+    memset(buf, 0, sizeof(buf));
+    struct ethhdr *eth = (struct ethhdr*)buf;
+    struct iphdr *ip = (struct iphdr*)(buf + 14);
+    struct tcphdr *tcp = (struct tcphdr*)(buf + 14 + sizeof(struct iphdr));
+
+    memcpy(eth->h_dest, dst_mac, 6);
+    memcpy(eth->h_source, my_mac, 6);
+    eth->h_proto = htons(ETH_P_IP);
+
+    ip->ihl = 5;
+    ip->version = 4;
+    ip->ttl = 64;
+    ip->protocol = IPPROTO_TCP;
+    ip->saddr = inet_addr(my_ip);
+    ip->daddr = inet_addr(dst_ip);
+
+    tcp->source = htons(src_port);
+    tcp->dest = htons(dst_port);
+    tcp->seq = htonl(snd_seq);
+    tcp->doff = 5;
+    tcp->syn = 1;
+    tcp->window = htons(5840);
+
+    ip->tot_len = htons(sizeof(struct iphdr) + sizeof(struct tcphdr));
+    ip->check = checksum(ip, sizeof(struct iphdr));
+    tcp->check = tcp_checksum(ip, tcp, NULL, 0);
+
+    printf("[+] Sending SYN seq=%u\n", snd_seq);
+    sendto(sock, buf, 14 + sizeof(struct iphdr) + sizeof(struct tcphdr),
+	   0, (struct sockaddr*)&addr, sizeof(addr));
+
+    fd_set fds;
+    struct timeval tv;
+
+    while (1) {
+	FD_ZERO(&fds);
+	FD_SET(sock, &fds);
+	tv.tv_sec = TCP_TIMEOUT;
+	tv.tv_usec = 0;
+
+	if (select(sock+1, &fds, NULL, NULL, &tv) <= 0) {
+	    printf("[-] Timeout waiting for SYN-ACK\n");
+	    return 1;
+	}
+
+	int n = recv(sock, buf, sizeof(buf), 0);
+	struct ethhdr *reth = (struct ethhdr*)buf;
+	if (ntohs(reth->h_proto) != ETH_P_IP) continue;
+
+	struct iphdr *rip = (struct iphdr*)(buf + 14);
+	if (rip->protocol != IPPROTO_TCP) continue;
+	if (rip->saddr != inet_addr(dst_ip)) continue;
+
+	struct tcphdr *rtcp = (struct tcphdr*)(buf + 14 + rip->ihl*4);
+	if (ntohs(rtcp->dest) != src_port) continue;
+
+	if (rtcp->syn && rtcp->ack) {
+	    rcv_seq = ntohl(rtcp->seq);
+	    uint32_t ack = ntohl(rtcp->ack);
+	    printf("[+] Got SYN-ACK seq=%u ack=%u\n", rcv_seq, ack);
+	    snd_seq++;
+	    break;
+	}
+    }
+
+    memset(buf, 0, sizeof(buf));
+    eth = (struct ethdhr*)buf;
+    ip = (struct iphdr*)(buf + 14);
+    tcp = (struct tcphdr*)(buf + 14 + sizeof(struct iphdr));
+
+    memcpy(eth->h_dest, dst_mac, 6);
+    memcpy(eth->h_source, my_mac, 6);
+    eth->h_proto = htons(ETH_P_IP);
+
+    ip->ihl = 5;
+    ip->version = 4;
+    ip->ttl = 64;
+    ip->protocol = IPPROTO_TCP;
+    ip->saddr = inet_addr(my_ip);
+    ip->daddr = inet_addr(dst_ip);
+
+    tcp->source = htons(src_port);
 }
