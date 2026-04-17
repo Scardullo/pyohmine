@@ -66,5 +66,7 @@ struct arp_pkt{
 void arp(int s,int ifi,uint8_t mm[6],char *mi,char *ti,uint8_t dm[6]){
     uint8_t b[60]={0};
     struct ethhdr *e=(void*)b; struct arp_pkt *a=(void*)(b+14);
-
+    memset(e->h_dest,0xff,6); memcpy(e->h_source,mm,6); e->h_proto=htons(ETH_P_ARP);
+    a->h=htons(1); a->p=htons(ETH_P_IP); a->hl=6; a->pl=4; a->op=htons(1);
+    memcpy(a->sha,mm,6); inet_pton(AF_INET,mi,a->spa); inet_pton(AF_INET,ti,a->tpa);
 }
