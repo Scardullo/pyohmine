@@ -273,4 +273,23 @@ int main(int argc, char *argv[]) {
     ip->daddr = inet_addr(dst_ip);
 
     tcp->source = htons(src_port);
+    tcp->dest = htons(dst_port);
+    tcp->seq = htonl(snd_seq);
+    tcp->ack_seq = htonl(rcv_seq + 1);
+    tcp->doff = 5;
+    tcp->ack = 1;
+    tcp->window = htons(5840);
+
+    ip->tot_len = htons(sizeof(struct iphdr) + sizeof(struct tcphdr));
+    ip->check = checksum(ip, sizeof(struct iphdr));
+    tcp->check = tcp_checksum(ip, tcp, NULL, 0);
+
+    printf("[+] Sending final ACK seq%u ack=%u\n", snd_seq, rcv_seq+1);
+    sendto(sock, buf, 14 + sizeof(struct iphdr) + sizeof(struct tcphdr),
+	   0, (struct sockaddr*)&addr, sizeof(addr));
+
+    printf("\n TCP HANDSHAKE COMPLETE IN USER SPACE \n");
+
+    close(sock);
+    return 0;
 }
