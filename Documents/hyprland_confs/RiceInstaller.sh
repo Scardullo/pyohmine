@@ -1857,6 +1857,13 @@ alias nerds='kitty +list-fonts --configured'
 if command -v pokemon-colorscripts &>/dev/null; then
     pokemon-colorscripts -r --no-title
 fi
+
+#--------------------------------
+# zsh-syntax-highlighting
+#------------------------------
+
+[[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && \
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 EOF
 
 # -----------------------------

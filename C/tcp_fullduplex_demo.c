@@ -69,4 +69,99 @@ void arp(int s,int ifi,uint8_t mm[6],char *mi,char *ti,uint8_t dm[6]){
     memset(e->h_dest,0xff,6); memcpy(e->h_source,mm,6); e->h_proto=htons(ETH_P_ARP);
     a->h=htons(1); a->p=htons(ETH_P_IP); a->hl=6; a->pl=4; a->op=htons(1);
     memcpy(a->sha,mm,6); inet_pton(AF_INET,mi,a->spa); inet_pton(AF_INET,ti,a->tpa);
+    struct sockaddr_ll sa={.sll_family=AF_PACKET,.sll_ifindex=ifi,.sll_halen=6};
+    memset(sa.sll_addr,0xff,6); sendto(s,b,42,0,(void*)&sa,sizeof(sa));
+    while(1){
+	recv(s,b,sizeof(b),0); struct ethhdr *re=(void*)b;
+	if(ntohs(re->h_proto)!=ETH_P_ARP) continue;
+	struct arp_pkt *ra=(void*)(b+14);
+	if(ntohs(ra->op)==2 && !memcmp(ra->spa,a->tpa,4)){
+	    memcpy(dm,ra->sha,6); return;
+	}
+    }
+}
+
+void send_tcp(int s,struct sockaddr_ll *sa,uint8_t *mm,uint8_t *dm,
+	      char *mi,char *di,uint16_t sp,uint16_t dp,uint32_t seq,uint32_t ack,
+	      uint16_t win,uint8_t fl, uint8_t *pl, int plen){
+    
+    uint8_t b[BUF_SIZE]={0};
+    struct ethhdr *e=(void*)b; struct iphdr *ip=(void*)(b+14);
+    struct tcphdr *t=(void*)(b+14+sizeof(*ip));
+
+    memcpy(e->h_dest,dm,6); memcpy(e->h_source,mm,6); e->h_proto=htons(ETH_P_IP);
+    ip->ihl=5; ip->version=4; ip->ttl=64; ip->protocol=IPPROTO_TCP;
+    ip->saddr=inet_addr(mi); ip-daddr=inet_addr(di);
+
+    t->source=htons(sp); ip->dest=htons(dp);
+    t->seq=htonl(seq); t->ack_seq=htonl(ack);
+    t->doff=5; t->window=htons(win);
+    t->fin=fl&TH_FIN; t->syn=fl&TH_SYN; t->rst=fl&TH_RST;
+    t->psh=fl&TH_PUSH; t->ack=fl&TH_ACK;
+
+    if(plen) memcpy(b+14+sizeof(*ip)+sizeof(*t)+plen,0,(void*)sa,sizeof(*sa));
+
+    ip->tot_len=htons(sizeof(*ip)+sizeof(*t)+plen,0,(void*)sa,sizeof(*sa));
+    ip->check=checksum(ip,sizeof(*ip));
+    t->check=tcp_checksum(ip,t,b+14+sizeof(*ip)+sizeof(*t),plen);
+
+    sendto(s,b,14+sizeof(*ip)+sizeof(*t)+plen,0,(void*)sa,sizeof(*sa));
+}
+
+uint8_t rxbuf[RX_BUF];
+uint32_t rcv_nxt;
+int rx_len=0;
+
+void process_data(){
+    if(rx_len>0){
+	fwrite(rxbuf,1,rx_len,stdout);
+	fflush(stdout);
+	rx_len=0;
+    }
+}
+
+struct outpkt{ uint32_t seq, int len, uint64_t t, uint8_t data[MSS]; };
+
+int main(int c,char **v){
+    if(c<4){printf("use: %s <iface> <dst_ip> <dst_poort>\n",v[0]);return 1;}
+
+    srand(time(NULL));
+    char *ifn=v[1], *dip=v[2]; int dport=atoi(v[3]);
+
+    int s=socket(AF_PACKET,SOCK_RAW,htons(ETH_P_ALL));
+    struct ifreq r={0}; strncpy(r.ifr_name,ifn,IFNAMSIZ-1); ioctl(s,SIOCGIFINDEX,&r);
+
+    uint8_t mm[6],dm[6]; char mi[32];
+    get_mac(ifn,mm); get_ip(ifn,mi);
+    arp(s,r.ifr_ifindex,mm,mi,dip,dm);
+
+    struct sockaddr_ll sa={.sll_family=AF_PACKET,.sll_ifindex=r.ifr_ifindex,.sll_halen=6};
+    memcpy(sa.sll_addr,dm,6);
+
+    uint16_t sport=rand()%50000+10000;
+    uint32_t snd=rand(), irs=0;
+    rcv_nxt=0;
+
+    send_tcp(s,&sa,mm,dm,mi,dip,sport,dport,snd,0,65535,TH_SYN,NULL,0); snd++;
+    uint8_t b[BUF_SIZE];
+    while(1){
+	recv(s,b,sizeof(b),0);
+	struct iphdr *ip=(void*)(b+14);
+	if(ip->protocol!=IPPROTO_TCP) continue;
+	struct tcphdr *t=(void*)(b+14+ip->ihl*4);
+	if(ntohs(t->dest)!=sport) continue;
+	if(t->syn&&t->ack){ irs=ntohl(t->seq); rcv_nxt=irs+1; break; }
+    }
+    send_tcp(s,&sa,mm,dm,mi,dip,sport,dport,snd,rcv_nxt,65535,TH_ACK,NULL,0);
+
+    printf("[+] Connected\n");
+
+    char req[]="GET / HTTP/1.1/\r\nHost: test\r\n\r\n";
+    int req_len=strlen(req);
+    send_tcp(s,&sa,mm,dm,mi,dip,sport,dport,snd,rcv_nxt,65535,TH_ACK|TH_PUSH,(uint8_t*)req,req_len);
+    snd+=req_len;
+
+    while(1){
+	recv(s,b,sizeof(b),0);
+    }
 }
