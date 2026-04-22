@@ -163,5 +163,29 @@ int main(int c,char **v){
 
     while(1){
 	recv(s,b,sizeof(b),0);
+	struct iphdr *ip=(void*)(b+14);
+	if(ip->protocol!=IPPROTO_TCP) continue;
+	struct tcphdr *t=(void*)(b+14+ip->ihl*4);
+	if(ntohs(t->dest)!=sport) continue;
+
+	int hl=ip->ihl*4 + t->doff*4;
+        int plen=ntohs(ip->tot_len)-hl;
+
+	if(plen>0 && ntohl(t->seq)==rcv_nxt){
+	    memcpy(rxbuf+rx_len,b+14+hl,plen);
+	    rx_len+=plen; rcv_nxt+=plen;
+	    process_data();
+	}
+
+	send_tcp(s,&sa,mm,dm,mi,dip,sport,dport,snd,rcv_nxt,65535,TH_ACK,NULL,0);
+
+	if(t->fin){
+	    rcv_nxt++;
+	    send_tcp(s,&sa,mm,dm,mi,dip,sport,dport,snd,rcv_nxt,65535,TH_ACK|TH_FIN,NULL,0);
+	    break;
+	}
     }
+
+    printf("\n[+] Connection closed\n");
+    close(s);
 }
