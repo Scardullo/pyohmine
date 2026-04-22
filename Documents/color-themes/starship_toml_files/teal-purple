@@ -1,8 +1,8 @@
 format = """
-[](#556FFF)\
+[](#515ea6)\
 $python\
 $username\
-[](bg:#8897F4 fg:#556FFF)\
+[](bg:#8897F4 fg:#515ea6)\
 $directory\
 [](fg:#8897F4 bg:#F37F97)\
 $git_branch\
@@ -20,9 +20,9 @@ $nim\
 $rust\
 [](fg:#F2A272 bg:#79E6F3)\
 $docker_context\
-[](fg:#79E6F3 bg:#556FFF)\
+[](fg:#79E6F3 bg:#515ea6)\
 $time\
-[ ](fg:#556FFF)\
+[ ](fg:#515ea6)\
 """
 command_timeout = 5000
 # Disable the blank line at the start of the prompt
@@ -31,8 +31,8 @@ command_timeout = 5000
 # You can also replace your username with a neat symbol like  to save some space
 [username]
 show_always = true
-style_user = "bg:#556FFF"
-style_root = "bg:#556FFF"
+style_user = "bg:#515ea6"
+style_root = "bg:#515ea6"
 format = '[ ]($style)'
 
 [directory]
@@ -114,7 +114,7 @@ style = "bg:#86BBD8"
 format = '[ $symbol ($version) ]($style)'
 
 [python]
-style = "bg:#556FFF"
+style = "bg:#515ea6"
 format = '[(\($virtualenv\) )]($style)'
 
 [rust]
@@ -125,5 +125,5 @@ format = '[ $symbol ($version) ]($style)'
 [time]
 disabled = false
 time_format = "%I:%M"
-style = "bg:#556FFF"
+style = "bg:#515ea6"
 format = '[ $time ]($style)'
