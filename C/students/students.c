@@ -95,5 +95,25 @@ void logMessage(const char *fmt, ...) {
 }
 
 int addStudent(const char *name, float grade) {
-    
+    Student *s = (Student*)student_malloc(sizeof(Student));
+    if (!s) return 0;
+
+    pthread_mutex_lock(&students_lock);
+
+    int max_id = 0;
+    for (Student *t=head; t; t=t->next) if (t->id>max_id) max_id=t->id;
+    s->id = max_id + 1;
+    strncpy(s->name,name,NAME_LEN-1);
+    s->name[NAME_LEN-1]='\0';
+    s->grade = grade;
+    s->next = head;
+    head = s;
+
+    pthread_mutex_unlock(&student_lock);
+    logMessage("Added student ID=%d Name=%s Grade=%.2f", s->id, s->name, s->grade);
+    return 1;
+}
+
+int editStudent(int id, const char *name, float grade) {
+    pthread_mutex_lock(&student_lock);
 }
