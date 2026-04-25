@@ -80,10 +80,10 @@ void print_allocation() {
 static FILE *log_fp = NULL;
 
 void logMessage(const char *fmt, ...) {
-    pthread_mutex_lock(&students_lock); // reuse students_lock
+    pthread_mutex_lock(&student_lock); // reuse student_lock
     if (!log_fp) {
 	log_fp = fopen("students.log","a");
-	if (!log_fp) { pthread_mutex_unlock(&students_lock); return; }
+	if (!log_fp) { pthread_mutex_unlock(&student_lock); return; }
     }
 
     time_t t = time(NULL);
@@ -105,7 +105,7 @@ int addStudent(const char *name, float grade) {
     Student *s = (Student*)student_malloc(sizeof(Student));
     if (!s) return 0;
 
-    pthread_mutex_lock(&students_lock);
+    pthread_mutex_lock(&student_lock);
 
     int max_id = 0;
     for (Student *t=head; t; t=t->next) if (t->id>max_id) max_id=t->id;
@@ -209,7 +209,7 @@ void freeList() {
     pthread_mutex_lock(&student_lock);
     Student *cur=head;
     while(cur){
-	Student *cur=head;
+	Student *tmp=cur;
 	cur=cur->next;
 	student_free(tmp);
     }
@@ -240,3 +240,71 @@ static Student* mergeByGrade(Student *a, Student *b){
 	return b;
     }
 }
+
+static void frontBackSplit(Student *source, Student **front, Student **back){
+    if(!source || !source->next){ *front=source; *back=NULL; return; }
+    Student *slow=source,*fast=source->next;
+    while(fast){
+	fast=fast->next;
+	if(fast){ slow=slow->next; fast=fast->next; }
+    }
+    *front=source;
+    *back=slow->next;
+    slow->next=NULL;
+}
+
+static void mergeSort(Student **headRef,int byGrade){
+    Student *h = *headRef;
+    if(!h || !h->next) return;
+    Student *a,*b;
+    frontBackSplit(h,&a,&b);
+    mergeSort(&a,byGrade);
+    mergeSort(&b,byGrade);
+    *headRef = byGrade ? mergeByGrade(a,b) : mergeByName(a,b);
+}
+
+void sortByName(){
+    pthread_mutex_lock(&student_lock);
+    mergeSort(&head,0);
+    pthread_mutex_unlock(&student_lock);
+    logMessage("Sorted students by name");
+}
+
+void sortByGrade(){
+    pthread_mutex_lock(&student_lock);
+    mergeSort(&head,1);
+    pthread_mutex_unlock(&student_lock);
+    logMessage("Sorted students by grade");
+}
+
+void saveCSV(){
+    pthread_mutex_lock(&student_lock);
+    FILE *fp = fopen(FILE_CSV,"w");
+    if(!fp){ pthread_mutex_unlock(&student_lock); return; }
+    fprintf(fp,"ID,Name,Grade\n");
+    for(Student *t=head; t; t=t->next)
+	fprintf(fp,"%d,%s,%.2f\n",t->id,t->name,t->grade);
+    fclose(fp);
+    pthread_mutex_unlock(&student_lock);
+    logMessage("Saved students to CSV");
+}
+
+void loadCSV(){
+    pthread_mutex_lock(&student_lock);
+    FILE *fp=fopen(FILE_CSV,"r");
+    if(!fp){ pthread_mutex_unlock(&student_lock); return; }
+    freeList();
+    char line[128];
+    fgets(line,sizeof(line),fp); // skip header
+    while(fgets(line,sizeof(line),fp)){
+	Student *s=(Student*)student_malloc(sizeof(Student));
+	if(sscanf(line,"%d,%49[^,],%f",&s->id,s->name,&s->grade)==3){
+	    s->next=head; head=s;
+	} else student_free(s);
+    }
+    fclose(fp);
+    pthread_mutex_unlock(&student_lock);
+    logMessage("Loaded students from CSV");
+}
+
+
