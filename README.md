@@ -12,5 +12,9 @@ Everforest
 Catppuccin
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/7d49f17f-decf-410a-9bd1-bfc3bec47293" />
 
+Nord
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/3472f113-4172-4b2d-ad7e-4190493415be" />
+
+
 
 
