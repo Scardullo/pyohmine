@@ -9,4 +9,8 @@ Dracula
 Everforest
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f9b20192-f650-48d9-8b2a-dd9df13084ef" />
 
+Catppuccin
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/7d49f17f-decf-410a-9bd1-bfc3bec47293" />
+
+
 
