@@ -17,10 +17,7 @@ Nord
 
 Tokyo-night
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f605b241-a4f1-43c2-aa23-532ce01d09fb" />
-<<<<<<< HEAD
 
 
 
 
-=======
->>>>>>> a24d9a8 (rice themes)
