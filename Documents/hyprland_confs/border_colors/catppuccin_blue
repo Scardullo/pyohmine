@@ -109,8 +109,8 @@ decoration {
     rounding_power = 2
 
     # Change transparency of focused and unfocused windows
-    active_opacity = 0.9
-    inactive_opacity = 0.9
+    active_opacity = 0.8
+    inactive_opacity = 0.8
 
     shadow {
         enabled = true
@@ -329,6 +329,12 @@ bind = $mainMod, C, exec, code
 # Swap windows (left/right)
 bind = $mainMod SHIFT, H, movewindow, l
 bind = $mainMod SHIFT, L, movewindow, r
+
+# toggle fullscreen
+bind = $mainMod, F, fullscreen, 0
+
+# screenshot focuded monitor
+bind = $mainMod, PRINT, exec, grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png
 
 ##############################
 ### WINDOWS AND WORKSPACES ###

@@ -331,7 +331,7 @@ bind = $mainMod SHIFT, H, movewindow, l
 bind = $mainMod SHIFT, L, movewindow, r
 
 # toggle fullscreen
-bind = $mainMod, F, fullscreen, 0
+bind = $mainMod, F, fullscreen, 0 
 
 # screenshot focuded monitor
 bind = $mainMod, PRINT, exec, grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png
