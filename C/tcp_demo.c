@@ -59,13 +59,13 @@ void run_server() {
 
 void run_client() {
     int sock;
-    struct sockaddr_in_addr;
+    struct sockaddr_in addr;
     char buffer[BUF_SIZE];
 
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
-	perror("socket");
-	exit(1);
+	    perror("socket");
+	    exit(1);
     }
 
     memset(&addr, 0, sizeof(addr));
