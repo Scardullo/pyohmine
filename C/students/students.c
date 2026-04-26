@@ -307,4 +307,19 @@ void loadCSV(){
     logMessage("Loaded students from CSV");
 }
 
-
+void saveJSON(){
+    pthread_mutex_lock(&student_lock);
+    FILE *fp=fopen(FILE_JSON,"w");
+    if(!fp){ pthread_mutex_unlock(&student_lock); return; }
+    fprintf(fp,"[\n");
+    Student *t=head;
+    while(t){
+	fprintf(fp," {\"id\": %d, \"name\": \"%s\", \"grade\": %.2f}%s\n",
+		t->id,t->name,t->grade,t->next ? "," : "");
+	t=t->next;
+    }
+    fprintf(fp,"]\n");
+    fclose(fp);
+    pthread_mutex_unlock(&student_lock);
+    logMessage("Saved students to JSON");
+}
