@@ -323,3 +323,86 @@ void saveJSON(){
     pthread_mutex_unlock(&student_lock);
     logMessage("Saved students to JSON");
 }
+
+
+void loadJSON(){
+    // Simple JSON loader placeholder
+    // Full JSON parsing can be added with cJSON or manual parsing
+    logMessage("JSON load not implemented, use CSV or SQLite");
+}
+
+int saveSQLite(sqlite3 *db){
+    if(!db) return 0;
+    pthread_mutex_lock(&student_lock);
+
+    char *err=NULL;
+    char sql[512];
+    snprintf(sql,sizeof(sql),
+	     "CREATE TABLE IF NOT EXISTS students (id INTEGER PRIMARY KEY, name TEXT, grade REAL);");
+    if(sqlite3_exec(db,sql,0,0,&err)!=SQLITE_OK){
+	fprintf(stderr,"SQLite error: %s\n",err);
+	sqlite3_free(err);
+	pthread_mutex_unlock(&student_lock);
+	return 0;
+    }
+
+    snprintf(sql,sizeof(sql),"DELETE FROM students;");
+    if(sqlite3_exec(db,sql,0,0,&err)!=SQLITE_OK){
+	fprintf(stderr, "SQLite error: %s\n",err);
+	sqlite3_free(err);
+	pthread_mutex_unlock(&student_lock);
+	return 0;
+    }
+
+    sqlite3_stmt *stmt;
+    sqlite3_prepare_v2(db,"INSERT INTO students (id,name,grade) VALUES (?,?,?);",-1,&stmt,0);
+    for(Student *t=head;t;t=t->next){
+	sqlite3_bind_int(stmt,1,t->id);
+	sqlite3_bind_text(stmt,2,t->name,-1,SQLITE_TRANSIENT);
+	sqlite3_bind_double(stmt,3,t->grade);
+	sqlite3_step(stmt);
+	sqlite3_reset(stmt);
+    }
+    sqlite3_finalize(stmt);
+    pthread_mutex_unlock(&student_lock);
+    logMessage("Saved students to SQLite");
+    return 1;
+}
+
+int loadSQLite(sqlite *db){
+    if(!db) return 0;
+    pthread_mutex_lock(&student_lock);
+    freeList();
+
+    char *err=NULL;
+    char sql[512];
+    snprintf(sql,sizeof(sql),"CREATE TABLE IF NOT EXISTS students (id INTEGER PRIMARY KEY, name TEXT, grade             REAL);");
+    if(sqlite3_exec(db,sql,0,0,&err)!=SQLITE_OK){
+	fprintf(stderr,"SQLite error: %s\n",err);
+	sqlite3_free(err);
+	pthread_mutex_unlock(&student_lock);
+	return 0;
+    }
+
+    sqlite3_stmt *stmt;
+    if(sqlite3_prepare_v2(db,"SELECT id,name,grade FROM students;",-1,&stmt,0)!=SQLITE_OK){
+	pthread_mutex_unlock(&student_lock);
+	return 0;
+    }
+
+    while(sqlite3_step(stmt)==SQLITE_ROW){
+	Student *s=(Student*)student_malloc(sizeof(Student));
+	s->id = sqlite3_column_int(stmt,0);
+	const unsigned char *name = sqlite3_column_text(stmt,1);
+	strncpy(s->name,(const char *)name,NAME_LEN-1);
+	s->name[NAME_LEN-1]='\0';
+	s->grade = (float)sqlite3_column_double(stmt,2);
+	s->next = head; head=s;
+    }
+    sqlite3_finalize(stmt);
+    pthread_mutex_unlock(&student_lock);
+    logMessage("Loaded students from SQLite");
+    return 1;
+}
+
+
