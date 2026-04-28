@@ -405,4 +405,41 @@ int loadSQLite(sqlite *db){
     return 1;
 }
 
+static Student *lastDeleted = NULL;
+
+void undoLastDelete() {
+    pthread_mutex_lock(&student_lock);
+    if (!lastDeleted) { pthread_mutex_unlock(&student_lock); return; }
+
+    lastDeleted->next = head;
+    head = lastDeleted;
+    lastDeleted = NULL;
+    pthread_mutex_unlock(&student_lock);
+    logMessage("Undo last delete performed");
+}
+
+int deleteStudentWithUndo(int id) {
+    pthread_mutex_lock(&student_lock);
+    Student *cur=head,*prev=NULL;
+    while(cur){
+	if(cur->id==id){
+	    if(prev) prev->next=cur->next; else head=cur->next;
+
+	    student_free(lastDeleted);
+	    lastDeleted = (Student*)student_malloc(sizeof(Student));
+	    *lastDeleted = *cur;
+	    lastDeleted->next = NULL;
+
+	    student_free(cur);
+	    pthread_mutex_unlock(&student_lock);
+	    logMessage("Deleted student ID=%d (with undo)",id);
+	    return 1;
+	}
+	prev=cur;
+	cur=cur->next;
+    }
+    pthread_mutex_unlock(&student_lock);
+    return 0;
+}
+
 
