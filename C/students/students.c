@@ -442,4 +442,47 @@ int deleteStudentWithUndo(int id) {
     return 0;
 }
 
+typedef void (*BroadcastCallback)(const char *msg);
+static BroadcastCallback broadcast_cb = NULL;
+
+void registerBroadcastCallback(BroadcastCallback cb){
+    broadcast_cb = cb;
+}
+
+static void broadcastMessage(const char *msg){
+    if(broadcast_cb) broadcast_cb(msg);
+}
+
+int addStudentBroadcast(const char *name,float grade){
+    int res = addStudent(name,grade);
+    if(res){
+	char msg[128];
+	snprintf(msg,sizeof(msg),"Added: %s %.2f",name,grade);
+	broadcastMessage(msg);
+    }
+    return res;
+}
+
+int editStudentBroadcast(int id,const char *name,float grade){
+    int res = editStudent(id,name,grade);
+    if(res){
+	char msg[128];
+	snprintf(msg,sizeof(msg),"Edited ID %d: %s %.2f",id,name,grade);
+	broadcastMessage(msg);
+    }
+    return res;
+}
+
+int deleteStudentBroadcast(int id){
+    int res = deleteStudentWithUndo(id);
+    if(res){
+	char msg[128];
+	snprintf(msg,sizeof(msg),"Deleted ID %d",id);
+	broadcastMessage(msg);
+    }
+    return res;
+}
+
+
+
 
