@@ -376,7 +376,7 @@ int loadSQLite(sqlite *db){
 
     char *err=NULL;
     char sql[512];
-    snprintf(sql,sizeof(sql),"CREATE TABLE IF NOT EXISTS students (id INTEGER PRIMARY KEY, name TEXT, grade             REAL);");
+    snprintf(sql,sizeof(sql),"CREATE TABLE IF NOT EXISTS students (id INTEGER PRIMARY KEY, name TEXT, grade REAL);");
     if(sqlite3_exec(db,sql,0,0,&err)!=SQLITE_OK){
 	fprintf(stderr,"SQLite error: %s\n",err);
 	sqlite3_free(err);
