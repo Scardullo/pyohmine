@@ -527,9 +527,29 @@ void printMemoryStats(){
 
     printf("\n=== Memory Stats ===\n");
     printf("Active allocations: %d\n", count);
-    printf("Total bytes allocate: %zu\n", total);
+    printf("Total bytes allocated: %zu\n", total);
 }
 
+void reportLeaks(){
+    pthread_mutex_lock(&alloc_lock);
+    if(alloc_head){
+	printf("\nMemory leaks detected:\n");
+	AllocRecord *cur=alloc_head;
+	while(cur){
+	    printf("  Leak: ptr=%p size=%zu\n",cur->ptr,cur->size);
+	    cur=cur->next;
+	}
+    } else {
+	printf("\nNo memory leaks detected.\n");
+    }
+    pthread_mutex_unlock(&alloc_lock);
+}
+
+void runUnitTestWithAllocator(){
+    printf("Running unit tests with memory tracking...\n");
+
+
+}
 
 
 
