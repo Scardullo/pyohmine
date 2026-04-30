@@ -483,6 +483,53 @@ int deleteStudentBroadcast(int id){
     return res;
 }
 
+void runUnitTests(){
+    printf("Running unit tests...\n");
+
+    addStudent("Alice",90);
+    addStudent("Bob",75);
+    addStudent("Charlie",85);
+
+    Student *s = searchById(1);
+    if(s && strcmp(s->name,"Alice")==0) printf("PASS: searchById\n");
+
+    editStudent(1,"AliceA",95);
+    s = searchById(1);
+    if(s && s->grade==95) printf("PASS: editStudent\n");
+
+    deleteStudentWithUndo(2);
+    s = searchById(2);
+    if(!s) printf("PASS: deleteStudentWithUndo\n");
+    undoLastDelete();
+    s = searchById(2);
+    if(s) printf("PASS: undoLastDelete\n");
+
+    float avg = getAverageGrade();
+    Student *top = getTopStudent();
+    Student *low = getLowestStudent();
+    printf("Avg: %.2f, Top: %s, Low: %s\n",avg,top?top->name:"N/A",low?low->name:"N/A");
+
+    freeList();
+    printf("Unit tests finished.\n");
+}
+
+void printMemoryStats(){
+    pthread_mutex_lock(&alloc_lock);
+    AllocRecord *cur = alloc_head;
+    int count = 0;
+    size_t total = 0;
+    while(cur){
+	count++;
+	total += cur->size;
+	cur = cur->next;
+    }
+    pthread_mutex_unlock(&alloc_lock);
+
+    printf("\n=== Memory Stats ===\n");
+    printf("Active allocations: %d\n", count);
+    printf("Total bytes allocate: %zu\n", total);
+}
+
 
 
 
