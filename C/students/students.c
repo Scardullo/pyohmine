@@ -548,7 +548,19 @@ void reportLeaks(){
 void runUnitTestWithAllocator(){
     printf("Running unit tests with memory tracking...\n");
 
+    addStudent("Alice",90);
+    addStuent("Bob",80);
+    addStudent("Charlie",85);
 
+    printMemoryStats();
+
+    deleteStudentWithUndo(2);
+    undoLastDelete();
+
+    printMemoryStats();
+
+    freeList()
+    reportLeaks();
 }
 
 
