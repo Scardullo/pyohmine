@@ -9,7 +9,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <pthread.h>
-#include <arpa/inet>
+#include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/socket.h>
 
@@ -29,8 +29,8 @@ void trim_newline(char *s) {
 }
 
 enum {
-    MSG_NAME = 1;
-    MSG_CHAT = 2;
+    MSG_NAME = 1,
+    MSG_CHAT = 2,
     MSG_SYS  = 3
 };
 
@@ -67,7 +67,7 @@ int recv_all(int fd, void *buf, size_t len) {
 }
 
 int tcp_listen(uint16_t port) {
-    ind fd = socket(AF_INET, SOCK_STREAM, 0);
+    int fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd < 0) err("socket");
 
     int yes =1;
@@ -113,7 +113,7 @@ typedef struct {
     char username[64];
 } Client;
 
-Clients clients[MAX_CLIENTS];
+Client clients[MAX_CLIENTS];
 
 pthread_mutex_t clients_lock = PTHREAD_MUTEX_INITIALIZER;
 

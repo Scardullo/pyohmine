@@ -19,7 +19,7 @@ import platform
 import signal
 import json
 
-from chat_gpt.netops_toolkit import ROOT_REQUIRED_FEATURES, ICMP_ECHO_REQUEST
+from netops_toolkit import ROOT_REQUIRED_FEATURES, ICMP_ECHO_REQUEST
 
 try:
     import psutil
