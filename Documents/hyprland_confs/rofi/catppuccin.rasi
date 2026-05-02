@@ -1,0 +1,88 @@
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    icon-theme: "Papirus";
+    font: "JetBrainsMono Nerd Font 11";
+    drun-display-format: "{icon} {name}";
+    sidebar-mode: false;
+}
+
+* {
+    bg:            #1e1e2e;
+    bg-alt:        #313244;
+    fg:            #cdd6f4;
+    selected:      #89b4fa;
+    active:        #a6e3a1;
+    urgent:        #f38ba8;
+
+    background-color: @bg;
+    text-color: @fg;
+}
+
+window {
+    width: 600px;
+    border: 2px;
+    border-color: @selected;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+mainbox {
+    children: [ inputbar, listview ];
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border-radius: 8px;
+    padding: 8px;
+    margin: 0px 0px 10px 0px;
+}
+
+prompt {
+    enabled: true;
+    text-color: @selected;
+}
+
+entry {
+    placeholder: "Search...";
+}
+
+listview {
+    lines: 10;
+    columns: 1;
+    spacing: 5px;
+    scrollbar: false;
+}
+
+element {
+    padding: 8px;
+    border-radius: 8px;
+}
+
+element normal.normal {
+    background-color: transparent;
+}
+
+element selected.normal {
+    background-color: @selected;
+    text-color: #1e1e2e;
+}
+
+element selected.active {
+    background-color: @active;
+    text-color: #1e1e2e;
+}
+
+element selected.urgent {
+    background-color: @urgent;
+    text-color: #1e1e2e;
+}
+
+element-icon {
+    size: 24px;
+    margin: 0px 10px 0px 0px;
+}
+
+element-text {
+    vertical-align: 0.5;
+}

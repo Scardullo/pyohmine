@@ -59,7 +59,7 @@ exec-once = ~/.config/hypr/autostart
 
 env = XCURSOR_SIZE,24
 env = HYPRCURSOR_SIZE,24
-env = QT_QPA_PLATFORMTHEME,qt5ct
+env = QT_QPA_PLATFORMTHEME,qt6ct
 
 
 ###################
@@ -92,10 +92,10 @@ general {
 
     border_size = 2
 
-    # https://wiki.hypr.land/Configuring/Variables/#variable-types for info about colors
-    col.active_border = rgba(d5c4a1ff) rgba(bdae93ff) 90deg
-    col.inactive_border = rgba(a89984ff)
-    
+    # Catppuccin navy-blue gradient (top -> bottom)
+    col.active_border = rgba(89b4faff) rgba(1e1e2eff) 90deg
+    col.inactive_border = rgba(313244ff)
+
     resize_on_border = false
     allow_tearing = false
 
@@ -312,7 +312,9 @@ bindl = , XF86AudioPrev, exec, playerctl previous
 
 # anthonys binds
 # rofi
-bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/config.rasi
+#bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/config.rasi
+#bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/themes/catppuccin.rasi
+bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/themes/tokyonight.rasi
 
 # Move current window to previous workspace
 bind = $mainMod SHIFT, left, workspace, e+1
@@ -340,18 +342,21 @@ bind = $mainMod, PRINT, exec, grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m
 ### WINDOWS AND WORKSPACES ###
 ##############################
 
-# Right monitor fixed to workspace 2
-workspace = 2, monitor:HDMI-A-1
+# RIGHT MONITOR (Dell) ONLY workspace 2
+workspace = 2, monitor:HDMI-A-2
 
-# Left monitor workspaces
+# LEFT MONITOR (Samsung) main workspaces
 workspace = 1, monitor:DP-1
 workspace = 3, monitor:DP-1
 workspace = 4, monitor:DP-1
 workspace = 5, monitor:DP-1
 workspace = 6, monitor:DP-1
 workspace = 7, monitor:DP-1
-# Add more if you need
+workspace = 8, monitor:DP-1
+workspace = 9, monitor:DP-1
+workspace = 10, monitor:DP-1
 
+# Add more if you need
 
 # See https://wiki.hypr.land/Configuring/Window-Rules/ for more
 # See https://wiki.hypr.land/Configuring/Workspace-Rules/ for workspace rules

@@ -48,7 +48,7 @@ $menu = hyprlauncher
 # exec-once = nm-applet &
 # exec-once = waybar & hyprpaper & firefox
 exec-once = ~/.config/hypr/autostart
-# exec-once = waybar
+#exec-once = waybar
 
 
 #############################
@@ -59,7 +59,7 @@ exec-once = ~/.config/hypr/autostart
 
 env = XCURSOR_SIZE,24
 env = HYPRCURSOR_SIZE,24
-env = QT_QPA_PLATFORMTHEME,qt5ct
+env = QT_QPA_PLATFORMTHEME,qt6ct
 
 
 ###################
@@ -93,18 +93,15 @@ general {
     border_size = 2
 
     # https://wiki.hypr.land/Configuring/Variables/#variable-types for info about colors
-    col.active_border = rgba(777777ff) rgba(888888ff) 45deg
-    col.inactive_border = rgba(595959ff)
- 
-
-    # Set to true enable resizing windows by clicking and dragging on borders and gaps
+    col.active_border = rgba(d5c4a1ff) rgba(bdae93ff) 90deg
+    col.inactive_border = rgba(a89984ff)
+    
     resize_on_border = false
-
-    # Please see https://wiki.hypr.land/Configuring/Tearing/ before you turn this on
     allow_tearing = false
 
     layout = dwindle
 }
+
 
 # https://wiki.hypr.land/Configuring/Variables/#decoration
 decoration {
@@ -123,12 +120,14 @@ decoration {
     }
 
     # https://wiki.hypr.land/Configuring/Variables/#blur
+
 blur {
     enabled = true
-    size = 7       # bigger radius
-    passes = 3     # more blur passes
-    vibrancy = 0.2 # optional tweak to make background pop slightly
-    }
+    size = 5       # medium radius
+    passes = 2     # moderate number of blur passes
+    vibrancy = 0.15 # slightly noticeable background enhancement
+}
+
 
 }
 
@@ -159,9 +158,9 @@ animations {
     animation = layersOut,     1,     1.5,   linear,       fade
     animation = fadeLayersIn,  1,     1.79,  almostLinear
     animation = fadeLayersOut, 1,     1.39,  almostLinear
-    animation = workspaces,    1,     1.94,  almostLinear, fade
-    animation = workspacesIn,  1,     1.21,  almostLinear, fade
-    animation = workspacesOut, 1,     1.94,  almostLinear, fade
+    animation = workspaces,    1, 2, default
+    animation = workspacesIn,  1, 2, default, fade
+    animation = workspacesOut, 1, 2, default, fade
     animation = zoomFactor,    1,     7,     quick
 }
 
@@ -313,7 +312,8 @@ bindl = , XF86AudioPrev, exec, playerctl previous
 
 # anthonys binds
 # rofi
-bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/config.rasi
+#bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/config.rasi
+bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/themes/gruvbox.rasi
 
 # Move current window to previous workspace
 bind = $mainMod SHIFT, left, workspace, e+1
@@ -334,12 +334,29 @@ bind = $mainMod SHIFT, L, movewindow, r
 # toggle fullscreen
 bind = $mainMod, F, fullscreen, 0
 
-# screenshot focused monitor
+# screenshot focuded monitor
 bind = $mainMod, PRINT, exec, grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png
 
 ##############################
 ### WINDOWS AND WORKSPACES ###
 ##############################
+
+# RIGHT MONITOR (Dell) ONLY workspace 2
+workspace = 2, monitor:HDMI-A-2
+
+# LEFT MONITOR (Samsung) main workspaces
+workspace = 1, monitor:DP-1
+workspace = 3, monitor:DP-1
+workspace = 4, monitor:DP-1
+workspace = 5, monitor:DP-1
+workspace = 6, monitor:DP-1
+workspace = 7, monitor:DP-1
+workspace = 8, monitor:DP-1
+workspace = 9, monitor:DP-1
+workspace = 10, monitor:DP-1
+
+# Add more if you need
+
 
 # See https://wiki.hypr.land/Configuring/Window-Rules/ for more
 # See https://wiki.hypr.land/Configuring/Workspace-Rules/ for workspace rules

@@ -1,0 +1,6 @@
+# Set wallpapers with swaybg
+
+sleep 2 && pkill swaybg
+
+swaybg -o DP-1 -i /home/anthony/Pictures/wallpaper/wayland-girl.jpg -m fill &
+swaybg -o HDMI-A-2 -i /home/anthony/Pictures/wallpaper/wayland-girl.jpg -m fill &

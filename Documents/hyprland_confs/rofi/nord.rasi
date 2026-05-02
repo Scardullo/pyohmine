@@ -1,0 +1,64 @@
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    icon-theme: "Papirus";
+    font: "Agave Nerd Font Mono 11";
+    drun-display-format: "{icon} {name}";
+}
+
+* {
+    bg:     #2e3440;
+    bg-alt: #3b4252;
+    fg:     #d8dee9;
+    selected:#88c0d0;
+    active: #a3be8c;
+    urgent: #bf616a;
+
+    background-color: @bg;
+    text-color: @fg;
+}
+
+window {
+    width: 600px;
+    border: 2px;
+    border-color: @selected;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border-radius: 8px;
+    padding: 8px;
+    margin: 0 0 10px 0;
+}
+
+listview {
+    lines: 10;
+    spacing: 5px;
+}
+
+element {
+    padding: 8px;
+    border-radius: 8px;
+}
+
+element selected.normal {
+    background-color: @selected;
+    text-color: #2e3440;
+}
+
+element selected.active {
+    background-color: @active;
+    text-color: #2e3440;
+}
+
+element selected.urgent {
+    background-color: @urgent;
+    text-color: #2e3440;
+}
+
+element-icon {
+    size: 24px;
+    margin: 0 10px 0 0;
+}
