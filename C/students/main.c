@@ -84,7 +84,51 @@ int main(int argc,char argv **){
 	    case 4:
 		displayStudents();
 		break;
+
+	    case 5:
+		sortByName();
+		break;
+
+	    case 6:
+		sortByGrade();
+		break;
+
+	    case 7:
+		saveCSV();
+		break;
+
+	    case 8:
+		loadCSV();
+		break;
+
+	    case 9:
+		if(db) saveSQLite(db);
+		break;
+
+	    case 10:
+		if(db) loadSQLite(db);
+		break;
+
+	    case 11:
+		runUnitTests();
+		break;
+
+	    case 12:
+		printMemoryStats();
+		break;
+
+	    case 13:
+		printf("Exiting...\n");
+		freeList();
+		reportLeaks();
+		if(db) sqlite3_close(db);
+		return 0;
+
+	    default:
+		printf("Invalid choice\n");
 	    
 	}
     }
+
+    return 0;
 }
