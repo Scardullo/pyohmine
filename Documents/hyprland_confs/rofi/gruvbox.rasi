@@ -5,3 +5,31 @@ configuration {
 }
 
 @theme "gruvbox-dark"
+
+/* --- overrides --- */
+
+* {
+    background-color: transparent;
+}
+
+window {
+    width: 450px;              /* ~25% smaller than default 600 */
+    background-color: rgba(40, 40, 40, 0.85);  /* gruvbox bg with transparency */
+    border-radius: 12px;
+    padding: 12px;
+}
+
+inputbar {
+    background-color: rgba(60, 56, 54, 0.75);
+    border-radius: 8px;
+    padding: 8px;
+}
+
+listview {
+    spacing: 6px;
+}
+
+element {
+    border-radius: 8px;
+    padding: 8px;
+}

@@ -1,64 +1,95 @@
 configuration {
-    modi: "drun,run,window";
+    modi: "drun";
     show-icons: true;
     icon-theme: "Papirus";
     font: "JetBrainsMono Nerd Font 11";
     drun-display-format: "{icon} {name}";
+    sidebar-mode: false;
 }
 
 * {
-    bg:     #1a1b26;
-    bg-alt: #24283b;
-    fg:     #c0caf5;
-    selected:#7aa2f7;
-    active: #9ece6a;
-    urgent: #f7768e;
+    bg:            rgba(30, 30, 46, 0.85);
+    bg-alt:        rgba(49, 50, 68, 0.75);
+    fg:            #cdd6f4;
 
-    background-color: @bg;
+    selected:      #bb9af7;
+    active:        #a6e3a1;
+    urgent:        #f38ba8;
+
+    border-col:    #bb9af7;
+
+    background-color: transparent;
     text-color: @fg;
 }
 
 window {
     width: 600px;
     border: 2px;
-    border-color: @selected;
-    border-radius: 10px;
-    padding: 10px;
+    border-color: @border-col;
+    border-radius: 14px;
+    padding: 12px;
+    background-color: @bg;
+}
+
+mainbox {
+    children: [ inputbar, listview ];
 }
 
 inputbar {
     background-color: @bg-alt;
-    border-radius: 8px;
-    padding: 8px;
-    margin: 0 0 10px 0;
+    border: 1.5px;
+    border-color: @border-col;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0px 0px 12px 0px;
+}
+
+prompt {
+    enabled: true;
+    text: "Search";
+    text-color: @selected;
+}
+
+entry {
+    placeholder: "Search...";
 }
 
 listview {
     lines: 10;
-    spacing: 5px;
+    columns: 1;
+    spacing: 6px;
+    scrollbar: false;
 }
 
 element {
-    padding: 8px;
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+element normal.normal {
+    background-color: transparent;
 }
 
 element selected.normal {
     background-color: @selected;
-    text-color: #1a1b26;
+    text-color: #1e1e2e;
 }
 
 element selected.active {
     background-color: @active;
-    text-color: #1a1b26;
+    text-color: #1e1e2e;
 }
 
 element selected.urgent {
     background-color: @urgent;
-    text-color: #1a1b26;
+    text-color: #1e1e2e;
 }
 
 element-icon {
     size: 24px;
-    margin: 0 10px 0 0;
+    margin: 0px 12px 0px 0px;
+}
+
+element-text {
+    vertical-align: 0.5;
 }

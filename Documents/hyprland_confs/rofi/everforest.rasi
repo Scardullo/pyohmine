@@ -1,5 +1,5 @@
 configuration {
-    modi: "drun,run,window";
+    modi: "drun";
     show-icons: true;
     icon-theme: "Papirus";
     font: "Agave Nerd Font Mono 11";
@@ -7,40 +7,56 @@ configuration {
 }
 
 * {
-    bg:     #2d353b;
-    bg-alt: #3a4248;
+    bg:     rgba(45, 53, 59, 0.85);
+    bg-alt: rgba(58, 66, 72, 0.75);
     fg:     #d3c6aa;
+
     selected:#a7c080;
     active: #83c092;
     urgent: #e67e80;
 
-    background-color: @bg;
+    border-col: #a7c080;
+
+    background-color: transparent;
     text-color: @fg;
 }
 
 window {
     width: 600px;
     border: 2px;
-    border-color: @selected;
-    border-radius: 10px;
-    padding: 10px;
+    border-color: @border-col;
+    border-radius: 14px;
+    padding: 12px;
+    background-color: @bg;
 }
 
 inputbar {
     background-color: @bg-alt;
-    border-radius: 8px;
-    padding: 8px;
-    margin: 0 0 10px 0;
+    border: 1.5px;
+    border-color: @border-col;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0 0 12px 0;
+}
+
+prompt {
+    enabled: true;
+    text: "Search";
+    text-color: @selected;
+}
+
+entry {
+    placeholder: "Search...";
 }
 
 listview {
     lines: 10;
-    spacing: 5px;
+    spacing: 6px;
 }
 
 element {
-    padding: 8px;
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 10px;
 }
 
 element selected.normal {
@@ -60,5 +76,5 @@ element selected.urgent {
 
 element-icon {
     size: 24px;
-    margin: 0 10px 0 0;
+    margin: 0 12px 0 0;
 }

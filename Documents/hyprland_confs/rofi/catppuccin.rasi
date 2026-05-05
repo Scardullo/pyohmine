@@ -1,5 +1,5 @@
 configuration {
-    modi: "drun,run,window";
+    modi: "drun";
     show-icons: true;
     icon-theme: "Papirus";
     font: "JetBrainsMono Nerd Font 11";
@@ -8,23 +8,27 @@ configuration {
 }
 
 * {
-    bg:            #1e1e2e;
-    bg-alt:        #313244;
+    bg:            rgba(30, 30, 46, 0.85);
+    bg-alt:        rgba(49, 50, 68, 0.75);
     fg:            #cdd6f4;
+
     selected:      #89b4fa;
     active:        #a6e3a1;
     urgent:        #f38ba8;
 
-    background-color: @bg;
+    border-col:    #89b4fa;
+
+    background-color: transparent;
     text-color: @fg;
 }
 
 window {
     width: 600px;
     border: 2px;
-    border-color: @selected;
-    border-radius: 10px;
-    padding: 10px;
+    border-color: @border-col;
+    border-radius: 14px;
+    padding: 12px;
+    background-color: @bg;
 }
 
 mainbox {
@@ -33,13 +37,16 @@ mainbox {
 
 inputbar {
     background-color: @bg-alt;
-    border-radius: 8px;
-    padding: 8px;
-    margin: 0px 0px 10px 0px;
+    border: 1.5px;
+    border-color: @border-col;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0px 0px 12px 0px;
 }
 
 prompt {
     enabled: true;
+    text: "Search";
     text-color: @selected;
 }
 
@@ -50,13 +57,13 @@ entry {
 listview {
     lines: 10;
     columns: 1;
-    spacing: 5px;
+    spacing: 6px;
     scrollbar: false;
 }
 
 element {
-    padding: 8px;
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 10px;
 }
 
 element normal.normal {
@@ -80,7 +87,7 @@ element selected.urgent {
 
 element-icon {
     size: 24px;
-    margin: 0px 10px 0px 0px;
+    margin: 0px 12px 0px 0px;
 }
 
 element-text {
