@@ -1,25 +1,25 @@
 configuration {
-    modi: "drun,run";
+    modi: "drun";
     show-icons: true;
     icon-theme: "Papirus";
-    font: "JetBrainsMono Nerd Font 12";
+    font: "Agave Nerd Font Mono 11";
     drun-display-format: "{icon} {name}";
     sidebar-mode: false;
 }
 
 * {
-    /* 🌑 slightly brighter purple base */
-    bg:            rgba(32, 24, 42, 0.88);
-    bg-alt:        rgba(44, 34, 58, 0.75);
+    /* 🧱 base */
+    bg:            rgba(23, 23, 23, 0.88);
+    bg-alt:        rgba(35, 35, 40, 0.75);
 
-    fg:            #e6e0f3;
+    fg:            #ffffff;
 
-    /* 🔵 cyan accent */
-    selected:      #3FDCEE;
-    active:        #2bd4e6;
-    urgent:        #f38ba8;
+    /* 🔵 darker blue accent */
+    selected:      #4a6fb8;
+    active:        #5f90ea;
+    urgent:        #e7034a;
 
-    border-col:    #3FDCEE;
+    border-col:    #4a6fb8;
 
     background-color: transparent;
     text-color: @fg;
@@ -85,7 +85,7 @@ element selected.active {
 
 element selected.urgent {
     background-color: @urgent;
-    text-color: #0f1115;
+    text-color: #ffffff;
 }
 
 element-icon {

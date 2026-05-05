@@ -48,7 +48,7 @@ $menu = hyprlauncher
 # exec-once = nm-applet &
 # exec-once = waybar & hyprpaper & firefox
 exec-once = ~/.config/hypr/autostart
-# exec-once = waybar
+#exec-once = waybar
 
 
 #############################
@@ -92,19 +92,16 @@ general {
 
     border_size = 2
 
-    # https://wiki.hypr.land/Configuring/Variables/#variable-types for info about colors
-    col.active_border = rgba(777777ff) rgba(888888ff) 45deg
-    col.inactive_border = rgba(595959ff)
- 
+    # Catppuccin navy-blue gradient (top -> bottom)
+    col.active_border = rgba(89b4faff) rgba(1e1e2eff) 90deg
+    col.inactive_border = rgba(313244ff)
 
-    # Set to true enable resizing windows by clicking and dragging on borders and gaps
     resize_on_border = false
-
-    # Please see https://wiki.hypr.land/Configuring/Tearing/ before you turn this on
     allow_tearing = false
 
     layout = dwindle
 }
+
 
 # https://wiki.hypr.land/Configuring/Variables/#decoration
 decoration {
@@ -123,12 +120,14 @@ decoration {
     }
 
     # https://wiki.hypr.land/Configuring/Variables/#blur
+
 blur {
     enabled = true
-    size = 3       # bigger radius
-    passes = 1     # more blur passes
-    vibrancy = 0.05 # optional tweak to make background pop slightly
-    }
+    size = 5       # medium radius
+    passes = 2     # moderate number of blur passes
+    vibrancy = 0.15 # slightly noticeable background enhancement
+}
+
 
 }
 
@@ -159,9 +158,9 @@ animations {
     animation = layersOut,     1,     1.5,   linear,       fade
     animation = fadeLayersIn,  1,     1.79,  almostLinear
     animation = fadeLayersOut, 1,     1.39,  almostLinear
-    animation = workspaces,    1,     1.94,  almostLinear, fade
-    animation = workspacesIn,  1,     1.21,  almostLinear, fade
-    animation = workspacesOut, 1,     1.94,  almostLinear, fade
+    animation = workspaces,    1, 2, default
+    animation = workspacesIn,  1, 2, default, fade
+    animation = workspacesOut, 1, 2, default, fade
     animation = zoomFactor,    1,     7,     quick
 }
 
@@ -314,7 +313,7 @@ bindl = , XF86AudioPrev, exec, playerctl previous
 # anthonys binds
 # rofi
 #bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/config.rasi
-bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/themes/dark-arch.rasi
+bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/themes/teal-purple.rasi
 
 # Move current window to previous workspace
 bind = $mainMod SHIFT, left, workspace, e+1
@@ -335,7 +334,7 @@ bind = $mainMod SHIFT, L, movewindow, r
 # toggle fullscreen
 bind = $mainMod, F, fullscreen, 0
 
-# screenshot focused monitor
+# screenshot focuded monitor
 bind = $mainMod, PRINT, exec, grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png
 
 ##############################
@@ -357,6 +356,7 @@ workspace = 9, monitor:DP-1
 workspace = 10, monitor:DP-1
 
 # Add more if you need
+
 # See https://wiki.hypr.land/Configuring/Window-Rules/ for more
 # See https://wiki.hypr.land/Configuring/Workspace-Rules/ for workspace rules
 

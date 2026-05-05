@@ -313,7 +313,6 @@ bindl = , XF86AudioPrev, exec, playerctl previous
 # anthonys binds
 # rofi
 #bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/config.rasi
-#bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/themes/catppuccin.rasi
 bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/themes/tokyonight.rasi
 
 # Move current window to previous workspace
