@@ -1,0 +1,19 @@
+#!/bin/bash
+# Usage: wallpp /path/to/image
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 /path/to/wallpaper"
+    exit 1
+fi
+
+WALLPAPER="$1"
+
+# kill previous wallpapers
+pkill swaybg
+
+# small delay to ensure cleanup
+sleep 0.2
+
+# apply per monitor (correct way)
+swaybg -o DP-1 -i "$WALLPAPER" -m fill &
+swaybg -o HDMI-A-2 -i "$WALLPAPER" -m fill &
