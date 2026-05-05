@@ -1,11 +1,10 @@
-#ifndef STUDENT_H
-#define STUDENT_H
-
 #include <pthread.h>
 #include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <stdarg.h>
 #include "student.h"
 
 #define NAME_LEN 50
@@ -208,13 +207,14 @@ void displayStudents() {
 void freeList() {
     pthread_mutex_lock(&student_lock);
     Student *cur=head;
+    head=NULL;
+    pthread_mutex_unlock(&student_lock);
+    
     while(cur){
 	Student *tmp=cur;
 	cur=cur->next;
 	student_free(tmp);
     }
-    head=NULL;
-    pthread_mutex_unlock(&student_lock);
 }
 
 static Student* mergeByName(Student *a, Student *b) {
@@ -290,10 +290,10 @@ void saveCSV(){
 }
 
 void loadCSV(){
+    freeList();
     pthread_mutex_lock(&student_lock);
     FILE *fp=fopen(FILE_CSV,"r");
     if(!fp){ pthread_mutex_unlock(&student_lock); return; }
-    freeList();
     char line[128];
     fgets(line,sizeof(line),fp); // skip header
     while(fgets(line,sizeof(line),fp)){
@@ -326,8 +326,6 @@ void saveJSON(){
 
 
 void loadJSON(){
-    // Simple JSON loader placeholder
-    // Full JSON parsing can be added with cJSON or manual parsing
     logMessage("JSON load not implemented, use CSV or SQLite");
 }
 
