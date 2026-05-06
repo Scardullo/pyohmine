@@ -13,7 +13,7 @@ catppuccin
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/d2020f41-4e81-4109-9a3b-ead49b49c25a" />
 
 Nord
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/3472f113-4172-4b2d-ad7e-4190493415be" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/7e47d9f5-1a9f-48ea-beb8-7fbe6c4ec2a8" />
 
 Tokyo-night
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f5c85fa0-ac31-43e1-b2ef-df167c081aa3" />
