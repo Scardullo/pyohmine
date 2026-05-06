@@ -1,7 +1,7 @@
 configuration {
     modi: "drun";
     show-icons: true;
-    icon-theme: "Papirus";
+    icon-theme: "candy-icons";
     font: "JetBrainsMono Nerd Font 11";
     drun-display-format: "{icon} {name}";
     sidebar-mode: false;
@@ -12,11 +12,11 @@ configuration {
     bg-alt:        rgba(49, 50, 68, 0.75);
     fg:            #cdd6f4;
 
-    selected:      #bb9af7;
+    selected:      #9a7ae0;
     active:        #a6e3a1;
     urgent:        #f38ba8;
 
-    border-col:    #bb9af7;
+    border-col:    #9a7ae0;
 
     background-color: transparent;
     text-color: @fg;
@@ -86,7 +86,7 @@ element selected.urgent {
 }
 
 element-icon {
-    size: 24px;
+    size: 28px;
     margin: 0px 12px 0px 0px;
 }
 

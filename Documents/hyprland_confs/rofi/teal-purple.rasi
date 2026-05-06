@@ -1,7 +1,7 @@
 configuration {
     modi: "drun,run";
     show-icons: true;
-    icon-theme: "Papirus";
+    icon-theme: "candy-icons";
     font: "JetBrainsMono Nerd Font 12";
     drun-display-format: "{icon} {name}";
     sidebar-mode: false;

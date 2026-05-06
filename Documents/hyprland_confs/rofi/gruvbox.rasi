@@ -1,6 +1,7 @@
 configuration {
     modi: "drun,run";
     show-icons: true;
+    icon-theme: "Gruvbox-Plus-Dark";
     font: "JetBrainsMono Nerd Font 12";
 }
 
@@ -27,9 +28,14 @@ inputbar {
 
 listview {
     spacing: 6px;
+    lines: 8;
 }
 
 element {
     border-radius: 8px;
     padding: 8px;
+}
+
+element-icon {
+    size: 48px;
 }
