@@ -1,0 +1,104 @@
+# -------------------------------
+
+# Powerlevel10k instant prompt (DISABLED for Starship)
+
+# This MUST be disabled or it will override Starship prompt behavior
+
+# -------------------------------
+
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+
+# source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+
+# fi
+
+# -------------------------------
+
+# Powerlevel10k theme (DISABLED for Starship)
+
+# -------------------------------
+
+# ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# Source Powerlevel10k theme if installed system-wide (DISABLED)
+
+# [[ -f /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]] && \
+
+# source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+
+# -------------------------------
+
+# zsh-autosuggestions (SAFE to keep)
+
+# -------------------------------
+
+[[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && 
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Optional: gray color for suggestions
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+
+# -------------------------------
+
+# History settings (shared across terminals)
+
+# -------------------------------
+
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+
+setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_REDUCE_BLANKS
+
+# -------------------------------
+
+# Aliases
+
+# -------------------------------
+
+alias dfree='df -hTx tmpfs'
+alias ls='eza -a --group-directories-first --icons --color=auto'
+alias ll='eza -la --group-directories-first --icons --color=auto'
+alias la='eza -la --group-directories-first --icons --color=auto'
+alias nerds='kitty +list-fonts --configured'
+
+# -------------------------------
+
+# Node / Python / other optional envs
+
+# -------------------------------
+
+# export PATH="$HOME/.local/bin:$PATH"
+
+# -------------------------------
+
+# Powerlevel10k config (DISABLED for Starship)
+
+# -------------------------------
+
+# [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+# -------------------------------
+
+# Pokémon greeting (SAFE to keep)
+
+# -------------------------------
+
+if command -v pokemon-colorscripts &>/dev/null; then
+pokemon-colorscripts -r --no-title
+fi
+
+# -------------------------------
+
+# Starship prompt (ENABLED)
+
+# Place this near the END of the file
+
+# -------------------------------
+
+eval "$(starship init zsh)"
