@@ -9,9 +9,8 @@ Dracula
 Everforest
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f982e98a-17a6-411d-837d-3810a777d2a9" />
 
-catppuccin
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/165208b7-9472-4cb7-9a66-559292b78234" />
-
+Catppuccin
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/ca2981fb-e41a-443b-a338-7b6c0834e492" />
 
 Nord
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/7e47d9f5-1a9f-48ea-beb8-7fbe6c4ec2a8" />
