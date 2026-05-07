@@ -7,7 +7,7 @@ Dracula
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/de2b0432-93ed-4da4-af19-0a615bc9d5de" />
 
 Everforest
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f982e98a-17a6-411d-837d-3810a777d2a9" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/a77f1163-0e91-4440-994f-6f662cffaede" />
 
 Catppuccin
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/ca2981fb-e41a-443b-a338-7b6c0834e492" />
