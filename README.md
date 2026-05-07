@@ -10,7 +10,7 @@ Everforest
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/a77f1163-0e91-4440-994f-6f662cffaede" />
 
 Catppuccin
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/ca2981fb-e41a-443b-a338-7b6c0834e492" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/8b9882a7-9fe1-43b7-9063-13941869d330" />
 
 Nord
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/7e47d9f5-1a9f-48ea-beb8-7fbe6c4ec2a8" />
