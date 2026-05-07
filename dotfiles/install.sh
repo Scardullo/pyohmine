@@ -2,7 +2,7 @@
 
 set -e
 
-echo " Arch Hyprland Setup Installer ..."
+echo " Arch Hyprland Setup Installer... "
 
 PACMAN_PKGS=(
     alacritty
@@ -140,6 +140,7 @@ mkdir -p ~/.config/kitty
 mkdir -p ~/.config/hypr
 mkdir -p ~/.config/fastfetch
 mkdir -p ~/.config/starship
+mkdir -p ~/.config/rofi/themes
 mkdir -p ~/Pictures/wallpaper
 
 echo "Copying configs..."
@@ -148,6 +149,7 @@ cp -r ./config/kitty/* ~/.config/kitty/
 cp -r ./config/hypr/* ~/.config/hypr/
 cp -r ./config/fastfetch/* ~/.config/fastfetch/
 cp -r ./config/starship/* ~/.config/starship/
+cp -r ./config/rofi/* ~/.config/rofi/themes/
 
 cp ./zshrc/.zshrc ~/.zshrc
 

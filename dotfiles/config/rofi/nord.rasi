@@ -1,0 +1,80 @@
+configuration {
+    modi: "drun";
+    show-icons: true;
+    icon-theme: "candy-icons";
+    font: "Agave Nerd Font Mono 11";
+    drun-display-format: "{icon} {name}";
+}
+
+* {
+    bg:     rgba(46, 52, 64, 0.85);
+    bg-alt: rgba(59, 66, 82, 0.75);
+    fg:     #d8dee9;
+
+    selected:#88c0d0;
+    active: #a3be8c;
+    urgent: #bf616a;
+
+    border-col: #88c0d0;
+
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    width: 600px;
+    border: 2px;
+    border-color: @border-col;
+    border-radius: 14px;
+    padding: 12px;
+    background-color: @bg;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border: 1.5px;
+    border-color: @border-col;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0 0 12px 0;
+}
+
+prompt {
+    enabled: true;
+    text: "Search";
+    text-color: @selected;
+}
+
+entry {
+    placeholder: "Search...";
+}
+
+listview {
+    lines: 10;
+    spacing: 6px;
+}
+
+element {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+element selected.normal {
+    background-color: @selected;
+    text-color: #2e3440;
+}
+
+element selected.active {
+    background-color: @active;
+    text-color: #2e3440;
+}
+
+element selected.urgent {
+    background-color: @urgent;
+    text-color: #2e3440;
+}
+
+element-icon {
+    size: 28px;
+    margin: 0 12px 0 0;
+}
