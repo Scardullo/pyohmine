@@ -125,9 +125,9 @@ decoration {
     # https://wiki.hypr.land/Configuring/Variables/#blur
 blur {
     enabled = true
-    size = 7       # bigger radius
-    passes = 3     # more blur passes
-    vibrancy = 0.2 # optional tweak to make background pop slightly
+    size = 3       # bigger radius
+    passes = 1     # more blur passes
+    vibrancy = 0.05 # optional tweak to make background pop slightly
     }
 
 }

@@ -1,7 +1,7 @@
 configuration {
     modi: "drun";
     show-icons: true;
-    icon-theme: "Papirus";
+    icon-theme: "candy-icons";
     font: "Agave Nerd Font Mono 11";
     drun-display-format: "{icon} {name}";
 }
@@ -75,6 +75,6 @@ element selected.urgent {
 }
 
 element-icon {
-    size: 24px;
+    size: 28px;
     margin: 0 12px 0 0;
 }
