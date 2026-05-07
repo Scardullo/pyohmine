@@ -17,7 +17,8 @@ Nord
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/7e47d9f5-1a9f-48ea-beb8-7fbe6c4ec2a8" />
 
 Tokyo-night
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f5c85fa0-ac31-43e1-b2ef-df167c081aa3" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/8ab85ef0-d2e5-4559-8fb2-ca9370fe11d3" />
+
 
 
 
