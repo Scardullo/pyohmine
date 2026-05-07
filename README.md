@@ -19,7 +19,7 @@ Nord
 Tokyo-night
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/8ab85ef0-d2e5-4559-8fb2-ca9370fe11d3" />
 
-Purple-haze
+Purple-dayz
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/30ba57b9-c99b-4875-bd58-770a8247c63e" />
 
 
