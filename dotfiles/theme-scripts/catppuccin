@@ -1,5 +1,8 @@
-wallpp /home/anthony/Pictures/wallpaper/boy-cat.webp
+#!/bin/bash
+
+wallpp ~/Pictures/wallpaper/boy-cat.webp
+
 cp ~/.config/kitty/catppuccin ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/catppuccin_blue ~/.config/hypr/hyprland.conf
-cp ~/Documents/bash_zsh_rc/myhypr/my_hypr_zshrc_17-04-2026 ~/.zshrc
-cp ~/Documents/fastfetch-configs/catppuccin ~/.config/fastfetch/config.jsonc
+cp ~/dotfiles/config/fastfetch/catppuccin ~/.config/fastfetch/config.jsonc
+cp ~/dotfiles/zshrc/p10k ~/.zshrc

@@ -1,5 +1,8 @@
-wallpp /home/anthony/Pictures/wallpaper/town-in-space.webp
+#!/bin/bash
+
+wallpp ~/Pictures/wallpaper/town-in-space.webp
+
 cp ~/.config/kitty/dracula ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/dracula ~/.config/hypr/hyprland.conf
-cp ~/Documents/bash_zsh_rc/myhypr/my_hypr_zshrc_17-04-2026 ~/.zshrc
-cp ~/Documents/fastfetch-configs/anime-jakool ~/.config/fastfetch/config.jsonc
+cp ~/dotfiles/zshrc/p10k ~/.zshrc
+cp ~/dotfiles/config/fastfetch/anime-jakool ~/.config/fastfetch/config.jsonc

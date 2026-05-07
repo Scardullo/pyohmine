@@ -1,6 +1,9 @@
-wallpp /home/anthony/Pictures/wallpaper/mountain.jpg 
+#!/bin/bash
+
+wallpp ~/Pictures/wallpaper/mountain.jpg
+
 cp ~/.config/kitty/teal-purple ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/teal-purple ~/.config/hypr/hyprland.conf
-cp ~/Documents/color-themes/starship_toml_files/teal-purple ~/.config/starship.toml
-cp ~/Documents/bash_zsh_rc/myhypr/my_hypr_starship_17-04-2026 ~/.zshrc
-cp ~/Documents/fastfetch-configs/anime-jakool ~/.config/fastfetch/config.jsonc
+cp ~/dotfiles/config/starship/teal-purple ~/.config/starship.toml
+cp ~/dotfiles/zshrc/starship ~/.zshrc
+cp ~/dotfiles/config/fastfetch/anime-jakool ~/.config/fastfetch/config.jsonc
