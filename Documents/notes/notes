@@ -119,3 +119,8 @@ swaybg -o DP-1 -i /home/anthony/Pictures/wallpaper/mountain.jpg -m fill \
 --------------------debian server ip address------------------
 
 10.0.0.139
+
+----------------------nwg-look--------------------------
+command$> "nwg-look" (for thunar icons)
+
+$ nwg-look
