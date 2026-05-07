@@ -4,7 +4,7 @@ Gruvbox
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/490dd1d1-c309-4c6e-a0af-b7c1963a7ebf" />
 
 Dracula
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/3d5bb81e-4a3c-434d-bf66-2c82cb3163b7" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/de2b0432-93ed-4da4-af19-0a615bc9d5de" />
 
 Everforest
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f982e98a-17a6-411d-837d-3810a777d2a9" />
