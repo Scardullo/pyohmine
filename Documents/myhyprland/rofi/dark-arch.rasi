@@ -59,7 +59,7 @@ entry {
 }
 
 listview {
-    lines: 10;
+    lines: 8;
     spacing: 6px;
     scrollbar: false;
 }
@@ -89,7 +89,7 @@ element selected.urgent {
 }
 
 element-icon {
-    size: 28px;
+    size: 48px;
     margin: 0px 12px 0px 0px;
 }
 
