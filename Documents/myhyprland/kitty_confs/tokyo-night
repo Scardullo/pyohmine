@@ -5,14 +5,14 @@
 font_size 15.0
 
 background  #171717
-foreground  #c0caf5
+foreground  #ffffff
 
 cursor                #8656e3
 
 selection_foreground  #afb1db
 selection_background  #8656e3
 
-color0  #81a1c1
+color0  #ffffff
 color8  #97a9cf
 
 # red
