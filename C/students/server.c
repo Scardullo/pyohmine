@@ -1,4 +1,5 @@
 #include "server.h"
+#include "student.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>

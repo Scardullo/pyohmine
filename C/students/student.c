@@ -184,7 +184,7 @@ Student* getLowestStudent() {
     for (Student *t=head->next; t; t=t->next)
 	if (t->grade<low->grade) low=t;
     pthread_mutex_unlock(&student_lock);
-    return count ? total/count : 0;
+    return low;
 }
 
 float getAverageGrade() {
@@ -232,7 +232,7 @@ static Student* mergeByName(Student *a, Student *b) {
 static Student* mergeByGrade(Student *a, Student *b){
     if (!a) return b;
     if (!b) return a;
-    if (strcmp(a->grade,b->grade)<0){
+    if (a->grade > b->grade){
 	a->next = mergeByGrade(a->next,b);
 	return a;
     } else {
@@ -367,7 +367,7 @@ int saveSQLite(sqlite3 *db){
     return 1;
 }
 
-int loadSQLite(sqlite *db){
+int loadSQLite(sqlite3 *db){
     if(!db) return 0;
     pthread_mutex_lock(&student_lock);
     freeList();
@@ -557,7 +557,7 @@ void runUnitTestWithAllocator(){
 
     printMemoryStats();
 
-    freeList()
+    freeList();
     reportLeaks();
 }
 

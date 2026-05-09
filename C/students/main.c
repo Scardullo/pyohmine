@@ -26,11 +26,11 @@ void printMenu(){
 	   "13. Exit\n");
 }
 
-int main(int argc,char argv **){
+int main(int argc,char **argv){
     
     if(sqlite3_open(FILE_SQLITE,&db)!=SQLITE_OK){
-	fprintf(stderr,"Cannot open SQLite DB\n");
-	db=NULL;
+	    fprintf(stderr,"Cannot open SQLite DB\n");
+	    db=NULL;
     }
 
     if(argc>1 && strcmp(argv[1],"server")==0){
@@ -51,7 +51,7 @@ int main(int argc,char argv **){
 	printMenu();
 	printf("Choice: ");
 
-	if(scanf("%d",&choice)!=){
+	if(scanf("%d",&choice)!=1){
 	    while(getchar()!='\n');
 	    continue;
 	}
@@ -62,7 +62,7 @@ int main(int argc,char argv **){
 		scanf("%s",name);
 		printf("Grade: ");
 		scanf("%f",&grade);
-		addStudent(id,name,grade);
+		addStudent(name,grade);
 		break;
 
 	    case 2:
