@@ -68,6 +68,25 @@ window#waybar {
     margin-right: 6px;
 }
 
+#cpu {
+    background: #5ADECD;
+    color: #000000;
+}
+
+/* MEMORY */
+
+#memory {
+    background: #8897F4;
+    color: #000000;
+}
+
+/* VOLUME */
+
+#pulseaudio {
+    background: #C574DD;
+    color: #000000;
+}
+
 /* Tooltip */
 
 tooltip {
