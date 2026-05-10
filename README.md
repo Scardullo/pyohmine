@@ -1,25 +1,26 @@
 Its jenk but its my jenk
 
 Gruvbox
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/490dd1d1-c309-4c6e-a0af-b7c1963a7ebf" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/150e98e8-733b-4a52-9a46-d7204d019dc2" />
 
 Dracula
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/8f7fdcec-4303-4844-921b-473735569502" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/be379f2f-0312-4401-b307-f28a215ec41c" />
 
 Everforest
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/a77f1163-0e91-4440-994f-6f662cffaede" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/7c55dc96-a566-4d06-967d-d02efe75cf7f" />
 
 Catppuccin
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/8b9882a7-9fe1-43b7-9063-13941869d330" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/896b7308-30f6-4ecb-826a-97b784382054" />
 
 Nord
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/7e47d9f5-1a9f-48ea-beb8-7fbe6c4ec2a8" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/ad0f9cfc-6324-4b7e-baf5-7ac3f183e419" />
 
 Tokyo-night
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/8ab85ef0-d2e5-4559-8fb2-ca9370fe11d3" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/e74d8cfe-5261-4570-a18b-5c2e9978c069" />
 
 Purple-daze
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/bc8be60f-4b2a-4898-a535-91eed8b37a31" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/addef2ea-8d3a-494a-aaaf-fe4f4fd3cc34" />
+
 
 
 
