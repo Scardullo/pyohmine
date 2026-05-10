@@ -1,8 +1,7 @@
-#!/bin/bash
-
-wallpp ~/Pictures/wallpaper/gruvy_street.png
-
+wallpp /home/anthony/Pictures/wallpaper/gruvy_street.png
 cp ~/.config/kitty/gruvbox ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/gruvbox ~/.config/hypr/hyprland.conf
-cp ~/dotfiles/zshrc/p10k ~/.zshrc
-cp ~/dotfiles/config/fastfetch/anime-jakool ~/.config/fastfetch/config.jsonc
+cp ~/Documents/bash_zsh_rc/myhypr/my_hypr_zshrc_17-04-2026 ~/.zshrc
+cp ~/Documents/fastfetch-configs/anime-jakool ~/.config/fastfetch/config.jsonc
+cp ~/.config/waybar/themes/gruvbox_style.css ~/.config/waybar/style.css
+pkill waybar && waybar &

@@ -1,8 +1,7 @@
-#!/bin/bash
-
-wallpp ~/Pictures/wallpaper/everforest_steps.webp
-
+wallpp /home/anthony/Pictures/wallpaper/everforest_steps.webp
 cp ~/.config/kitty/everforest ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/everforest ~/.config/hypr/hyprland.conf
-cp ~/dotfiles/zshrc/p10k ~/.zshrc
-cp ~/dotfiles/config/fastfetch/anime-jakool ~/.config/fastfetch/config.jsonc
+cp ~/Documents/bash_zsh_rc/myhypr/my_hypr_zshrc_17-04-2026 ~/.zshrc
+cp ~/Documents/fastfetch-configs/anime-jakool ~/.config/fastfetch/config.jsonc
+cp ~/.config/waybar/themes/everforest_style.css ~/.config/waybar/style.css
+pkill waybar && waybar &
