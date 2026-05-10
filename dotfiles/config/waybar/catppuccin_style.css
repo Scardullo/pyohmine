@@ -1,6 +1,6 @@
 * {
     font-family: "JetBrainsMono Nerd Font";
-    font-size: 14px;
+    font-size: 12px;
     min-height: 0;
     border: none;
 }
@@ -15,24 +15,24 @@ window#waybar {
 #custom-logo {
     background: rgba(30, 30, 46, 0.90);
     color: #89B4FA;
-    margin: 6px 4px 6px 8px;
-    padding: 0 16px;
-    border-radius: 12px;
-    font-size: 18px;
+    margin: 3px 3px 3px 6px;
+    padding: 0 10px;
+    border-radius: 10px;
+    font-size: 15px;
 }
 
 /* Workspaces */
 
 #workspaces {
-    margin: 6px 0;
+    margin: 3px 0;
 }
 
 #workspaces button {
     background: rgba(30, 30, 46, 0.90);
     color: #89B4FA;
-    margin: 0 4px;
-    padding: 0 12px;
-    border-radius: 10px;
+    margin: 0 2px;
+    padding: 0 10px;
+    border-radius: 8px;
     transition: all 0.2s ease;
 }
 
@@ -56,13 +56,13 @@ window#waybar {
 #tray {
     background: rgba(30, 30, 46, 0.90);
     color: #89B4FA;
-    margin: 6px 4px;
-    padding: 0 14px;
-    border-radius: 12px;
+    margin: 3px 3px;
+    padding: 0 10px;
+    border-radius: 10px;
 }
 
 #tray {
-    margin-right: 8px;
+    margin-right: 6px;
 }
 
 tooltip {
