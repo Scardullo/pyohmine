@@ -88,7 +88,7 @@ env = QT_QPA_PLATFORMTHEME,qt6ct
 # https://wiki.hypr.land/Configuring/Variables/#general
 general {
     gaps_in = 5
-    gaps_out = 20
+    gaps_out = 5
 
     border_size = 2
 
@@ -123,9 +123,9 @@ decoration {
 
 blur {
     enabled = true
-    size = 5       # medium radius
-    passes = 2     # moderate number of blur passes
-    vibrancy = 0.15 # slightly noticeable background enhancement
+    size = 3       # medium radius
+    passes = 1     # moderate number of blur passes
+    vibrancy = 0.05 # slightly noticeable background enhancement
 }
 
 
