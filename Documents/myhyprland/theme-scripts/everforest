@@ -3,3 +3,5 @@ cp ~/.config/kitty/everforest ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/everforest ~/.config/hypr/hyprland.conf
 cp ~/Documents/bash_zsh_rc/myhypr/my_hypr_zshrc_17-04-2026 ~/.zshrc
 cp ~/Documents/fastfetch-configs/anime-jakool ~/.config/fastfetch/config.jsonc
+cp ~/.config/waybar/themes/everforest_style.css ~/.config/waybar/style.css
+pkill waybar && waybar &

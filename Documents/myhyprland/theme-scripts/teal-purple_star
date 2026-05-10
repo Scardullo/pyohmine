@@ -4,3 +4,5 @@ cp ~/.config/hypr/teal-purple ~/.config/hypr/hyprland.conf
 cp ~/Documents/color-themes/starship_toml_files/teal-purple ~/.config/starship.toml
 cp ~/Documents/bash_zsh_rc/myhypr/my_hypr_starship_17-04-2026 ~/.zshrc
 cp ~/Documents/fastfetch-configs/anime-jakool ~/.config/fastfetch/config.jsonc
+cp ~/.config/waybar/themes/teal-purple_style.css ~/.config/waybar/style.css
+pkill waybar && waybar &

@@ -1,0 +1,70 @@
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
+    min-height: 0;
+    border: none;
+}
+
+window#waybar {
+    background: transparent;
+    color: #5884d4;
+}
+
+#custom-logo {
+    background: rgba(23, 23, 23, 0.90);
+    color: #5884d4;
+    margin: 6px 4px 6px 8px;
+    padding: 0 16px;
+    border-radius: 12px;
+    font-size: 18px;
+}
+
+#workspaces {
+    margin: 6px 0;
+}
+
+#workspaces button {
+    background: rgba(23, 23, 23, 0.90);
+    color: #5884d4;
+    margin: 0 4px;
+    padding: 0 12px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button.active {
+    background: #5884d4;
+    color: #171717;
+}
+
+#workspaces button:hover {
+    background: rgba(37, 38, 60, 0.90);
+    color: #5884d4;
+}
+
+#clock,
+#cpu,
+#memory,
+#network,
+#pulseaudio,
+#tray {
+    background: rgba(23, 23, 23, 0.90);
+    color: #5884d4;
+    margin: 6px 4px;
+    padding: 0 14px;
+    border-radius: 12px;
+}
+
+#tray {
+    margin-right: 8px;
+}
+
+tooltip {
+    background: #171717;
+    border: 2px solid #3b4261;
+    border-radius: 10px;
+}
+
+tooltip label {
+    color: #5884d4;
+}

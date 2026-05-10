@@ -1,0 +1,76 @@
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
+    min-height: 0;
+    border: none;
+}
+
+window#waybar {
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
+}
+
+/* Arch Logo */
+
+#custom-logo {
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
+    margin: 6px 4px 6px 8px;
+    padding: 0 16px;
+    border-radius: 12px;
+    font-size: 18px;
+}
+
+/* Workspaces */
+
+#workspaces {
+    margin: 6px 0;
+}
+
+#workspaces button {
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
+    margin: 0 4px;
+    padding: 0 12px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button.active {
+    background: #89B4FA;
+    color: #1e1e2e;
+}
+
+#workspaces button:hover {
+    background: #313244;
+    color: #89B4FA;
+}
+
+/* Modules */
+
+#clock,
+#cpu,
+#memory,
+#network,
+#pulseaudio,
+#tray {
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
+    margin: 6px 4px;
+    padding: 0 14px;
+    border-radius: 12px;
+}
+
+#tray {
+    margin-right: 8px;
+}
+
+tooltip {
+    background: #1e1e2e;
+    border: 2px solid #313244;
+    border-radius: 10px;
+}
+
+tooltip label {
+    color: #89B4FA;
+}

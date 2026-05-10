@@ -4,3 +4,5 @@ cp ~/.config/hypr/everforest ~/.config/hypr/hyprland.conf
 cp ~/Documents/color-themes/starship_toml_files/everforest ~/.config/starship.toml
 cp ~/Documents/bash_zsh_rc/myhypr/my_hypr_starship_17-04-2026 ~/.zshrc
 cp ~/Documents/fastfetch-configs/anime-jakool ~/.config/fastfetch/config.jsonc
+cp ~/.config/waybar/themes/everforest_style.css ~/.config/waybar/style.css
+pkill waybar && waybar &
