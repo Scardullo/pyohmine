@@ -85,6 +85,7 @@ window#waybar {
 #pulseaudio {
     background: #f7768e;
     color: #000000;
+    font-weight: bold;
 }
 
 /* Tooltip */

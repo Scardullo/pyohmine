@@ -83,8 +83,9 @@ window#waybar {
 /* VOLUME */
 
 #pulseaudio {
-    background: #e7034a;
-    color: #ffffff;
+    background: #6fb352;
+    color: #000000;
+    font-weight: bold;
 }
 
 /* Tooltip */
