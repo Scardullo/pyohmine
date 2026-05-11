@@ -73,6 +73,7 @@ window#waybar {
 #cpu {
     background: #d79921;
     color: #000000;
+    border-radius: 0px;
 }
 
 /* MEMORY */
@@ -80,6 +81,7 @@ window#waybar {
 #memory {
     background: #98971a;
     color: #000000;
+    border-radius: 0px;
 }
 
 /* VOLUME */
@@ -87,6 +89,7 @@ window#waybar {
 #pulseaudio {
     background: #d3869b;
     color: #000000;
+    border-radius: 0px;
 }
 
 /* Tooltip */
