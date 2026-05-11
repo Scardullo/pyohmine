@@ -65,10 +65,41 @@ int main() {
 		struct epoll_event cev = { .events = EPOLLIN, .data.fd = fd };
 		epoll_ctl(ep, EPOLL_CTL_ADD, fd, &cev);
 
-		printf("Client disconnected %d\n", fd);
+		printf("Client connected %d\n", fd);
 	    }
 	    else {
 		int fd = events[i].data.fd;
+		Client *c = clients[fd];
+
+		Packet pkt;
+
+		if (recv_all(fd, &pkt.len, 2) < 0) {
+		    printf("client disconnected %d\n", fd);
+		    epoll_ctl(ep, EPOLL_CTL_DEL, fd, NULL);
+		    client_destroy(c);
+		    clients[fd] = NULL;
+		    continue;
+		}
+
+		pkt.len = ntohs(pkt.len);
+
+		if (recv_all(fd, &pkt.type, 1) < 0) {
+		    printf("Client disconnected %d\n", fd);
+		    epoll_ctl(ep, EPOLL_CTL_DEL, fd, NULL);
+		    client_destroy(c);
+		    clients[fd] = NULL;
+		    continue;
+		}
+
+		if(recv_all(fd, pkt.data, pkt.len) < 0) {
+		    printf("Client disconnected %d\n", fd);
+		    epoll_ctl(ep, EPOLL_CTL_DEL, fd, NULL);
+		    client_destroy(c);
+		    clients[fd] = NULL;
+		    continue;
+		}
+
+		handle_packet(c, &pkt);
 	    }
 	}
     }
