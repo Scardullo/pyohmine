@@ -12,7 +12,7 @@
 #define MAX_EVENTS 64
 #define MAX_CLIENTS 1024
 
-static Client *clients[MAX_CLIENTS]
+static Client *clients[MAX_CLIENTS];
 
 static void broadcast(Packet *pkt, int except_fd) {
     for (int i = 0; i < MAX_CLIENTS; i++) {

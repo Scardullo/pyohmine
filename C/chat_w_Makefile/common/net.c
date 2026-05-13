@@ -19,7 +19,7 @@ int tcp_listen(uint16_t port) {
     int yes = 1;
     setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
 
-    struct sockaddr_in addr = {0}:
+    struct sockaddr_in addr = {0};
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = INADDR_ANY;
