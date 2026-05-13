@@ -71,6 +71,7 @@ window#waybar {
 #cpu {
     background: #ffb964;
     color: #000000;
+    font-weight: bold;
     border-radius: 0px;
 }
 
@@ -79,6 +80,7 @@ window#waybar {
 #memory {
     background: #5884D4;
     color: #000000;
+    font-weight: bold;
     border-radius: 0px;
 }
 
@@ -89,6 +91,16 @@ window#waybar {
     color: #000000;
     font-weight: bold;
     border-radius: 0px;
+}
+
+/* CLOCK */
+
+#clock {
+    font-weight: bold;
+}
+
+#custom-weather {
+    font-weight: bold;
 }
 
 /* Tooltip */

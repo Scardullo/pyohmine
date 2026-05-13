@@ -31,11 +31,11 @@
     },
 
     "cpu": {
-        "format": "cpu  {usage}%"
+        "format": "CPU  {usage}%"
     },
 
     "memory": {
-        "format": "󰍛  {}%"
+        "format": "RAM 󰍛 {percentage}%"
     },
 
     "network": {
