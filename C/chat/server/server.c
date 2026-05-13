@@ -1,6 +1,7 @@
 #include "../common/net.h"
 #include "../common/util.h"
 #include "../common/protocol.h"
+#include "client.h"
 
 #include <sys/epoll.h>
 #include <unistd.h>
