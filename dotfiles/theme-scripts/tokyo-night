@@ -2,6 +2,6 @@ wallpp /home/anthony/Pictures/wallpaper/arch-dark-dracula.webp
 cp ~/.config/kitty/tokyo-night ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/tokyo-night ~/.config/hypr/hyprland.conf
 cp ~/Documents/bash_zsh_rc/myhypr/p10k ~/.zshrc
-cp ~/Documents/fastfetch-configs/anime-jakool ~/.config/fastfetch/config.jsonc
+cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
 cp ~/.config/waybar/themes/tokyo-night_style.css ~/.config/waybar/style.css
 pkill waybar && waybar &

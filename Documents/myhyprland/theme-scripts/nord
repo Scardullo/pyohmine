@@ -2,6 +2,6 @@ wallpp /home/anthony/Pictures/wallpaper/retro-space.webp
 cp ~/.config/kitty/nord ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/nord ~/.config/hypr/hyprland.conf
 cp ~/Documents/bash_zsh_rc/myhypr/my_hypr_zshrc_17-04-2026 ~/.zshrc
-cp ~/Documents/fastfetch-configs/anime-jakool ~/.config/fastfetch/config.jsonc
+cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
 cp ~/.config/waybar/themes/nord_style.css ~/.config/waybar/style.css
 pkill waybar && waybar &
