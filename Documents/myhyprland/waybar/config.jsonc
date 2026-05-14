@@ -14,6 +14,7 @@
     ],
 
     "modules-right": [
+        "custom/weather",
         "pulseaudio",
         "network",
         "cpu",
@@ -30,19 +31,28 @@
         "format": "  {:%I:%M %p}"
     },
 
+    "custom/weather": {
+        "exec": "curl -s 'wttr.in/?format=%t' | sed 's/+//'",
+	"interval": 1800,
+        "format": " {}",
+	"tooltip": false
+    },
+
     "cpu": {
-        "format": "CPU  {usage}%"
+        "format": "CPU 󰍛 {usage}%"
     },
 
     "memory": {
-        "format": "RAM 󰍛 {percentage}%"
+        "format": "RAM 󰓅 {percentage}%"
     },
 
+
     "network": {
-        "format-wifi": "  {signalStrength}%",
-        "format-ethernet": "󰈀 Connected",
-        "format-disconnected": "󰖪 Offline",
-        "tooltip-format": "{ifname}"
+    "format-wifi": " {signalStrength}%",
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰖪",
+    "tooltip-format": "{ifname}",
+    "tooltip": false
     },
 
     "pulseaudio": {
