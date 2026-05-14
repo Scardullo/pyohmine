@@ -2,7 +2,7 @@
 # This work is licensed under the terms of the MIT license.
 # For a copy, see https://opensource.org/licenses/MIT.
 # font_family JetBrainsMono Nerd Font
-font_size 15.0
+font_size 14.0
 
 background   	     #1D1F28
 foreground  	     #FDFDFD
@@ -12,7 +12,7 @@ cursor                #C574DD
 selection_foreground  #1D1F28
 selection_background  #C574DD
 
-color0  #81a1c1
+color0  #ffffff
 color8  #97a9cf
 
 # red
