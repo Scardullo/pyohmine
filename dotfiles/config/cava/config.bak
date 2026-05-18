@@ -1,12 +1,12 @@
 [general]
 bars = 12
-framerate = 60
+framerate = 30
 sensitivity = 100
 
 [input]
 method = pulse
 source = auto
-gain = 3
+gain = 2
 
 [output]
 method = raw
@@ -18,4 +18,4 @@ channels = mono
 monstercat = 1
 waves = 0
 gravity = 60
-noise_reduction = 0
+noise_reduction = 0.77
