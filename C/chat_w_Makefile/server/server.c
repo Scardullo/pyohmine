@@ -24,7 +24,7 @@ static void broadcast(Packet *pkt, int except_fd) {
 
 static void handle_packet(Client *c, Packet *pkt) {
     if (pkt->type == MSG_NICK) {
-	safe_strncpy(c->nick, (char*)pkt->data, MSG_NICK);
+	safe_strncpy(c->nick, (char*)pkt->data, MAX_NICK);
 	Packet out = {0};
 	out.type = MSG_SYSTEM;
 	snprintf((char*)out.data, MAX_PAYLOAD, "%s joined", c->nick);
