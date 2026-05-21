@@ -28,7 +28,7 @@ inputbar {
 
 listview {
     spacing: 6px;
-    lines: 10;
+    lines: 8;
 }
 
 element {
@@ -37,5 +37,5 @@ element {
 }
 
 element-icon {
-    size: 24px;
+    size: 48px;
 }

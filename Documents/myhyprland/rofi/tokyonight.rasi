@@ -2,21 +2,24 @@ configuration {
     modi: "drun";
     show-icons: true;
     icon-theme: "candy-icons";
-    font: "JetBrainsMono Nerd Font 11";
+    font: "Agave Nerd Font Mono 11";
     drun-display-format: "{icon} {name}";
     sidebar-mode: false;
 }
 
 * {
-    bg:            rgba(30, 30, 46, 0.85);
-    bg-alt:        rgba(49, 50, 68, 0.75);
-    fg:            #cdd6f4;
+    /* 🧱 base */
+    bg:            rgba(23, 23, 23, 0.88);
+    bg-alt:        rgba(35, 35, 40, 0.75);
 
-    selected:      #9a7ae0;
-    active:        #a6e3a1;
-    urgent:        #f38ba8;
+    fg:            #ffffff;
 
-    border-col:    #9a7ae0;
+    /* 🔵 darker blue accent */
+    selected:      #4a6fb8;
+    active:        #5f90ea;
+    urgent:        #e7034a;
+
+    border-col:    #4a6fb8;
 
     background-color: transparent;
     text-color: @fg;
@@ -33,6 +36,7 @@ window {
 
 mainbox {
     children: [ inputbar, listview ];
+    spacing: 8px;
 }
 
 inputbar {
@@ -41,7 +45,7 @@ inputbar {
     border-color: @border-col;
     border-radius: 10px;
     padding: 10px;
-    margin: 0px 0px 12px 0px;
+    margin: 0px 0px 10px 0px;
 }
 
 prompt {
@@ -56,7 +60,6 @@ entry {
 
 listview {
     lines: 8;
-    columns: 1;
     spacing: 6px;
     scrollbar: false;
 }
@@ -72,17 +75,17 @@ element normal.normal {
 
 element selected.normal {
     background-color: @selected;
-    text-color: #1e1e2e;
+    text-color: #0f1115;
 }
 
 element selected.active {
     background-color: @active;
-    text-color: #1e1e2e;
+    text-color: #0f1115;
 }
 
 element selected.urgent {
     background-color: @urgent;
-    text-color: #1e1e2e;
+    text-color: #ffffff;
 }
 
 element-icon {

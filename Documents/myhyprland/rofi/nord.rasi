@@ -1,7 +1,7 @@
 configuration {
     modi: "drun";
     show-icons: true;
-    icon-theme: "candy-icons";
+    icon-theme: "Adwaita";
     font: "Agave Nerd Font Mono 11";
     drun-display-format: "{icon} {name}";
 }
