@@ -38,7 +38,7 @@ int tcp_connect(const char *host, uint16_t port) {
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
 
-    if (getaddrinfo(host, p, &hints, &res) != 0)
+    if (getaddrinfo(host, p, &hints, &res) != 0) // getaddrinfo(..., struct addrinfo **res);
 	die("getaddrinfo");
 
     int fd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
