@@ -67,3 +67,69 @@ static void die(const char *msg) {
     exit(1);
 }
 
+static void trim_newline(char *s) {
+    size_t n = strlen(s);
+    if (n && s[n - 1] == '\n')
+        s[n - 1] = 0;
+}
+
+static void timestamp(char *buf, size_t sz) {
+    time_t now = time(NULL);
+    struct tm *tm = localtime(&now);
+    strftime(buf, sz, "%H:%M:%S", tm);
+}
+
+static void log_msg(const char *fmt, ...) {
+    char tbuf[32];
+    timestamp(tbuf, sizeof tbuf);
+
+    printf(ANSI_CYAN "[%s] " ANSI_RESET, tbuf);
+
+    va_list ap;
+    va_start(ap, fmt);
+    vprintf(fmt, ap);
+    va_end(ap);
+
+    printf("\n");
+}
+
+static int send_all(int fd, const void *buf, size_t len) {
+    size_t sent = 0;
+    const char *p = buf;
+
+    while (sent < len) {
+	ssize_t n = send(fd, p + sent, len - sent, 0);
+	if (n <= 0)
+	    return -1;
+	sent += n;
+    }
+
+    return 0;
+}
+
+static int recv_all(int fd, void *buf, size_t len) {
+    size_t recvd = 0;
+    char *p = buf;
+
+    while (recvd < len) {
+	ssize_t n = recv(fd, p + recvd, len - recvd, 0);
+	if (n <= 0)
+		return -1;
+	recvd += n;
+    }
+
+    return 0;
+}
+
+static int send_packet(int fd, uint8_t type, const char *msg) {
+    Packet pkt = {0};
+
+    pkt.type = type;
+    strncpy(pkt.data, msg, sizeof(pkt.data) - 1);
+    pkt.len = strlen(pkt.data) + 1;
+
+    uint16_t netlen = htons(pkt.len);
+
+    if (send_all(fd, &netlen, 2) < 0)
+	return -1;
+}
