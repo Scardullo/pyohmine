@@ -19,13 +19,7 @@
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
-  # let nix manage ~/.local/bin properly
   environment.localBinInPath = true;
-
-  # ❌ REMOVE custom PATH override (not needed on NixOS)
-  # environment.sessionVariables = {
-  #   PATH = "$HOME/.local/bin:$PATH";
-  # };
 
   # -------------------------
   # TIME / LOCALE
@@ -49,13 +43,14 @@
     initialPassword = "nixos";
   };
 
+  # -------------------------
+  # ZSH
+  # -------------------------
   programs.zsh = {
     enable = true;
+    autosuggestions.enable = true;
+    syntax-highlighting.enable = true;
   };
-
-  # FIXED WAY (THIS IS WHY YOUR AUTOSUGGESTIONS BROKE BEFORE)
-  programs.zsh.autosuggestions.enable = true;
-  programs.zsh.syntaxHighlighting.enable = true;
 
   # -------------------------
   # HYPRLAND
@@ -86,7 +81,7 @@
   services.openssh.enable = true;
 
   # -------------------------
-  # FONTS (FIXED NERD FONTS)
+  # FONTS
   # -------------------------
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
@@ -98,7 +93,7 @@
   ];
 
   # -------------------------
-  # SYSTEM PACKAGES
+  # THEMING (THIS IS WHAT YOU WANTED)
   # -------------------------
   environment.systemPackages = with pkgs; [
     # WM
@@ -111,7 +106,13 @@
     # file manager
     xfce.thunar
 
-    # screenshots
+    # GTK / GNOME THEMING SUPPORT (IMPORTANT FOR DARK MODE)
+    gnome-themes-extra
+    adwaita-qt
+    glib
+    dconf
+
+    # screenshots / clipboard
     grim
     slurp
     wl-clipboard
@@ -144,12 +145,9 @@
     # network
     networkmanagerapplet
 
-    # zsh plugins (OK to keep here too)
+    # zsh plugins
     zsh-autosuggestions
     zsh-syntax-highlighting
-
-    zsh-powerlevel10k
-    meslo-lgs-nf
   ];
 
   # -------------------------
