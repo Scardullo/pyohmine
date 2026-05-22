@@ -28,7 +28,8 @@ Purple-daze
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f261786e-45d9-49cf-840c-c880a7a12612" />
 
 
-
+Nixos
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d302ee96-1f07-4702-98a6-da85cdacbb7f" />
 
 
 
