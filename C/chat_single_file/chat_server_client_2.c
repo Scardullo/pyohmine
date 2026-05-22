@@ -61,3 +61,9 @@ static Client clients[MAX_CLIENTS];
 static pthread_mutex_t clients_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static volatile sig_atomic_t running = 1;
+
+static void die(const char *msg) {
+    perror(msg);
+    exit(1);
+}
+
