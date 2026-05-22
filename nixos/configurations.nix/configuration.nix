@@ -49,7 +49,7 @@
   programs.zsh = {
     enable = true;
     autosuggestions.enable = true;
-    syntax-highlighting.enable = true;
+    syntaxHighlighting.enable = true;
   };
 
   # -------------------------
@@ -74,6 +74,9 @@
     enable = true;
     pulse.enable = true;
   };
+
+  # thumbnail support
+  services.tumbler.enable = true;
 
   # -------------------------
   # SSH
@@ -149,6 +152,13 @@
     # zsh plugins
     zsh-autosuggestions
     zsh-syntax-highlighting
+    
+    imagemagick    
+    ffmpegthumbnailer
+    poppler-utils
+    gdk-pixbuf
+    webp-pixbuf-loader
+    librsvg
 
   ];
 
