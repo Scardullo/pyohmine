@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# -------------------------
+# KILL OLD INSTANCES CLEANLY
+# -------------------------
+pkill swaybg 2>/dev/null
+pkill waybar 2>/dev/null
+
+# small delay so processes fully exit
+sleep 0.3
+
+# -------------------------
+# WALLPAPER (ONE PER MONITOR)
+# -------------------------
+WALL="/home/anthony/Pictures/wallpaper/gruvy_street.png"
+
+swaybg -o HDMI-A-1 -i "$WALL" -m fill &
+# If you only have ONE monitor, remove the line below
+# swaybg -o DP-1 -i "$WALL" -m fill &
+
+# -------------------------
+# WAYBAR
+# -------------------------
+waybar &
+

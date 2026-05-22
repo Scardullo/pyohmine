@@ -1,0 +1,6 @@
+wallpp /home/anthony/Pictures/wallpaper/gruvy_street.png
+cp ~/.config/kitty/gruvbox ~/.config/kitty/kitty.conf
+cp ~/.config/hypr/gruvbox.conf ~/.config/hypr/hyprland.conf
+cp ~/Documents/color-themes/starship_toml_files/gruvbox ~/.config/starship.toml
+cp ~/.config/waybar/themes/gruvbox_style.css ~/.config/waybar/style.css
+pkill waybar && waybar &

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+    echo "Usage: wallpp /path/to/wallpaper"
+    exit 1
+fi
+
+WALLPAPER="$1"
+
+# kill previous swaybg
+pkill swaybg
+
+sleep 0.2
+
+# start ONE swaybg instance (correct way)
+swaybg -i "$WALLPAPER" -m fill &
