@@ -1,0 +1,76 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 34,
+    "spacing": 6,
+
+    "modules-left": [
+        "custom/logo",
+        "hyprland/workspaces",
+        "custom/cava",
+	"custom/media"
+    ],
+
+    "modules-center": [
+        "clock"
+    ],
+
+    "modules-right": [
+        "custom/weather",
+        "pulseaudio",
+        "network",
+        "cpu",
+        "memory",
+        "tray"
+    ],
+
+    "custom/logo": {
+        "format": "",
+        "tooltip": false
+    },
+
+//    "custom/media": {
+//        "exec": "/home/anthony/.config/waybar/scripts/mediainfo.sh",
+//        "return-type": "text",
+//        "interval": 2
+//    },
+
+    "clock": {
+        "format": "  {:%I:%M %p}"
+    },
+
+    "custom/weather": {
+        "exec": "curl -s 'wttr.in/?format=%t' | sed 's/+//'",
+        "interval": 1800,
+        "format": " {}",
+        "tooltip": false
+    },
+
+    "cpu": {
+        "format": "CPU 󰍛 {usage}%"
+    },
+
+    "memory": {
+        "format": "RAM 󰓅 {percentage}%"
+    },
+
+    "network": {
+        "format-wifi": " {signalStrength}%",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰖪",
+        "tooltip-format": "{ifname}",
+        "tooltip": false
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰖁 Muted",
+        "format-icons": {
+            "default": [
+                "",
+                "",
+                ""
+            ]
+        }
+    }
+}

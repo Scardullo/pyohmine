@@ -90,6 +90,7 @@
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
+    nerd-fonts.agave
   ];
 
   # -------------------------
@@ -148,6 +149,7 @@
     # zsh plugins
     zsh-autosuggestions
     zsh-syntax-highlighting
+
   ];
 
   # -------------------------
