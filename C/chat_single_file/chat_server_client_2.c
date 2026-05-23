@@ -132,4 +132,16 @@ static int send_packet(int fd, uint8_t type, const char *msg) {
 
     if (send_all(fd, &netlen, 2) < 0)
 	return -1;
+
+    if (send_all(fd, &pkt.type, 1) < 0)
+	return -1;
+
+    if (send_all(fd, pkt.data, pkt.len) < 0)
+	return -1;
+
+    return 0;
+}
+
+static int recv_packet(int fd, Packet *pkt) {
+    uint16_t netlen;
 }
