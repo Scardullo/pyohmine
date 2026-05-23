@@ -79,6 +79,72 @@
   services.tumbler.enable = true;
 
   # -------------------------
+# NFS AUTOMOUNT (SYSTEMD)
+# -------------------------
+
+services.rpcbind.enable = true;
+
+fileSystems."/mnt/nfs/Documents" = {
+  device = "10.0.0.75:/home/anthony/Documents";
+  fsType = "nfs4";
+  options = [
+    "x-systemd.automount"
+    "x-systemd.idle-timeout=60"
+    "noatime"
+  ];
+};
+
+fileSystems."/mnt/nfs/mediaplex" = {
+  device = "10.0.0.75:/home/anthony/mediaplex";
+  fsType = "nfs4";
+  options = [
+    "x-systemd.automount"
+    "x-systemd.idle-timeout=60"
+    "noatime"
+  ];
+};
+
+fileSystems."/mnt/nfs/python" = {
+  device = "10.0.0.75:/home/anthony/python";
+  fsType = "nfs4";
+  options = [
+    "x-systemd.automount"
+    "x-systemd.idle-timeout=60"
+    "noatime"
+  ];
+};
+
+fileSystems."/mnt/nfs/bashscripts" = {
+  device = "10.0.0.75:/home/anthony/bashscripts";
+  fsType = "nfs4";
+  options = [
+    "x-systemd.automount"
+    "x-systemd.idle-timeout=60"
+    "noatime"
+  ];
+};
+
+fileSystems."/mnt/nfs/postgres" = {
+  device = "10.0.0.75:/home/anthony/postgres";
+  fsType = "nfs4";
+  options = [
+    "x-systemd.automount"
+    "x-systemd.idle-timeout=60"
+    "noatime"
+  ];
+};
+
+fileSystems."/mnt/nfs/vmisos" = {
+  device = "10.0.0.75:/home/anthony/vmisos";
+  fsType = "nfs4";
+  options = [
+    "x-systemd.automount"
+    "x-systemd.idle-timeout=60"
+    "noatime"
+  ];
+};
+
+  # -------------------------
   # SSH
   # -------------------------
   services.openssh.enable = true;
@@ -162,6 +228,10 @@
     librsvg
     htop
     bat
+    lsof
+    psmisc
+    ncdu
+    cmatrix
   ];
 
   # -------------------------
