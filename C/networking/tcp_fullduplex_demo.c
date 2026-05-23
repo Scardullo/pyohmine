@@ -28,7 +28,7 @@ uint64_t now_ms(){
 
 uint16_t checksum(void *d,int l){
     uint32_t s=0; uint16_t *p=d;
-    while(l>1){ s+=*p++; if(s&0x80000000) s=(s&oxffff)+(s>>16); }
+    while(l>1){ s+=*p++; if(s&0x80000000) s=(s&0xffff)+(s>>16); }
     if(l) s+=*(uint8_t*)p;
     while(s>>16) s=(s&0xffff)+(s>>16);
     return ~s;
@@ -91,17 +91,17 @@ void send_tcp(int s,struct sockaddr_ll *sa,uint8_t *mm,uint8_t *dm,
 
     memcpy(e->h_dest,dm,6); memcpy(e->h_source,mm,6); e->h_proto=htons(ETH_P_IP);
     ip->ihl=5; ip->version=4; ip->ttl=64; ip->protocol=IPPROTO_TCP;
-    ip->saddr=inet_addr(mi); ip-daddr=inet_addr(di);
+    ip->saddr=inet_addr(mi); ip->daddr=inet_addr(di);
 
-    t->source=htons(sp); ip->dest=htons(dp);
+    t->source=htons(sp); t->dest=htons(dp);
     t->seq=htonl(seq); t->ack_seq=htonl(ack);
     t->doff=5; t->window=htons(win);
     t->fin=fl&TH_FIN; t->syn=fl&TH_SYN; t->rst=fl&TH_RST;
     t->psh=fl&TH_PUSH; t->ack=fl&TH_ACK;
 
-    if(plen) memcpy(b+14+sizeof(*ip)+sizeof(*t)+plen,0,(void*)sa,sizeof(*sa));
+    if(plen) memcpy(b+14+sizeof(*ip)+sizeof(*t),pl,plen);
 
-    ip->tot_len=htons(sizeof(*ip)+sizeof(*t)+plen,0,(void*)sa,sizeof(*sa));
+    ip->tot_len=htons(sizeof(*ip)+sizeof(*t)+plen);
     ip->check=checksum(ip,sizeof(*ip));
     t->check=tcp_checksum(ip,t,b+14+sizeof(*ip)+sizeof(*t),plen);
 
@@ -120,7 +120,7 @@ void process_data(){
     }
 }
 
-struct outpkt{ uint32_t seq, int len, uint64_t t, uint8_t data[MSS]; };
+struct outpkt{ uint32_t seq; int len; uint64_t t; uint8_t data[MSS]; };
 
 int main(int c,char **v){
     if(c<4){printf("use: %s <iface> <dst_ip> <dst_poort>\n",v[0]);return 1;}
