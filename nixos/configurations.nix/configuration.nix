@@ -21,6 +21,11 @@
 
   environment.localBinInPath = true;
 
+  environment.sessionVariables = {
+    XCURSOR_THEME = "Bibata-Modern-Classic";
+    XCURSOR_SIZE = "24";
+  };
+
   # -------------------------
   # TIME / LOCALE
   # -------------------------
@@ -79,76 +84,90 @@
   services.tumbler.enable = true;
 
   # -------------------------
-# NFS AUTOMOUNT (SYSTEMD)
-# -------------------------
+  # NFS AUTOMOUNT (SYSTEMD)
+  # -------------------------
 
-services.rpcbind.enable = true;
+  services.rpcbind.enable = true;
 
-fileSystems."/mnt/nfs/Documents" = {
-  device = "10.0.0.75:/home/anthony/Documents";
-  fsType = "nfs4";
-  options = [
-    "x-systemd.automount"
-    "x-systemd.idle-timeout=60"
-    "noatime"
-  ];
-};
+  fileSystems."/mnt/nfs/Documents" = {
+    device = "10.0.0.75:/home/anthony/Documents";
+    fsType = "nfs4";
+    options = [
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=60"
+      "noatime"
+    ];
+  };
 
-fileSystems."/mnt/nfs/mediaplex" = {
-  device = "10.0.0.75:/home/anthony/mediaplex";
-  fsType = "nfs4";
-  options = [
-    "x-systemd.automount"
-    "x-systemd.idle-timeout=60"
-    "noatime"
-  ];
-};
+  fileSystems."/mnt/nfs/mediaplex" = {
+    device = "10.0.0.75:/home/anthony/mediaplex";
+    fsType = "nfs4";
+    options = [
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=60"
+      "noatime"
+    ];
+  };
 
-fileSystems."/mnt/nfs/python" = {
-  device = "10.0.0.75:/home/anthony/python";
-  fsType = "nfs4";
-  options = [
-    "x-systemd.automount"
-    "x-systemd.idle-timeout=60"
-    "noatime"
-  ];
-};
+  fileSystems."/mnt/nfs/python" = {
+    device = "10.0.0.75:/home/anthony/python";
+    fsType = "nfs4";
+    options = [
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=60"
+      "noatime"
+    ];
+  };
 
-fileSystems."/mnt/nfs/bashscripts" = {
-  device = "10.0.0.75:/home/anthony/bashscripts";
-  fsType = "nfs4";
-  options = [
-    "x-systemd.automount"
-    "x-systemd.idle-timeout=60"
-    "noatime"
-  ];
-};
+  fileSystems."/mnt/nfs/bashscripts" = {
+    device = "10.0.0.75:/home/anthony/bashscripts";
+    fsType = "nfs4";
+    options = [
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=60"
+      "noatime"
+    ];
+  };
 
-fileSystems."/mnt/nfs/postgres" = {
-  device = "10.0.0.75:/home/anthony/postgres";
-  fsType = "nfs4";
-  options = [
-    "x-systemd.automount"
-    "x-systemd.idle-timeout=60"
-    "noatime"
-  ];
-};
+  fileSystems."/mnt/nfs/postgres" = {
+    device = "10.0.0.75:/home/anthony/postgres";
+    fsType = "nfs4";
+    options = [
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=60"
+      "noatime"
+    ];
+  };
 
-fileSystems."/mnt/nfs/vmisos" = {
-  device = "10.0.0.75:/home/anthony/vmisos";
-  fsType = "nfs4";
-  options = [
-    "x-systemd.automount"
-    "x-systemd.idle-timeout=60"
-    "noatime"
-  ];
-};
+  fileSystems."/mnt/nfs/vmisos" = {
+    device = "10.0.0.75:/home/anthony/vmisos";
+    fsType = "nfs4";
+    options = [
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=60"
+      "noatime"
+    ];
+  };
 
   # -------------------------
   # SSH
   # -------------------------
   services.openssh.enable = true;
 
+  
+  # SUDO NOPASSWD
+  security.sudo.extraRules = [
+    {
+      users = [ "anthony" ];
+      commands = [
+        {
+          command = "ALL";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];  
+ 
   # -------------------------
   # FONTS
   # -------------------------
@@ -181,6 +200,7 @@ fileSystems."/mnt/nfs/vmisos" = {
     adwaita-qt
     glib
     dconf
+    bibata-cursors
 
     # screenshots / clipboard
     grim
@@ -219,8 +239,8 @@ fileSystems."/mnt/nfs/vmisos" = {
     zsh-autosuggestions
     zsh-syntax-highlighting
     
-    #miscellaneous    
-    imagemagick    
+    # miscellaneous
+    imagemagick
     ffmpegthumbnailer
     poppler-utils
     gdk-pixbuf
