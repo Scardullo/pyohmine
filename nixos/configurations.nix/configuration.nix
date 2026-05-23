@@ -153,13 +153,15 @@
     zsh-autosuggestions
     zsh-syntax-highlighting
     
+    #miscellaneous    
     imagemagick    
     ffmpegthumbnailer
     poppler-utils
     gdk-pixbuf
     webp-pixbuf-loader
     librsvg
-
+    htop
+    bat
   ];
 
   # -------------------------
