@@ -215,4 +215,29 @@ static int tcp_connect(const char *host, uint16_t port) {
     return fd;
 }
 
+static void system_message(const char *fmt, ...) {
+    char buf[MAX_PAYLOAD];
 
+    va_list ap;
+    va_start(ap, fmt);
+    vsnprintf(buf, sizeof buf, fmt, ap);
+    va_end(ap);
+
+    pthread_mutex_unlock(&clients_lock);
+
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+	if (clients[i].active)
+	    send_packet(clients[i].fd, PKT_SYSTEM, buf);
+    }
+
+    pthread_mutex_unlock(&clients_lock);
+}
+
+static void room_broadcast(const char *room, int except_fd, uint8_t type, const char *msg) {
+    
+    pthread_mutex_lock(&clients_lock);
+
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+	
+    }
+}
