@@ -144,4 +144,75 @@ static int send_packet(int fd, uint8_t type, const char *msg) {
 
 static int recv_packet(int fd, Packet *pkt) {
     uint16_t netlen;
+
+    if (recv_all(fd, &netlen, 2) < 0)
+	return -1;
+
+    pkt->len = ntohs(netlen);
+
+    if (pkt->len >= MAX_PAYLOAD)
+	return -1;
+
+    if (recv_all(fd, &pkt->type, 1) < 0)
+	return -1;
+
+    if (recv_all(fd, pkt->data, pkt->len) < 0)
+	return -1;
+
+    pkt->data[pkt->len - 1] = 0;
+
+    return 0;
 }
+
+static int tcp_listen(uint16_t port) {
+    int fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd < 0)
+	die("socket");
+
+    int yes = 1;
+
+    if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes) < 0)
+	die("setsockopt");
+
+    struct sockaddr_in_addr = {0};
+
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr
+    addr.sin_port = htons(port);
+
+    if (bind(fd, (struct sockaddr *)&addr, sizeof addr) < 0)
+	die("bind");
+
+    if (listen(fd, BACKLOG) < 0)
+	die("listen");
+
+    return fd;
+}
+
+static int tcp_connect(const char *host, uint16_t port) {
+    struct addrinfo hints = {0}, *res;
+
+    char pbuf[16];
+
+    snprintf(pbuf, sizeof pbuf, "%u", port);
+
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+
+    if (getaddrinfo(host, pbuf, &hints, &res) != 0)
+	die("getaadrinfo");
+
+    int fd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+
+    if (fd < 0)
+	die("socket");
+
+    if (connect(fd, res->ai_addr, res->ai_addrlen) < 0)
+	die("connect");
+
+    freeaddrinfo(res);
+
+    return fd;
+}
+
+
