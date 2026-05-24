@@ -41,12 +41,19 @@
   # -------------------------
   # USER
   # -------------------------
-  users.users.anthony = {
+    users.users.anthony = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" ];
     shell = pkgs.zsh;
     initialPassword = "nixos";
   };
+
+  services.accounts-daemon.enable = true;
+
+  environment.etc."AccountsService/users/anthony".text = ''
+    [User]
+    Icon=/etc/user-icons/anthony.png
+  '';
 
   # -------------------------
   # ZSH
@@ -64,6 +71,18 @@
     enable = true;
     xwayland.enable = true;
   };
+  
+  # -------------------------
+  # DISPLAY MANAGER (GDM)
+  # -------------------------
+  services.xserver.enable = true;
+
+  services.displayManager.gdm = {
+    enable = true;
+    wayland = true;
+  };
+
+  services.desktopManager.gnome.enable = false;
 
   xdg.portal = {
     enable = true;
