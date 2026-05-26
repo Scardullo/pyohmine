@@ -24,6 +24,10 @@
   environment.sessionVariables = {
     XCURSOR_THEME = "Bibata-Modern-Classic";
     XCURSOR_SIZE = "24";
+    NIXOS_OZONE_WL = "1";
+
+    # Qt theming (needed for qt5ct)
+    QT_QPA_PLATFORMTHEME = "qt5ct";
   };
 
   # -------------------------
@@ -43,10 +47,35 @@
   # -------------------------
   users.users.anthony = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" "networkmanager" "wireshark" ];
     shell = pkgs.zsh;
     initialPassword = "nixos";
   };
+
+  services.accounts-daemon.enable = true;
+  services.tor = {
+    enable = true;
+    settings = {
+      SocksPort = "0.0.0.0:9050";
+    };
+  };
+
+  programs.wireshark.enable = true;
+
+  environment.etc."AccountsService/users/anthony".text = ''
+    [User]
+    Icon=/etc/user-icons/anthony.png
+  '';
+  
+  environment.etc."proxychains.conf".source = pkgs.writeText "proxychains.conf" ''
+    dynamic_chain
+    proxy_dns
+    tcp_read_time_out 15000
+    tcp_connect_time_out 8000
+
+    [ProxyList]
+    socks5 127.0.0.1 9050
+  '';
 
   # -------------------------
   # ZSH
@@ -64,6 +93,22 @@
     enable = true;
     xwayland.enable = true;
   };
+
+  # -------------------------
+  # DISPLAY MANAGER (SDDM)
+  # -------------------------
+  services.xserver.enable = true;
+
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+  };
+
+  services.desktopManager.gnome.enable = false;
+
+  services.displayManager.sessionPackages = [
+    pkgs.hyprland
+  ];
 
   xdg.portal = {
     enable = true;
@@ -86,7 +131,6 @@
   # -------------------------
   # NFS AUTOMOUNT (SYSTEMD)
   # -------------------------
-
   services.rpcbind.enable = true;
 
   fileSystems."/mnt/nfs/Documents" = {
@@ -154,8 +198,23 @@
   # -------------------------
   services.openssh.enable = true;
 
-  
+  # -------------------------
+  # LOCATE (plocate)
+  # -------------------------
+  services.locate = {
+    enable = true;
+    package = pkgs.plocate;
+
+    prunePaths = [
+      "/tmp"
+      "/var/tmp"
+      "/nix/store"
+    ];
+  };
+
+  # -------------------------
   # SUDO NOPASSWD
+  # -------------------------
   security.sudo.extraRules = [
     {
       users = [ "anthony" ];
@@ -166,15 +225,14 @@
         }
       ];
     }
-  ];  
- 
+  ];
+
   # -------------------------
   # FONTS
   # -------------------------
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
-
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
@@ -182,32 +240,42 @@
   ];
 
   # -------------------------
-  # THEMING (THIS IS WHAT YOU WANTED)
+  # QT (FIXED)
+  # -------------------------
+  qt = {
+    enable = true;
+    platformTheme = "qt5ct";
+    style = "adwaita-dark";
+  };
+
+
+  # -------------------------
+  # PACKAGES
   # -------------------------
   environment.systemPackages = with pkgs; [
-    # WM
     hyprland
     waybar
     kitty
     rofi
     swaybg
+    alacritty
 
-    # file manager
     xfce.thunar
 
-    # GTK / GNOME THEMING SUPPORT (IMPORTANT FOR DARK MODE)
     gnome-themes-extra
     adwaita-qt
     glib
     dconf
     bibata-cursors
 
-    # screenshots / clipboard
+    qt6.qtwayland
+    qt5.qtwayland
+    libsForQt5.qt5ct   # <-- ADD THIS HERE (important fix)
+
     grim
     slurp
     wl-clipboard
 
-    # dev tools
     git
     wget
     curl
@@ -218,28 +286,30 @@
     ripgrep
     fd
 
-    # system tools
     fastfetch
     eza
     starship
 
-    # audio / media
     playerctl
     pavucontrol
     brightnessctl
 
-    # apps
     firefox
     vscode
 
-    # network
     networkmanagerapplet
 
-    # zsh plugins
     zsh-autosuggestions
     zsh-syntax-highlighting
-    
-    # miscellaneous
+
+    wireshark
+    dnsutils
+    ipcalc
+    nettools
+    proxychains-ng
+    nmap
+    tor
+
     imagemagick
     ffmpegthumbnailer
     poppler-utils
@@ -252,6 +322,8 @@
     psmisc
     ncdu
     cmatrix
+    hyprshot
+    python3
   ];
 
   # -------------------------
