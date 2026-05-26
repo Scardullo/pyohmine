@@ -174,10 +174,10 @@ static int tcp_listen(uint16_t port) {
     if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes) < 0)
 	die("setsockopt");
 
-    struct sockaddr_in_addr = {0};
+    struct sockaddr_in addr = {0};
 
     addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr
+    addr.sin_addr.s_addr = INADDR_ANY;
     addr.sin_port = htons(port);
 
     if (bind(fd, (struct sockaddr *)&addr, sizeof addr) < 0)
@@ -238,6 +238,42 @@ static void room_broadcast(const char *room, int except_fd, uint8_t type, const 
     pthread_mutex_lock(&clients_lock);
 
     for (int i = 0; i < MAX_CLIENTS; i++) {
-	
+	if (!clients[i].active)
+	    continue;
+
+	if (clients[i].fd == except_fd)
+	    continue;
+
+	if (strcmp(clients[i].room, room) != 0)
+	    continue;
+
+	send_packet(clinets[i].fd, type, msg);
     }
+
+    pthread_mutex_unlock(&clients_lock);
+}
+
+static Client *find_client_by_name(const char *name) {
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+	if (!clients[i].active)
+	    continue;
+
+	if (!strcasecmp(clients[i].username, name))
+	    return &clients[i];
+    }
+
+    return NULL;
+}
+
+static void send_user_list(Client *c) {
+    char buf[MAX_PAYLOAD];
+    size_t used = 0;
+
+    used += snprintf(buf + used,
+		    sizeof(buf) - used,
+		    "=== USERS ONLINE ===\n");
+
+    pthread_mutex_unlock(&clients_lock);
+
+
 }
