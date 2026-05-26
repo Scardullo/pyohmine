@@ -275,5 +275,15 @@ static void send_user_list(Client *c) {
 
     pthread_mutex_unlock(&clients_lock);
 
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+	if (!Clients[i].active)
+	    continue;
 
+	used += snprintf(buf + used, sizeof(buf) - used, "%s (%s)\n", clients[i].username, clients[i].room);
+    }
+
+    pthread_mutex_unlock(&clients_lock);
+
+    send_packet(c->fd, PKT_SYSTEM, buf);
 }
+
