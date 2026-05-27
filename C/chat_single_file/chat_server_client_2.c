@@ -273,7 +273,7 @@ static void send_user_list(Client *c) {
 		    sizeof(buf) - used,
 		    "=== USERS ONLINE ===\n");
 
-    pthread_mutex_unlock(&clients_lock);
+    pthread_mutex_lock(&clients_lock);
 
     for (int i = 0; i < MAX_CLIENTS; i++) {
 	if (!Clients[i].active)

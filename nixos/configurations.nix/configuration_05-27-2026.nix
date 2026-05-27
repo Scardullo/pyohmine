@@ -315,7 +315,6 @@
     lsof
     psmisc
     ncdu
-    smartmontools
 
     # -------------------------
     # SHELL / TERMINAL ENHANCEMENTS
