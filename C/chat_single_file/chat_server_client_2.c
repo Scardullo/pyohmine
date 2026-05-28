@@ -287,3 +287,20 @@ static void send_user_list(Client *c) {
     send_packet(c->fd, PKT_SYSTEM, buf);
 }
 
+static void handle_command(Client *c, char *cmdline) {
+    char *cmd = strtok(cmdline, " ");
+
+    if (!cmd)
+	return;
+
+    if (!strcmp(cmd, "/help")) {
+	send_packet(
+		s->fd,
+		PKT_SYSTEM,
+		"Commands:\n"
+		"/help\n"
+		"/list\n"
+		"/rooms\n"
+		"/join <room>\n"
+    }
+}
