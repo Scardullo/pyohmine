@@ -295,12 +295,36 @@ static void handle_command(Client *c, char *cmdline) {
 
     if (!strcmp(cmd, "/help")) {
 	send_packet(
-		s->fd,
-		PKT_SYSTEM,
-		"Commands:\n"
-		"/help\n"
-		"/list\n"
-		"/rooms\n"
-		"/join <room>\n"
+	    c->fd,
+	    PKT_SYSTEM,
+	    "Commands:\n"
+	    "/help\n"
+	    "/list\n"
+	    "/rooms\n"
+	    "/join <room>\n"
+	    "/nick <name>\n"
+	    "/msg <user> <message>\n"
+	    "/whoami\n"
+	    "/stats\n"
+	    "/quit\n"
+	);
     }
+
+    else if (!strcmp(cmd, "/list")) {
+	send_user_list(c);
+    }
+
+    else if (!strcmp(cmd, "/rooms")) {
+	send_packet(
+	    c->fd,
+	    PKT_SYSTEM,
+	    "Known rooms:\n"
+	    "#general\n"
+	    "#linux\n"
+	    "#random\n"
+	    "#programming"
+	);
+    }
+
+
 }
