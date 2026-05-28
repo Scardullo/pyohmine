@@ -17,7 +17,7 @@ Catppuccin
 
 
 Nord
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/59b71039-4342-492e-93cf-d8c5224ef04c" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f8220f18-5a93-4ee1-9952-7c9a0bb1daf6" />
 
 
 Tokyo-night
