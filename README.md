@@ -1,11 +1,11 @@
 Its jenk but its my jenk
 
 Gruvbox
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/dc95314e-5701-43e4-976e-d50036d29f64" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/48e449a6-ffff-4b54-8e2b-b416dac07653" />
 
 
 Dracula
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f1cd7b75-adde-48f3-a3dc-6aae6aa59423" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/4f9825f7-9bbc-481b-9f23-d5e15acd0eda" />
 
 
 Everforest
