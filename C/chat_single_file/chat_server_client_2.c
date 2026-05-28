@@ -326,5 +326,20 @@ static void handle_command(Client *c, char *cmdline) {
 	);
     }
 
+    else if (!strcmp(cmd, "/join")) {
+	char *room = strtok(NULL, " ");
+
+	if (!room) {
+	    send_packet(c->fd, PKT_SYSTEM, "usage: /join <room>");
+
+	    return;
+	}
+
+	char old[MAX_ROOM];
+	strncpy(old, c->room, sizeof old);
+
+	strncpy(c->room, room, sizeof c->room - 1);
+    }
+
 
 }
