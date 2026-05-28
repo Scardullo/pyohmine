@@ -2,9 +2,9 @@
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
 
     "logo": {
-        "source": "/home/anthony/Pictures/purpnix.png",
+        "source": "/home/anthony/Pictures/ft15_nix.png",
         //"padding": {
-	  //"top": 1,
+	  //"top": 2,
 	//}
     },
 
@@ -22,7 +22,7 @@
     "modules": [
         {
             "type": "custom",
-            "format": "\n"  // <- this is what moves info down
+            "format": "\n"
         },
 
         {
