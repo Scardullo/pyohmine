@@ -1,7 +1,7 @@
 Its jenk but its my jenk
 
 Gruvbox
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/694aac41-42a1-4ae1-b2b4-51bbd6d46762" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/dc95314e-5701-43e4-976e-d50036d29f64" />
 
 
 Dracula
