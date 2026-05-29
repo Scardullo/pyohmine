@@ -155,19 +155,8 @@
         },
         {
             "type": "localip",
-            "key": "├─󰩟",
-            "compact": true,
-            "keyColor": "blue"
-        },
-        {
-            "type": "wifi",
-            "key": "├─",
-            "format": "{ssid}",
-            "keyColor": "blue"
-        },
-        {
-            "type": "locale",
             "key": "╰─",
+	    "compact": true,
             "keyColor": "blue"
         }
     ]
