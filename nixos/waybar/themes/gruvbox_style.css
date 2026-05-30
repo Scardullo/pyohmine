@@ -1,37 +1,35 @@
 * {
     font-family: "JetBrainsMono Nerd Font";
-    font-size: 14px;
+    font-size: 12px;
     min-height: 0;
     border: none;
 }
 
 window#waybar {
-    background: rgba(40, 40, 40, 0.90);
+    background: #282828;
     color: #ebdbb2;
 
-    border-bottom: 2px solid #504945;
+    border: none;
+    border-radius: 16px;
+    margin: 20px 50px 0px 50px;
 
-    border-radius: 16px 0px 0px 16px;
-
-    margin: 6px 0px 6px 6px;
-
-    padding-left: 0px;
+    padding: 0px 10px;
 }
 
 /* Arch Logo */
 
 #custom-logo {
-    background: #326670;
+    background: #83a598;
     color: #ebdbb2;
 
-    margin: 3px 3px 3px 0px;
+    margin: 0px;
 
     padding-left: 20px;
     padding-right: 24px;
 
-    border-radius: 12px 0px 0px 12px;
+    border-radius: 16px 0px 0px 16px;
 
-    font-size: 15px;
+    font-size: 18px;
     font-weight: bold;
 }
 
@@ -70,7 +68,7 @@ window#waybar {
 #tray {
     background: transparent;
     color: #ebdbb2;
-    margin: 3px 3px;
+    margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
 }
@@ -96,7 +94,7 @@ window#waybar {
     background: #98971a;
     color: #000000;
     font-weight: bold;
-    border-radius: 0px;
+    border-radius: 0px 10px 10px 0px;
 }
 
 /* VOLUME */

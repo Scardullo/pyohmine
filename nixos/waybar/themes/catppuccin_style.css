@@ -1,6 +1,6 @@
 * {
     font-family: "JetBrainsMono Nerd Font";
-    font-size: 14px;
+    font-size: 12px;
     min-height: 0;
     border: none;
 }
@@ -21,14 +21,14 @@ window#waybar {
 #custom-logo {
     background: #89b4fa;
     color: #1e1e2e;
-    margin: 3px 3px 3px 0px;
+    margin: 0px;
 
     padding-left: 20px;
     padding-right: 24px;
 
-    border-radius: 12px 0px 0px 12px;
+    border-radius: 16px 0px 0px 16px;
 
-    font-size: 15px;
+    font-size: 18px;
     font-weight: bold;
 }
 /* Workspaces */
@@ -66,7 +66,7 @@ window#waybar {
 #tray {
     background: rgba(30, 30, 46, 0.90);
     color: #89B4FA;
-    margin: 3px 3px;
+    margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
 }
