@@ -1,0 +1,98 @@
+configuration {
+    modi: "drun,run";
+    show-icons: true;
+    icon-theme: "candy-icons";
+    font: "JetBrainsMono Nerd Font 12";
+    drun-display-format: "{icon} {name}";
+    sidebar-mode: false;
+}
+
+* {
+    /* 🌑 slightly brighter purple base */
+    bg:            rgba(32, 24, 42, 0.88);
+    bg-alt:        rgba(44, 34, 58, 0.75);
+
+    fg:            #e6e0f3;
+
+    /* 🔵 cyan accent */
+    selected:      #3FDCEE;
+    active:        #2bd4e6;
+    urgent:        #f38ba8;
+
+    border-col:    #3FDCEE;
+
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    width: 600px;
+    border: 2px;
+    border-color: @border-col;
+    border-radius: 14px;
+    padding: 12px;
+    background-color: @bg;
+}
+
+mainbox {
+    children: [ inputbar, listview ];
+    spacing: 8px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border: 1.5px;
+    border-color: @border-col;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0px 0px 10px 0px;
+}
+
+prompt {
+    enabled: true;
+    text: "Search";
+    text-color: @selected;
+}
+
+entry {
+    placeholder: "Search...";
+}
+
+listview {
+    lines: 8;
+    spacing: 6px;
+    scrollbar: false;
+}
+
+element {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+element normal.normal {
+    background-color: transparent;
+}
+
+element selected.normal {
+    background-color: @selected;
+    text-color: #0f1115;
+}
+
+element selected.active {
+    background-color: @active;
+    text-color: #0f1115;
+}
+
+element selected.urgent {
+    background-color: @urgent;
+    text-color: #0f1115;
+}
+
+element-icon {
+    size: 48px;
+    margin: 0px 12px 0px 0px;
+}
+
+element-text {
+    vertical-align: 0.5;
+}
