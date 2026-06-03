@@ -27,6 +27,10 @@ Tokyo-night
 Purple-daze
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f261786e-45d9-49cf-840c-c880a7a12612" />
 
+Elemental
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/b7fb14b5-7cb9-409a-ba03-9699f4788423" />
+
+
 
 
 
