@@ -27,7 +27,7 @@ window {
     border-color: @border-col;
     border-radius: 14px;
     padding: 12px;
-    background-color: @bg;
+    background-color: #211105;
 }
 
 inputbar {
