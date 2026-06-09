@@ -1,5 +1,7 @@
 #!/bin/bash
 
+trap "exit" INT TERM EXIT
+
 cava | while read -r line; do
     out=""
 

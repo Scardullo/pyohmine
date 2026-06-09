@@ -1,0 +1,7 @@
+wallpp /home/anthony/Pictures/wallpaper/orange-desert.jpg
+cp ~/.config/kitty/elemental ~/.config/kitty/kitty.conf
+cp ~/.config/hypr/elemental.conf ~/.config/hypr/hyprland.conf
+cp ~/Documents/bash_zsh_rc/myhypr/p10k ~/.zshrc
+cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
+cp ~/.config/waybar/themes/elemental_style.css ~/.config/waybar/style.css
+pkill waybar && waybar &

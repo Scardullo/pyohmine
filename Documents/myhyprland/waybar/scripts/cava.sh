@@ -1,6 +1,7 @@
 #!/bin/bash
 
-trap "exit" INT TERM EXIT
+set -o pipefail
+trap "exit 0" INT TERM PIPE
 
 cava | while read -r line; do
     out=""
@@ -18,5 +19,5 @@ cava | while read -r line; do
         esac
     done
 
-    echo "$out"
+    echo "$out" 2>/dev/null || exit 0
 done

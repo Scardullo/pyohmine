@@ -1,5 +1,5 @@
 * {
-    font-family: "JetBrainsMono Nerd Font";
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans Mono", "Noto Sans Symbols2";
     font-size: 12px;
     min-height: 0;
     border: none;
@@ -8,14 +8,14 @@
 window#waybar {
     background: rgba(40, 40, 40, 0.90);
     color: #ebdbb2;
-    border-bottom: 2px solid #504945;
 }
 
 /* Arch Logo */
 
 #custom-logo {
-    background: transparent;
+    background: rgba(40, 40, 40, 0.90);
     color: #ebdbb2;
+
     margin: 3px 3px 3px 6px;
     padding: 0 10px;
     border-radius: 10px;
