@@ -4,6 +4,7 @@
 from __future__ import annotations
 import argparse
 import asyncio
+import ctypes
 import socket
 import struct
 import select
@@ -18,8 +19,6 @@ import threading
 import platform
 import signal
 import json
-
-from netops_toolkit import ROOT_REQUIRED_FEATURES, ICMP_ECHO_REQUEST
 
 try:
     import psutil
