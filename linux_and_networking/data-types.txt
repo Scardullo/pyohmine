@@ -1,0 +1,18 @@
+Each letter = a data type.
+
+Code	Meaning			Size	C equivalent
+b	signed char		1 byte	int8_t
+B	unsigned char		1 byte	uint8_t
+h	signed short		2 bytes	int16_t
+H	unsigned short		2 bytes	uint16_t
+i	signed int		4 bytes	int32_t
+I	unsigned int		4 bytes	uint32_t
+l	signed long		4 bytes (platform dependent)	long
+L	unsigned long		4 bytes	unsigned long
+q	signed long long	8 bytes	int64_t
+Q	unsigned long long	8 bytes	uint64_t
+f	float			4 bytes	float
+d	double			8 bytes	double
+s	char[]			bytes	string
+c	char			1 byte	char
+?	bool			1 byte	bool
