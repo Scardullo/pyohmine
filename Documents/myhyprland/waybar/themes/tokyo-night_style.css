@@ -69,8 +69,8 @@ window#waybar {
 }
 
 #cpu {
-    background: #ffb964;
-    color: #000000;
+    background: rgba(23, 23, 23, 0.90);
+    color: #5884d4;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -78,8 +78,8 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #5884D4;
-    color: #000000;
+    background: rgba(23, 23, 23, 0.90);
+    color: #5884d4;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -87,8 +87,8 @@ window#waybar {
 /* VOLUME */
 
 #pulseaudio {
-    background: #6fb352;
-    color: #000000;
+    background: rgba(23, 23, 23, 0.90);
+    color: #5884d4;
     font-weight: bold;
     border-radius: 0px;
 }

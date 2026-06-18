@@ -1,0 +1,14 @@
+The clean mental model (this is the key)
+
+Type			What is const?		What you can change
+
+const char *p		the char data		where p points
+
+char *const p		the pointer		the data it points to
+
+
+
+One sentence that makes it click
+--------------------------------
+const char *p → “I promise I won’t change the data”
+char *const p → “I promise I won’t change the pointer”

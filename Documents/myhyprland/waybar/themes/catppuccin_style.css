@@ -28,7 +28,7 @@ window#waybar {
 }
 
 #workspaces button {
-    background: rgba(30, 30, 46, 0.90);
+    background: transparent;
     color: #89B4FA;
     margin: 0 2px;
     padding: 0 10px;
@@ -54,7 +54,7 @@ window#waybar {
 #network,
 #pulseaudio,
 #tray {
-    background: rgba(30, 30, 46, 0.90);
+    background: transparent;
     color: #89B4FA;
     margin: 3px 3px;
     padding: 0 10px;
@@ -66,8 +66,8 @@ window#waybar {
 }
 
 #cpu {
-    background: #f9e2af;
-    color: #000000;
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -75,8 +75,8 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #a6e3a1;
-    color: #000000;
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -84,8 +84,8 @@ window#waybar {
 /* VOLUME */
 
 #pulseaudio {
-    background: #F38ba8;
-    color: #000000;
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
     font-weight: bold;
     border-radius: 0px;
 }
