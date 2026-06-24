@@ -6,16 +6,15 @@
 }
 
 window#waybar {
-    background: #282828;
-    color: #ebdbb2;
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
 }
 
 /* Arch Logo */
 
 #custom-logo {
-    background: #282828;
-    color: #ebdbb2;
-
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
     margin: 3px 3px 3px 6px;
     padding: 0 10px;
     border-radius: 10px;
@@ -30,7 +29,7 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #a89984;
+    color: #89B4FA;
     margin: 0 2px;
     padding: 0 10px;
     border-radius: 8px;
@@ -38,13 +37,13 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #ebdbb2;
-    color: #282828;
+    background: #89B4FA;
+    color: #1e1e2e;
 }
 
 #workspaces button:hover {
-    background: #504945;
-    color: #fbf1c7;
+    background: #313244;
+    color: #89B4FA;
 }
 
 /* Modules */
@@ -56,23 +55,19 @@ window#waybar {
 #pulseaudio,
 #tray {
     background: transparent;
-    color: #ebdbb2;
+    color: #89B4FA;
     margin: 3px 3px;
     padding: 0 10px;
     border-radius: 10px;
 }
 
-/* Right spacing */
-
 #tray {
     margin-right: 6px;
 }
 
-/* CPU */
-
 #cpu {
-    background: #282828;
-    color: #ebdbb2;
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -80,8 +75,8 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #282828;
-    color: #ebdbb2;
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -89,8 +84,8 @@ window#waybar {
 /* VOLUME */
 
 #pulseaudio {
-    background: #282828;
-    color: #ebdbb2;
+    background: rgba(30, 30, 46, 0.90);
+    color: #89B4FA;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -103,14 +98,12 @@ window#waybar {
     font-weight: bold;
 }
 
-/* Tooltip */
-
 tooltip {
-    background: #282828;
-    border: 2px solid #504945;
+    background: #1e1e2e;
+    border: 2px solid #313244;
     border-radius: 10px;
 }
 
 tooltip label {
-    color: #ebdbb2;
+    color: #89B4FA;
 }

@@ -6,7 +6,8 @@
 
     "modules-left": [
         "custom/logo",
-        "hyprland/workspaces"
+        "hyprland/workspaces",
+        "custom/cava"
     ],
 
     "modules-center": [
@@ -27,15 +28,22 @@
         "tooltip": false
     },
 
+    "custom/cava": {
+        "exec": "/home/anthony/.config/waybar/scripts/cava.sh",
+        "return-type": "text",
+        "restart-interval": 1,
+        "tooltip": false
+    },
+
     "clock": {
         "format": "  {:%I:%M %p}"
     },
 
     "custom/weather": {
         "exec": "curl -s 'wttr.in/?format=%t' | sed 's/+//'",
-	"interval": 1800,
+        "interval": 1800,
         "format": " {}",
-	"tooltip": false
+        "tooltip": false
     },
 
     "cpu": {
@@ -46,13 +54,12 @@
         "format": "RAM 󰓅 {percentage}%"
     },
 
-
     "network": {
-    "format-wifi": " {signalStrength}%",
-    "format-ethernet": "󰈀",
-    "format-disconnected": "󰖪",
-    "tooltip-format": "{ifname}",
-    "tooltip": false
+        "format-wifi": " {signalStrength}%",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰖪",
+        "tooltip-format": "{ifname}",
+        "tooltip": false
     },
 
     "pulseaudio": {
@@ -65,9 +72,5 @@
                 ""
             ]
         }
-    },
-
-    "tray": {
-        "spacing": 10
     }
 }
