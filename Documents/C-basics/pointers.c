@@ -21,6 +21,9 @@ int main() {
 
 void birthday(int* age){
     // C uses pass-by-value, but passing a pointer simulates pass-by-reference
-    (*age)++;  // <- by adding parenthesis we are forcing operator precedence,
-}              //    without them we would dereference first, then increment the pointer
-	       //    which would keep age at 27
+   (*age)++;  // <- parentheses force the dereference to happen first.
+}             //    This increments the VALUE that age points to.
+              //
+              //    Without them, *age++ becomes *(age++)
+              //    which increments the POINTER after using its old address,
+              //    not the value being pointed at.
