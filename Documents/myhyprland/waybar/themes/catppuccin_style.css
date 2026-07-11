@@ -6,14 +6,14 @@
 }
 
 window#waybar {
-    background: rgba(30, 30, 46, 0.90);
+    background: #1e1e2e;
     color: #89B4FA;
 }
 
 /* Arch Logo */
 
 #custom-logo {
-    background: rgba(30, 30, 46, 0.90);
+    background: #1e1e2e;
     color: #89B4FA;
     margin: 3px 3px 3px 6px;
     padding: 0 10px;
@@ -66,7 +66,7 @@ window#waybar {
 }
 
 #cpu {
-    background: rgba(30, 30, 46, 0.90);
+    background: #1e1e2e;
     color: #89B4FA;
     font-weight: bold;
     border-radius: 0px;
@@ -75,7 +75,7 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: rgba(30, 30, 46, 0.90);
+    background: #1e1e2e;
     color: #89B4FA;
     font-weight: bold;
     border-radius: 0px;
@@ -84,7 +84,7 @@ window#waybar {
 /* VOLUME */
 
 #pulseaudio {
-    background: rgba(30, 30, 46, 0.90);
+    background: #1e1e2e;
     color: #89B4FA;
     font-weight: bold;
     border-radius: 0px;
