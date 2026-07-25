@@ -175,6 +175,8 @@ int main(int c,char **v){
             ssthresh=cwnd/2; cwnd=1; win_used=0; continue;
         }
 
+  	if(rv < 0){ perror("select"); continue; }
+
         recv(s,b,sizeof(b),0);
         struct iphdr *ip=(void*)(b+14);
         if(ip->protocol!=IPPROTO_TCP) continue;
