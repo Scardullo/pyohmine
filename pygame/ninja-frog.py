@@ -547,10 +547,6 @@ def handle_move(player, objects, checkpoints, flag, cherry, bananas):
         player.move_left(PLAYER_VEL)
     if keys[pygame.K_RIGHT] and not collide_right:
         player.move_right(PLAYER_VEL)
-    if keys[pygame.K_LEFT] and not chk_left:
-        player.move_left(PLAYER_VEL)
-    if keys[pygame.K_RIGHT] and not chk_right:
-        player.move_right(PLAYER_VEL)
 
     vertical_collide = handle_vertical_collision(player, objects, player.y_vel)
     to_check = [collide_left, collide_right, *vertical_collide, chk_left,
@@ -689,6 +685,9 @@ def main(window):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE and player.jump_count < 2:
                     player.jump()
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+                    break
 
         player.loop(FPS)
         flag.loop()
