@@ -1,0 +1,1998 @@
+
+_________________________
+#import pickle
+
+Purpose: Save and load Python objects (serialization).
+
+In this game:
+Likely used to save player progress, scores, or settings into a file (like data.txt or save.dat).
+
+__________________________
+
+#import pygame.gfxdraw as gfxdraw
+
+Feature			pygame.draw	||	pygame.gfxdraw
+================================================================
+
+Speed	 ->		Fast			Slightly slower
+Quality	 ->		Pixelated edges		Smooth, antialiased edges
+Precision->		Integer-only positions	Supports subpixel precision
+Extras	 ->		Basic shapes		Extra shapes (like filled circles with outlines)
+
+__________________________
+
+#import pygame.math as math
+
+#vec = math.Vector2
+
+# what the alias does
+vec = math.Vector2
+
+# This line just creates a short nickname for pygame.math.Vector2,
+so instead of typing:
+pos = pygame.math.Vector2(100, 200)
+you can simply write:
+pos = vec(100, 200)
+
+# Example use:
+
+import pygame
+vec = pygame.math.Vector2
+
+# Player position and velocity
+pos = vec(100, 300)
+vel = vec(2, 0)
+gravity = vec(0, 0.5)
+
+# Update position
+vel += gravity
+pos += vel
+
+print(pos)  # outputs something like <Vector2(102, 300.5)>
+
+___________________________
+
+#global_tick = 0
+
+global_tick is a counter variable that keeps track of how many frames or “ticks” have passed 
+since the game started.
+
+In Pygame, the game typically runs in a loop at a fixed frame rate (here FPS = 60). 
+Each iteration of the loop is considered one “tick.”
+
+___________________________
+
+#mixer.pre_init(44100, -16, 1, 512)
+
+mixer is pygame.mixer, Pygame’s module for playing sounds and music.
+
+pre_init() is called before pygame.init() to set up the audio system with custom settings.
+
+
+mixer.pre_init(frequency, size, channels, buffer)
+
+*frequency = 44100
+
+Sampling rate in Hertz (Hz).
+
+44100 Hz is CD quality audio.
+
+Higher values = higher quality sound.
+
+
+
+*size = -16
+
+Bit depth of audio samples.
+
+Negative means signed values (-16 = 16-bit signed).
+
+Common choices: -16 (high quality), -8, 8, 16.
+# signed means '-' negative range included
+
+
+*channels = 1
+
+Mono (1) or Stereo (2).
+
+Here 1 = mono sound.
+
+
+*buffer = 512
+
+Size of the audio buffer in samples.
+
+Smaller = lower latency (less delay), but can cause clicks/pops if too small.
+
+Larger = more stable playback, slightly more delay.
+
+______________________________
+
+#screen = display.set_mode(size, DOUBLEBUF)
+
+# draws screen to buffer first then flips it all at once on to actual screen.
+# Helps with smooth animations and avoids flickering.
+
+______________________________
+
+# order of layers:
+
+back_back_sprites.draw(screen)   # farthest layer
+back_front_sprites.draw(screen)  # behind player
+all_sprites.draw(screen)         # main gameplay layer
+front_sprites.draw(screen)       # in front of everything else
+
+front_sprites       ← UI, effects, maybe foreground grass
+all_sprites         ← player, enemies, collectibles
+back_front_sprites  ← bridges hidden until player is behind a wall  
+back_back_sprites   ← bridges behind water, always behind everything  distant background
+
+-------------------------------
+
+In Python, when you write something like:
+
+string[start:end]
+
+it means:
+
+start at index start
+
+go up to but not including index end
+
+If you leave out end, like this:
+
+string[start:]
+
+…it means “take everything from start to the end of the string.”
+
+_________________________________
+
+# for the function get_image() (line 83) 
+
+img.blit(sheet, img.get_rect(), pos) (line 86)
+
+Say your sheet is 256×256, with 4 sprites across and 4 down (each 64×64).
+
+You want the sprite in the 2nd column, 3rd row → (x=64, y=128, w=64, h=64).
+
+pos = (64, 128, 64, 64)
+img = Surface((64, 64), SRCALPHA)
+img.blit(sheet, img.get_rect(), pos)
+
+__________________________________
+
+		# Move buttons
+		for b in range(len(buttons)):
+			if d == 'right':
+				buttons[b].pos[0] -= round(16.58 * cos(radians(i)))
+				buttons[b].rect.x -= round(16.58 * cos(radians(i)))
+			elif d == 'left':
+				buttons[b].pos[0] += round(16.58 * cos(radians(i)))
+				buttons[b].rect.x += round(16.58 * cos(radians(i)))
+			elif d == 'up':
+				buttons[b].pos[1] += round(11.06 * cos(radians(i)))
+				buttons[b].rect.y += round(11.06 * cos(radians(i)))
+			elif d == 'down':
+				buttons[b].pos[1] -= round(11.06 * cos(radians(i)))
+				buttons[b].rect.y -= round(11.06 * cos(radians(i)))
+			screen.blit(buttons[b].image, buttons[b].rect)
+
+
+rect = A pygame.Rect object, which stores integer coordinates and dimensions for blitting and collision detection.
+
+.x → left position
+
+.y → top position
+
+.center → center position, etc.
+
+pos = Usually a separate variable, often a list or vector of floats, that stores the "true" 
+      position of the object in the game world.
+
+It may include subpixel precision that rect cannot hold because Rect coordinates are integers.
+
+Useful if you want smooth movement (like moving 0.2 pixels per frame) without rounding errors.
+
+
+
+
+-----------------------------------------------------------------(line 59)
+
+
+
+Function signature
+def mul_lines(f_path, t, s, wid, f_color=BLACK):
+
+Parameters
+
+f_path – path to a font file (e.g. .ttf)
+
+t – the text string to render
+
+s – font size
+
+wid – maximum width (in pixels) for each line
+
+f_color – text color (defaults to BLACK)
+
+Create the font
+f = font.Font(f_path, s)
+
+
+Creates a Pygame Font object from the file path and size.
+
+Prepare storage for wrapped lines
+lines = []
+
+
+This will become a list of strings, one per wrapped line.
+
+Main wrapping loop
+while f.size(t)[0] > wid:    # <- remeber [0] means width because .size() returns -> (widht, Height)
+
+
+f.size(t) returns (width, height) of the text if rendered.
+
+This loop runs while the current text is wider than the allowed width.
+
+Start searching for a breaking point
+pos = len(t)
+
+
+Start at the end of the string and move backward until the text fits.
+
+Inner loop: shrink the string
+while f.size(t[0:pos])[0] > wid:
+    pos = t.rfind(' ', 0, pos)
+
+What this does:
+
+t[0:pos] is a substring from the start to pos
+
+rfind(' ', 0, pos) finds the last space before pos
+
+This keeps shortening the string word by word until it fits
+
+
+What rfind() does (in one sentence)
+t.rfind(' ', 0, pos)
+
+
+means:
+
+“Search backwards in string t, starting just before pos, and find the last space character.”
+
+The method signature
+str.rfind(sub, start, end)
+
+
+sub → what you’re searching for (' ' = a space)
+
+start → where the search range starts (inclusive)
+
+end → where the search range ends (exclusive)
+
+Important:
+Even though the range is left → right, the search itself goes right → left.
+
+
+
+⚠️ Critical bug / infinite loop risk
+if pos == -1:
+    continue
+
+Why this is dangerous:
+
+If the text contains no spaces (e.g. "Supercalifragilisticexpialidocious")
+
+rfind() returns -1
+
+continue jumps back to the start of the loop
+
+pos never changes
+
+💥 Infinite loop
+
+Correct behavior should be:
+
+Either force-break the word
+
+Or break out of the loop
+
+We’ll come back to this.
+
+Store the wrapped line
+lines.append(t[0:pos])
+t = t[pos+1:]
+
+
+Add the fitted portion to lines
+
+Remove it (plus the space) from t
+
+Continue wrapping the remaining text
+
+Append the final line
+lines.append(t)
+
+
+After the loop ends, whatever remains fits in one line.
+
+Calculate surface height
+totHeight = f.size(lines[0])[1] * len(lines)
+
+
+Gets font height from the first line
+
+Multiplies by number of lines
+
+Assumes all lines have the same height (reasonable for fonts)
+
+Create a transparent surface
+surf = Surface((wid, totHeight), SRCALPHA)
+surf.fill((0,0,0,0))
+
+
+SRCALPHA allows transparency
+
+Filled with fully transparent pixels
+
+Render each line
+for p in range(len(lines)):
+
+
+Loop through each line.
+
+Render text to a surface
+lineFont = f.render(lines[p], True, f_color)
+
+
+Anti-aliased text
+
+Returned as a new surface
+
+Center the text horizontally
+lineFontRect = lineFont.get_rect()
+lineFontRect.midtop = surf.get_width()//2, p * lineFont.get_height()
+
+
+Centers each line horizontally
+
+Vertically stacks lines using their height
+
+Blit text onto the main surface
+surf.blit(lineFont, lineFontRect)
+
+
+Copies the rendered text onto the transparent surface.
+
+Return the final surface
+return surf
+
+
+You now have a multi-line, word-wrapped text surface ready to blit onto the screen.
+
+
+--------------------------------------------------------------------------(line 82)
+
+Function signature
+def get_image(sheet, pos):
+
+
+sheet → a Pygame Surface (your full image or sprite sheet).
+
+pos → a tuple (x, y, width, height) specifying the rectangle you want to extract from the sheet.
+
+x = starting horizontal position in the sheet
+
+y = starting vertical position in the sheet
+
+width = how wide the rectangle is
+
+height = how tall the rectangle is
+
+Step 1: Create a new blank surface
+img = Surface((pos[2], pos[3]), SRCALPHA)
+
+
+Surface((width, height)) → makes a new Pygame surface of exactly the rectangle size you want.
+
+SRCALPHA → allows per-pixel transparency, so parts of the surface can be fully or partially transparent.
+
+Now img is just a blank canvas, ready to receive the portion of the sheet.
+
+Step 2: Fill it with transparent pixels
+img.fill((255, 255, 255, 0))
+
+
+(R, G, B, A) → red, green, blue, alpha
+
+A = 0 → fully transparent
+
+This ensures no leftover or garbage pixels appear in the empty areas.
+
+Step 3: Copy (blit) the rectangle from the sheet
+img.blit(sheet, img.get_rect(), pos)
+
+
+Let’s break down the blit function:
+
+dest_surface.blit(source_surface, dest_rect, area_rect=None)
+
+
+dest_surface → where you are drawing onto (img)
+
+source_surface → where you are copying from (sheet)
+
+dest_rect → where on the destination to draw (img.get_rect() = whole surface)
+
+area_rect → which rectangle to copy from the source (pos)
+
+So in words:
+
+Copy the rectangle defined by pos from sheet and draw it onto img, starting at the top-left of img.
+
+After this line, img now contains exactly the portion of sheet defined by pos.
+
+Step 4: Return the new surface
+return img
+
+
+Now you can use img like any other Pygame surface:
+
+Blit it onto the screen
+
+Apply transformations
+
+Use it as a sprite
+
+
+-----------------------------------------------------------(line 90)
+
+
+Function signature
+def get_cos(file_path):
+
+
+file_path → the path to a .txt file that contains sprite coordinates.
+
+The goal: read the file, parse the coordinates, and return a list of rectangles.
+
+Step 1: Open and read the file
+f = open(file_path).read().strip()
+
+
+open(file_path).read() → opens the file and reads the entire content as a single string.
+
+.strip() → removes leading and trailing whitespace, including newlines at the end.
+
+Example file content:
+
+0 0 32 32
+32 0 32 32
+64 0 32 32
+
+
+After .read().strip(), you’d have:
+
+"0 0 32 32\n32 0 32 32\n64 0 32 32"
+
+Step 2: Split into lines
+co_list = f.split('\n')
+
+
+.split('\n') → splits the string at each newline
+
+co_list now becomes a list of strings, each representing a line:
+
+['0 0 32 32', '32 0 32 32', '64 0 32 32']
+
+Step 3: Loop through each line
+for pos in range(len(co_list)):
+
+
+pos is the index of each line in co_list.
+
+Step 3a: Split the line into individual numbers
+co_list[pos] = co_list[pos].split(' ')
+
+
+.split(' ') → splits the line into a list of strings at each space.
+
+Example:
+
+'0 0 32 32'.split(' ')  → ['0', '0', '32', '32']
+
+
+Now co_list[pos] is a list of 4 strings.
+
+Step 3b: Convert strings to integers
+for s in range(4):
+    co_list[pos][s] = int(co_list[pos][s])
+
+
+Loops through the 4 elements in the line
+
+Converts each string to an integer
+
+Example:
+
+['0', '0', '32', '32'] → [0, 0, 32, 32]
+
+
+Now each line is a list of 4 integers representing a rectangle: (x, y, width, height).
+
+Step 4: Return the final list
+return co_list
+
+
+The final co_list is a list of lists of integers.
+
+Each inner list is [x, y, width, height] for a sprite.
+
+Example return value:
+
+[[0, 0, 32, 32],
+ [32, 0, 32, 32],
+ [64, 0, 32, 32]]
+
+
+-----------------------------------------------------------------------------------(line 111)
+
+# remeber that this darken by throwing a layer on top of the existing one
+
+The key line that matters
+surf = surf.copy()
+
+
+This line is doing two things at once:
+
+It calls .copy() on the original surface
+
+It rebinds the local variable surf to the new surface
+
+After this line runs:
+
+The original surface passed into the function is untouched
+
+The name surf inside the function now refers to the copy
+
+Variable names ≠ objects
+
+This is the crucial concept.
+
+def darken(surf, a=75):
+
+
+surf is just a name
+
+It initially points to the surface passed in
+
+After:
+
+surf = surf.copy()
+
+
+The name surf now points to a different surface
+
+The original surface still exists, unchanged
+
+So when you later do:
+
+return surf
+
+
+You are returning the copied and modified surface, not the original one.
+
+
+
+------------------------------------------------------------------------(line 129)
+
+
+
+I’ll assume:
+
+player.rect → the player’s position on screen
+
+screen_rect.centerx → horizontal center of the screen
+
+move_by → how much the world (sprites) should scroll
+
+go_ahead → flag meaning “yes, scroll this frame”
+
+Big-picture idea first
+
+This code has two scrolling modes:
+
+off_screen == False
+→ Soft scrolling when the player gets near the screen edges
+
+off_screen == True
+→ Catch-up scrolling when the player has gone too far from center
+
+Think of it like:
+
+Normal camera movement near the edges
+
+Emergency camera correction if the player gets too far off-center
+
+1️⃣ The if off_screen: block (catch-up mode)
+if off_screen:
+    move_by = (player.rect.centerx - screen_rect.centerx) / 20
+    go_ahead = True
+
+What this does
+
+Measures how far the player is from the screen center
+
+Moves the camera a fraction of that distance
+
+This causes smooth easing back toward center
+
+Why divide by 20?
+
+Prevents snapping
+
+Makes the camera glide smoothly
+
+Larger number → slower catch-up
+
+Smaller number → faster snap
+
+📌 This is classic camera smoothing.
+
+When does catch-up mode stop?
+if abs(player.rect.centerx - screen_rect.centerx) < width//8:
+    off_screen = False
+
+
+Once the player is “close enough” to center
+
+Camera returns to normal edge-based scrolling
+
+width//8 defines a dead-zone
+
+So:
+
+“Once the player is roughly centered again, stop correcting.”
+
+2️⃣ The else: block (normal edge scrolling)
+
+This runs only when off_screen is False.
+
+Left edge trigger
+if player.rect.left < width // 4:
+    move_by = -abs(player.vel.x)
+    go_ahead = True
+
+
+Player is in the left quarter of the screen
+
+Scroll the world right
+
+Use player speed so scrolling matches movement
+
+Negative means:
+
+World moves right
+
+Player appears to move left less
+
+Right edge trigger
+elif player.rect.right > width - width // 4:
+    move_by = abs(player.vel.x)
+    go_ahead = True
+
+
+Player is in the right quarter of the screen
+
+Scroll the world left
+
+Again tied to player velocity
+
+Why not always use center-based scrolling?
+
+Because:
+
+Constant centering feels “floaty”
+
+Edge-based scrolling feels more natural and controlled
+
+Catch-up mode only kicks in when the player gets too far
+
+This hybrid approach gives:
+✅ Responsive movement
+✅ Smooth camera
+✅ No jitter
+
+Mental picture
+|----|----|----|----|
+     ^         ^
+ left edge    right edge
+
+
+Middle area → no scrolling
+
+Edges → normal scrolling
+
+Too far → smooth re-centering
+
+
+===================================== note about -abs(player.vel.x)
+
+
+move_by = -abs(player.vel.x)
+
+The negative sign is applied AFTER abs(), not inside it.
+
+So this means:
+
+    “Take the magnitude of the player’s speed, then force it to be negative.”
+
+Operator order (this is the whole trick)
+
+Python evaluates this as:
+
+move_by = -(abs(player.vel.x))
+
+NOT as:
+
+move_by = abs(-player.vel.x)
+
+Those are very different things.
+
+
+-----------------------------------------------------------------(line 159)
+
+
+What s.pos[0] refers to
+if s in enemies:
+    s.pos[0] -= rounded_move_by
+
+What s.pos is
+
+s.pos is not a Pygame thing — it’s something you (or the original author) added.
+
+Most likely:
+
+s.pos is a list or vector holding the enemy’s precise world position
+
+Example:
+
+s.pos = [x, y]
+
+
+or
+
+s.pos = pygame.math.Vector2(x, y)
+
+What [0] means
+
+[0] → the x-coordinate
+
+[1] → the y-coordinate
+
+So:
+
+s.pos[0] -= rounded_move_by
+
+
+means:
+
+“Move the enemy’s world x-position left by the scroll amount.”
+
+Why not just use s.rect.x?
+
+Because:
+
+rect.x is usually rounded to integers
+
+pos often stores sub-pixel precision (floats)
+
+Movement physics usually update pos
+
+rect is then synced from pos
+
+So this line keeps:
+
+Physics position (pos)
+
+Rendering position (rect)
+in sync
+
+What player_spawn_point[0] refers to
+player_spawn_point[0] -= rounded_move_by
+
+What player_spawn_point likely is
+
+It’s almost certainly:
+
+A list or tuple holding the world coordinates where the player respawns
+
+Example:
+
+player_spawn_point = [1000, 300]
+
+
+or
+
+player_spawn_point = pygame.math.Vector2(1000, 300)
+
+What [0] means
+
+Again:
+
+[0] → x-coordinate
+
+[1] → y-coordinate
+
+So this line means:
+
+“If the world scrolls, the player’s spawn location must scroll too.”
+
+Otherwise:
+
+You scroll the level
+
+But the spawn point stays in the old world position
+
+Respawning would put the player in the wrong place
+
+
+
+--------------------------------------------------------------------(line 217)
+
+
+# ...  height - p_height*player.size*16 + player.size*16*y + (255-c.a)*player.size*16)
+
+
+Step 1: The starting point
+height - p_height*player.size*16
+
+
+height → the bottom of the screen in Pygame (remember y=0 at top)
+
+p_height*player.size*16 → total height of the level in game units
+
+Subtracting:
+
+height - total_level_height
+
+
+→ This sets the top of the level at the proper vertical position on the screen.
+
+So the level doesn’t start off the screen
+
+Think of it as the anchor point for the top of your level
+
+Step 2: Add player.size*16*y
+height - p_height*player.size*16 + player.size*16*y
+
+
+y = row of the pixel in the PNG (0 at top, increasing downward)
+
+Multiply by block size → how far down from the top of the level this object should be placed
+
+So top pixel (y=0) stays at the top of the level, bottom pixel (y=p_height-1) moves downward
+
+✅ This is exactly what you said: “whatever the y is on the level image can then be added (increased downward) 
+and multiplied to be at the corresponding y coordinate on the screen.”
+
+Step 3: Add alpha offset
++ (255 - c.a)*player.size*16
+
+
+Small tweak based on the pixel’s alpha
+
+Slightly pushes the object downward if it’s partially transparent
+
+Useful for stacked objects, slopes, or subtle vertical placement
+
+Step 4: Full picture
+y_pos = height - p_height*player.size*16 + player.size*16*y + (255 - c.a)*player.size*16
+
+
+height - p_height*player.size*16 → top of the level on the screen
+
++ player.size*16*y → row offset downward
+
++ (255 - c.a)*player.size*16 → fine adjustment
+
+Top of level = screen anchor
+
+Y in PNG = position in level
+
+Alpha tweak = small adjustment
+
+Exactly how you described it.
+
+
+
+------------------------------------------------------------------------------(line 315)
+
+
+Big picture first (what problem this solves)
+
+Your game has hidden areas behind “back blocks”.
+
+You use different sprite groups to control visibility order:
+
+front_sprites → always visible
+
+back_front_sprites → hidden until player is behind a wall
+
+back_back_sprites → always behind everything (deep background)
+
+Bridges are special:
+
+They can exist inside hidden areas
+
+Or in normal visible space
+
+So after the level is created, you do a second pass to decide where each bridge goes.
+
+The loop
+for bridge in bridges:
+    found = False
+
+
+For each bridge:
+
+found means:
+👉  “Have we already decided that this bridge belongs to a special (non-default) layer?”
+
+Once found is True, the bridge should not be added anywhere else.
+
+Check against hidden back blocks
+for bb in back_blocks:
+    if bb.rect.colliderect(bridge.rect) and bb.touching and not found:
+
+
+This checks:
+
+Does the bridge overlap a back block?
+
+bb.rect.colliderect(bridge.rect)
+
+
+Is that back block a “hidden-area” block?
+
+bb.touching == True
+
+
+Recall:
+
+touching=True → hidden unless player is behind wall
+
+touching=False → always background
+
+Have we already placed the bridge?
+
+not found
+
+If all conditions match
+back_front_sprites.add(bridge)
+found = True
+
+
+Meaning:
+
+“This bridge is inside a hidden area — put it in the hidden layer.”
+
+Once found = True, no other placement should happen.
+
+Check against water areas
+for w in waters:
+    if w.rect.colliderect(bridge.rect) and bb.touching and not found:
+        back_back_sprites.add(bridge)
+        found = True
+
+
+Intent (important):
+
+If the bridge overlaps water inside a hidden area, push it even further back
+
+So this places the bridge:
+
+behind water
+
+behind hidden walls
+
+👉 Deep background layer
+
+⚠️ Bug note (very important):
+This line:
+
+and bb.touching
+
+
+uses bb from the previous loop.
+
+If back_blocks is empty or the loop ended differently, this could be wrong.
+
+It probably should be:
+
+and w.touching   # or some other water property
+
+
+This works only because bb still exists from the prior loop — but it’s fragile.
+
+Default case: visible bridge
+if not found:
+    front_sprites.add(bridge)
+
+
+If:
+
+The bridge didn’t overlap any hidden blocks
+
+Didn’t overlap water in hidden areas
+
+Then:
+
+“This is a normal bridge — show it all the time.”
+
+Final mental model (easy recall)
+For each bridge:
+    If it overlaps a hidden back block:
+        Put it in hidden layer
+    Else if it overlaps hidden water:
+        Put it even further back
+    Else:
+        Make it always visible
+
+Why this is done AFTER level creation
+
+You can’t know a bridge’s visibility when placing it because:
+
+It depends on overlapping objects
+
+Those objects are created in a different pass
+
+So you:
+
+Create everything
+
+Then resolve layer membership
+
+This is good engine design.
+
+One small improvement (optional but recommended)
+
+You can break early once found:
+
+if found:
+    break
+
+
+-----------------------------------------------------------------------------(line 329)
+
+
+
+    for k in keys:
+        found = False
+        for bb in back_blocks:
+            if bb.rect.colliderect(k.rect) and bb.touching and not found:
+                back_front_sprites.add(k)
+                found = True
+        if not found:
+            front_sprites.add(k)
+
+so then this checks to see if the key is in a hidden area and then pust the rest in regular game space
+
+Yes — that understanding is exactly right 👍
+You’ve got it.
+
+Let me restate it cleanly and then tie it back to the earlier bridge logic so it “locks in” mentally.
+
+What this code is doing (plain English)
+
+For each key:
+
+If it is inside a hidden area → put it in the hidden sprite layer
+
+Otherwise → put it in the normal visible layer
+
+That’s it.
+
+Line-by-line confirmation
+for k in keys:
+    found = False
+
+
+Process one key at a time
+
+found means: have we already decided where this key belongs?
+
+for bb in back_blocks:
+    if bb.rect.colliderect(k.rect) and bb.touching and not found:
+
+
+This checks:
+
+Does the key overlap a back block?
+
+Is that back block a hidden-area block (touching=True)?
+
+Has the key not already been assigned?
+
+back_front_sprites.add(k)
+found = True
+
+
+If yes:
+
+“This key starts hidden — only visible when the player goes behind the wall.”
+
+if not found:
+    front_sprites.add(k)
+
+
+If no hidden-area overlap was found:
+
+“This is a normal key — always visible.”
+
+
+found is not meant to mean “this object was placed somewhere”.
+
+It means:
+
+“This object belongs to a special (hidden) layer.”
+
+So:
+
+found = True → we detected a hidden-area condition
+
+found = False → no hidden-area condition was found
+
+The normal layer is the default, so it does not set found.
+
+
+What found actually represents
+
+A better mental name for found would be:
+
+is_hidden = False
+
+
+
+------------------------------------------------------------------------------(line 357)
+
+
+1️⃣ Preparing the animation frames
+ani_pics = []
+
+
+This will hold every frame of the animation, precomputed.
+
+Load the base image
+fire_ball_img = get_image(image.load('images/miscSheet.png'),
+                          get_cos('images/miscCo.txt')[8])
+fire_ball_img = transform.scale(fire_ball_img, (64,64))
+
+
+What this does:
+
+Loads a sprite sheet (miscSheet.png)
+
+Extracts one sprite (index 8)
+
+Scales it to 64×64
+
+At this point:
+
+fire_ball_img = a single 64×64 fireball image
+
+Create many scaled versions of that image
+for i in range(359, -1, -10):
+    ani_pics.append(transform.scale(fire_ball_img, i))
+
+
+This is the key visual trick.
+
+range(359, -1, -10) produces:
+
+359, 349, 339, ..., 9
+
+
+Each value of i is used as the new size
+
+So this generates:
+
+Very large fireball
+
+Slightly smaller
+
+Slightly smaller
+
+…
+
+Almost invisible
+
+All stored in:
+
+ani_pics = [Surface, Surface, Surface, ...]
+
+
+You’re precomputing frames so the animation loop is fast.
+
+⚠️ Note: This works only because Pygame interprets scale(surface, i) as (i, i)
+
+2️⃣ The loading animation loop
+def loading_animation(delay):
+
+
+This function is meant to run in a separate thread while assets load.
+
+Infinite cycling over frames
+for c in itertools.cycle(ani_pics):
+
+
+itertools.cycle:
+
+Loops through ani_pics forever
+
+Never stops unless you break
+
+So this is your animation loop.
+
+Exit condition
+if loading_images_done:
+    break
+
+
+Another thread sets:
+
+loading_images_done = True
+
+
+This cleanly stops the animation when loading finishes.
+
+3️⃣ Drawing each frame
+screen.fill(BLACK)
+
+
+Clears the screen each frame.
+
+Center the current frame
+tmpRect = c.get_rect()
+tmpRect.center = width - randint(49,51), height - randint(49,51)
+
+
+Two things happening:
+
+get_rect() creates a rect matching the current image size
+
+center is set near the bottom-right corner
+
+The randint(49,51) introduces a tiny jitter, so the spinner:
+
+Looks more alive
+
+Doesn’t feel perfectly static
+
+Visually, it “vibrates” slightly.
+
+Draw and update screen
+screen.blit(c, tmpRect)
+display.flip()
+
+
+This draws the frame and presents it immediately.
+
+Control animation speed
+time.wait(delay)
+
+
+Pauses between frames.
+
+Smaller delay → smoother / faster animation
+Larger delay → slower pulsing effect
+
+What this looks like in motion
+
+What the player sees:
+
+A fireball near the bottom-right
+
+It shrinks steadily
+
+Then jumps back to large
+
+Repeats while loading
+
+Slight jitter gives it life
+
+This is essentially a pulsing shrink animation.
+
+
+---------------------------------------------------------------------------(line 390)
+
+title_text_render = mul_lines('fonts/GameBoy.ttf', 'Alien Adventures', 36, 
+		             font.Font('fonts/GameBoy.ttf', 36).size('Adventures')[0]+10)
+
+
+The + 10 at the end of this line is extra horizontal padding added to the maximum 
+line width so that the longest word ("Adventures") comfortably 
+fits on one line without wrapping or clipping.
+
+
+---------------------------------------------------------------------------(line 558)
+
+
+🔧 Function signature
+def scroll(d, background=False, player=False):
+
+
+Parameters:
+
+d → direction: 'left', 'right', 'up', 'down'
+
+background → whether to scroll the menu background
+
+player → whether to scroll the preview player sprite
+
+So this function can move:
+
+only background
+
+only player
+
+or both
+
+🌍 Globals used
+global buttons, mx, my, menu_back_rect, menu_back, let_go, ani_counter, control_fonts
+
+
+These are shared menu/game state variables, for example:
+
+menu_back_rect → rect for background image
+
+ani_counter → controls animation frames and bobbing
+
+buttons, mx, my → probably menu input stuff
+
+This function mutates global UI state while animating.
+
+🔁 Main animation loop
+for i in range(91):
+
+
+This runs 91 frames of animation.
+
+So scrolling takes about:
+
+91 frames
+
+at ~60 FPS → ~1.5 seconds
+
+This is your smooth transition instead of instant teleport.
+
+🧼 Clear screen
+screen.fill(WHITE)
+
+
+Erase previous frame.
+
+🖼️ Background scrolling (parallax)
+if background:
+    if d == 'right':
+        menu_back_rect.x -= round(2.3 * cos(radians(i)))
+
+
+This moves the background a tiny amount per frame.
+
+Important parts:
+
+✔ Direction
+
+If direction is 'right', background moves left:
+
+menu_back_rect.x -= ...
+
+
+That creates the illusion that camera moved right.
+
+✔ Why cosine?
+cos(radians(i))
+
+
+Cosine starts near 1 and slowly eases toward 0.
+
+So movement is:
+
+fast at first
+
+slows down smoothly
+
+This is called easing — it feels more natural than constant speed.
+
+✔ Why 2.3?
+2.3 * cos(...)
+
+
+This is the speed scale.
+Background scrolls slowly for depth effect (parallax).
+
+
+🔁 What cos(radians(i)) is doing in animation
+
+You had something like:
+
+menu_back_rect.x -= round(2.3 * cos(radians(i)))
+
+
+and i goes from 0 → 90.
+
+So every frame, you move the object by:
+
+step = 2.3 × cos(angle)
+
+📐 Step 1 — What cosine looks like
+
+Cosine of an angle:
+
+angle	cos(angle)
+0°	1.0
+30°	0.866
+60°	0.5
+90°	0.0
+
+So as the angle increases from 0 → 90:
+
+cosine starts at 1
+
+smoothly decreases to 0
+
+Graphically, that’s a smooth curve, not a straight line.
+
+🚀 Step 2 — How that becomes easing
+
+If each frame you move by:
+
+movement = max_speed × cos(angle)
+
+
+then:
+
+At the start:
+cos(0°) = 1 → full movement
+
+
+➡ fast
+
+Near the end:
+cos(80°) ≈ 0.17 → tiny movement
+
+
+➡ slow
+
+At the end:
+cos(90°) = 0 → stop
+
+
+➡ perfectly settles
+
+So instead of moving:
+
+same distance every frame  → robotic
+
+
+you get:
+
+big steps → medium → tiny → stop   → natural
+
+
+That’s ease-out motion.
+
+
+
+✅ Step 1: What your code actually feeds into cosine
+
+You wrote:
+
+cos(radians(i))
+
+
+And i goes:
+
+0 → 90   (degrees)
+
+
+After conversion:
+
+radians(0)  = 0
+radians(90) = π/2 ≈ 1.57
+
+
+So cosine is seeing:
+
+cos(0 → π/2)
+
+✅ Step 2: What cosine DOES on that interval
+
+Cosine values:
+
+angle (deg)	angle (rad)	cos(angle)
+0°	0	1.0
+30°	0.52	0.866
+60°	1.05	0.5
+90°	1.57	0.0
+
+So as the angle increases:
+
+the cosine decreases smoothly from 1 → 0
+
+That’s just how the cosine curve behaves on the first quadrant of the circle.
+
+🟢 Visual intuition (unit circle)
+
+On the unit circle:
+
+cosine = x-coordinate
+
+sine = y-coordinate
+
+At:
+
+0°
+
+Point = (1, 0)
+→ cos = 1
+
+90°
+
+Point = (0, 1)
+→ cos = 0
+
+So as you rotate from 0° to 90°, the x-value slides from 1 down to 0.
+
+That x-value is exactly what cos() returns.
+
+🔁 Why this is perfect for easing
+
+Your movement step is:
+
+step = speed * cos(angle)
+
+
+So:
+
+at start: cos = 1 → full speed
+
+near end: cos ≈ 0.1 → tiny speed
+
+end: cos = 0 → stop
+
+You are not mapping angle to position,
+you are mapping angle to velocity multiplier.
+
+That’s the crucial idea.
+
+⚠️ Important distinction
+
+Angle behavior:
+
+0 → 90   (degrees)
+0 → π/2  (radians)
+
+
+Cosine behavior on that interval:
+
+1 → 0
+
+
+So you’re using:
+
+angle as a parameter to drive a curve, not as the thing being animated.
+
+🧠 If cosine went from 0 → 1 instead…
+
+That would be sine:
+
+sin(0) = 0
+sin(90°) = 1
+
+
+So:
+
+sin(0 → π/2) gives 0 → 1 (ease-in)
+
+cos(0 → π/2) gives 1 → 0 (ease-out)
+
+Same angles, different curve shape.
+
+🔥 One-sentence mental model
+
+Think of i as:
+
+“How far along the animation am I?”
+
+And cos(radians(i)) as:
+
+“Given that progress, how fast should I be moving right now?”
+
+Not position — speed.
+
+
+
+
+🖼️ Draw background + overlay
+screen.blit(menu_back, menu_back_rect)
+screen.blit(alpha_screen, (0,0))
+
+
+Draw menu background
+
+Draw transparent dark overlay (probably for fade / shading)
+
+🧍 Preview player scrolling
+if player:
+    if d == 'right':
+        preview_player_rect.x -= round(16.58 * cos(radians(i)))
+
+
+Same easing motion, but:
+
+Much bigger movement (16.58 vs 2.3)
+
+Player moves faster than background
+
+This creates foreground motion, enhancing depth.
+
+Different Y speeds:
+
+11.06 for vertical
+16.58 for horizontal
+
+
+Likely tuned so player ends up perfectly aligned on next menu tile.
+
+🎞️ Pick animation frame
+current_animation = preview_animations[current_preview_player][int(ani_counter)%2]
+
+
+Breakdown:
+
+preview_animations[player] → list of frames
+
+% 2 → toggles between frame 0 and 1
+
+Creates walking/idle animation
+
+So the preview character animates while sliding.
+
+
+
+🫧 1. Bubble wobble amount
+tmp = round(4 * sin(radians(ani_counter * 70)))
+
+
+This computes a small vertical pulse for the bubble radius.
+
+ani_counter → slowly increasing animation time
+
+* 70 → makes the sine wave oscillate faster
+
+sin() → smooth back-and-forth motion
+
+* 4 → max ±4 pixels
+
+round() → integer pixels for clean drawing
+
+So tmp is in range roughly:
+
+-4 to +4
+
+
+This is used to slightly expand and shrink the bubble radius → looks like pulsing energy / wobbling bubble.
+
+🫧 2. Draw glowing bubble behind player
+Filled transparent glow
+gfxdraw.filled_circle(
+    screen,
+    preview_player_rect.centerx,
+    preview_player_rect.centery,
+    196 + tmp,
+    (buttons[current_preview_player].hover_color + (100,))
+)
+
+
+Breakdown:
+
+Centered on player preview
+
+Radius = 196 + tmp → pulsing size
+
+Color = hover color of current button + alpha 100
+
+So this is:
+👉 big soft translucent glow behind the player
+
+Bubble outline ring
+draw.circle(
+    screen,
+    buttons[current_preview_player].button_color,
+    preview_player_rect.center,
+    196 + tmp,
+    5
+)
+
+
+Same center, same pulsing radius:
+
+Draws only the outline
+
+Thickness = 5 pixels
+
+So now you have:
+
+glowing filled circle
+
+bright ring around it
+
+That’s your bubble effect.
+
+🧍 3. Draw player preview facing mouse
+if mx < preview_player_rect.centerx:
+    screen.blit(transform.flip(current_animation, 1, 0), preview_player_rect)
+else:
+    screen.blit(current_animation, preview_player_rect)
+
+
+(current_animation, 1, 0):
+This makes the character look at your mouse:
+
+If mouse is left of player → flip sprite horizontally
+
+Otherwise → normal sprite
+
+So player preview reacts to cursor position.
+Nice UI polish again.
+
+In Pygame:
+
+pygame.transform.flip(surface, flip_x, flip_y)
+
+✅ Parameters
+transform.flip(current_animation, 1, 0)
+
+
+means:
+
+current_animation → the image (Surface) to flip
+
+1 (or True) → flip horizontally (left ↔ right)
+
+0 (or False) → don’t flip vertically (up ↔ down)
+
+
+
+🎞️ 4. Advance animation timer
+ani_counter += 0.04
+
+
+This drives:
+
+walk animation frame switching
+
+bubble wobble sine wave
+
+Small increment = smooth slow animation.
+
+🔘 5. Scroll all buttons with the menu
+for b in range(len(buttons)):
+
+
+Each button is moved by the same scrolling amount as the player.
+
+Example for right scroll:
+
+buttons[b].pos[0] -= round(16.58 * cos(radians(i)))
+buttons[b].rect.x -= round(16.58 * cos(radians(i)))
+
+
+So:
+
+visual rect moves
+
+logical stored position moves
+
+Why both?
+Because probably:
+
+.pos is used for logic/layout
+
+.rect is used for drawing & collision
+
+This keeps buttons glued to the same screen region during scroll.
+
+Then:
+
+screen.blit(buttons[b].image, buttons[b].rect)
+
+
+Draw each button in new position.
+
+🎮 6. Move controls panel
+if d == 'right':
+    controls_image_rect.x -= round(16.58 * cos(radians(i)))
+...
+
+
+Same scroll logic:
+
+controls help graphic slides with the menu
+
+So when menu scrolls, everything moves together:
+
+player preview
+
+buttons
+
+controls display
+
+title text
+
+🏷️ 7. Move title text
+if d == 'right':
+    title_text_rect.x -= round(16.58 * cos(radians(i)))
+...
+
+
+Same idea as controls panel.
+
+Keeps the title centered in the new menu page after scroll completes.
+
+🧾 8. Draw background boxes and UI panels
+Controls background box
+gfxdraw.box(
+    screen,
+    (controls_image_rect.centerx - controls_back[0]/2,
+     controls_image_rect.centery - controls_back[1]/2,
+     controls_back[0],
+     controls_back[1]),
+    (GREY + (150,))
+)
+
+
+Draws a translucent grey rectangle behind controls image.
+
+
+🧠 What gfxdraw.box expects
+gfxdraw.box(surface, rect, color)
+
+
+rect must be:
+
+(x, y, width, height)
+
+
+And x, y must be the top-left corner of the box.
+
+But you don’t want the box positioned by top-left —
+you want it centered behind the controls image.
+
+So you must convert:
+
+center position → top-left position
+
+📦 What these variables mean
+Controls image center
+controls_image_rect.centerx
+controls_image_rect.centery
+
+
+This is the center of the controls image.
+
+That’s where the background box should also be centered.
+
+Background box size
+controls_back[0]  # width
+controls_back[1]  # height
+
+
+This is how big the background box should be.
+
+🎯 Goal
+
+We want:
+
+box.center == controls_image_rect.center
+
+But gfxdraw.box needs:
+
+box.topleft
+
+So we must convert.
+
+🧮 The math (this is the key idea)
+
+To center a rectangle:
+
+topleft_x = center_x - (width / 2)
+topleft_y = center_y - (height / 2)
+
+
+That’s exactly what this code is doing:
+
+controls_image_rect.centerx - controls_back[0] / 2
+controls_image_rect.centery - controls_back[1] / 2
+
+
+So:
+
+Start at center of controls image
+
+Move left by half the box width
+
+Move up by half the box height
+
+Now the box is perfectly centered behind it.
+
+
+
+Then:
+
+screen.blit(controls_image, controls_image_rect)
+
+
+So controls have a backdrop for readability.
+
+Title background box
+gfxdraw.box(
+    screen,
+    (title_text_rect.x - 50,
+     title_text_rect.y - 50,
+     title_text_rect.width + 100,
+     title_text_rect.height + 100),
+    GREY + (100,)
+)
+
+
+Big padded translucent box behind title text.
+
+Then:
+
+screen.blit(title_text_render, title_text_rect)
+
+
+So title is readable regardless of background.
+
+🖱️ 9. Input + frame update
+event.pump()
+mx, my = mouse.get_pos()
+display.flip()
+time.wait(3)
+
+event.pump()
+
+Keeps OS events flowing so window doesn’t freeze.
+
+mouse.get_pos()
+
+Update mouse position for:
+
+player facing direction next frame
+
+display.flip()
+
+Show everything you just drew.
+
+time.wait(3)
+
+Tiny delay to slow animation:
+
+~3 ms per frame
+
+combined with 91 iterations → smooth scroll duration
+
+🛑 10. Unlock input
+let_go = False
+
+
+This probably means:
+
+“Scrolling finished, player can click again.”
+
+Used elsewhere to block menu input during transitions.
