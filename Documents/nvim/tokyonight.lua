@@ -38,14 +38,12 @@ require("lazy").setup({
   -- Treesitter
   {
     "nvim-treesitter/nvim-treesitter",
-    branch = "main",
     build = ":TSUpdate",
     config = function()
-      local parsers = { "c", "lua", "python", "javascript", "typescript" }
-      require("nvim-treesitter").install(parsers)
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = parsers,
-        callback = function() vim.treesitter.start() end,
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = { "c", "lua", "python", "javascript", "typescript" },
+        highlight = { enable = true },
+        auto_install = true,
       })
     end
   },
@@ -141,9 +139,21 @@ vim.cmd.colorscheme("tokyonight")
 -- ============================================
 -- LSP Setup
 -- ============================================
--- nvim-lspconfig ships default server configs under lsp/*.lua, which
--- vim.lsp.enable() picks up automatically (see :h lspconfig-nvim-0.11).
-vim.lsp.enable({ "pyright", "ts_ls" })
+local lspconfig = require("lspconfig")
+
+local function safe_setup(server, opts)
+  if lspconfig[server] then
+    lspconfig[server].setup(opts or {})
+  else
+    vim.notify("LSP '" .. server .. "' not found", vim.log.levels.WARN)
+  end
+end
+
+-- Python
+safe_setup("pyright")
+
+-- TypeScript / JavaScript (new name)
+safe_setup("ts_ls")
 
 -- ============================================
 -- LSP Keymaps
