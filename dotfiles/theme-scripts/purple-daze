@@ -1,6 +1,6 @@
 wallpp /home/anthony/Pictures/wallpaper/wayland-girl.jpg
 cp ~/.config/kitty/purple-daze ~/.config/kitty/kitty.conf
-cp ~/.config/hypr/purple-daze.conf ~/.config/hypr/hyprland.conf
+cp ~/.config/hypr/purple-daze.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/bash_zsh_rc/myhypr/p10k ~/.zshrc
 cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
 cp ~/.config/waybar/themes/purple-daze_style.css ~/.config/waybar/style.css

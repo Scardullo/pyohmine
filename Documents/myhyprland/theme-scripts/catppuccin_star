@@ -1,6 +1,6 @@
 wallpp /home/anthony/Pictures/wallpaper/boy-cat.webp 
 cp ~/.config/kitty/catppuccin ~/.config/kitty/kitty.conf
-cp ~/.config/hypr/catppuccin.conf ~/.config/hypr/hyprland.conf
+cp ~/.config/hypr/catppuccin.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/color-themes/starship_toml_files/catppuccin ~/.config/starship.toml
 cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
 cp ~/Documents/fastfetch-configs/catppuccin ~/.config/fastfetch/config.jsonc

@@ -1,0 +1,5 @@
+Resume this session with:
+claude --resume fc29f843-5e37-4486-a9d8-4d8e8f7bfdf0
+
+Resume this session with:
+claude --resume fc29f843-5e37-4486-a9d8-4d8e8f7bfdf0

@@ -1,7 +1,7 @@
-wallpp /home/anthony/Pictures/wallpaper/gruvy_street.png
+wallpp /home/anthony/Pictures/wallpaper/Cartoon.png
 cp ~/.config/kitty/gruvbox ~/.config/kitty/kitty.conf
-cp ~/.config/hypr/gruvbox.conf ~/.config/hypr/hyprland.conf
+cp ~/.config/hypr/gruvbox.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/bash_zsh_rc/myhypr/p10k ~/.zshrc
-cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
+cp ~/Documents/fastfetch-configs/cloudy ~/.config/fastfetch/config.jsonc
 cp ~/.config/waybar/themes/gruvbox_style.css ~/.config/waybar/style.css
 pkill waybar && waybar &

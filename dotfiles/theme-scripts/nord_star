@@ -1,7 +1,7 @@
-wallpp /home/anthony/Pictures/wallpaper/retro-space.webp
-cp ~/.config/kitty/nord ~/.config/kitty/kitty.conf
-cp ~/.config/hypr/nord.conf ~/.config/hypr/hyprland.conf
-cp ~/Documents/color-themes/starship_toml_files/nord_star.toml ~/.config/starship.toml
+wallpp /home/anthony/Pictures/wallpaper/nord-sky.png
+cp ~/.config/kitty/nordic ~/.config/kitty/kitty.conf
+cp ~/.config/hypr/nord.lua ~/.config/hypr/hyprland.lua
+cp ~/Documents/color-themes/starship_toml_files/new_nord.toml ~/.config/starship.toml
 cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
 cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
 cp ~/.config/waybar/themes/nord_style.css ~/.config/waybar/style.css

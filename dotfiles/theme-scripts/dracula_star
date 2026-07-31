@@ -1,6 +1,6 @@
-wallpp /home/anthony/Pictures/wallpaper/japanese_dracula.webp 
+wallpp /home/anthony/Pictures/wallpaper/town-in-space.webp 
 cp ~/.config/kitty/dracula ~/.config/kitty/kitty.conf
-cp ~/.config/hypr/dracula.conf ~/.config/hypr/hyprland.conf
+cp ~/.config/hypr/dracula.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/color-themes/starship_toml_files/dracula ~/.config/starship.toml
 cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
 cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
