@@ -35,7 +35,6 @@ require("lazy").setup({
   { "rebelot/kanagawa.nvim" },
   { "morhetz/gruvbox" },
   { "folke/tokyonight.nvim" },
-  { "Mofiqul/vscode.nvim" },
   -- Treesitter
   {
     "nvim-treesitter/nvim-treesitter",
@@ -132,12 +131,13 @@ require("lazy").setup({
 -- ============================================
 -- Colorscheme
 -- ============================================
-require("vscode").setup({
-    style = "dark",
-    transparent = false,
-    italic_comments = true,
+require("tokyonight").setup({
+  style = "night",  -- darkest variant
 })
-require("vscode").load()
+
+
+vim.cmd.colorscheme("tokyonight")
+
 -- ============================================
 -- LSP Setup
 -- ============================================
