@@ -1,2 +1,5 @@
 Resume this session with:
 claude --resume cd1a2fbc-de2d-410c-8d32-3c4f0d835e42
+
+Resume this session with:
+claude --resume cd1a2fbc-de2d-410c-8d32-3c4f0d835e42
