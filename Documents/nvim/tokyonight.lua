@@ -35,6 +35,7 @@ require("lazy").setup({
   { "rebelot/kanagawa.nvim" },
   { "morhetz/gruvbox" },
   { "folke/tokyonight.nvim" },
+  { "Mofiqul/vscode.nvim" },
   -- Treesitter
   {
     "nvim-treesitter/nvim-treesitter",
@@ -101,7 +102,7 @@ require("lazy").setup({
 
   -- Hex colors
   {
-    "norcalli/nvim-colorizer.lua",
+    "catgoose/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup({ "*" }, { RGB = true, RRGGBB = true, names = true, css = true })
     end
@@ -132,12 +133,10 @@ require("lazy").setup({
 -- Colorscheme
 -- ============================================
 require("tokyonight").setup({
-  style = "night",  -- darkest variant
+    style = "night",
 })
 
-
 vim.cmd.colorscheme("tokyonight")
-
 -- ============================================
 -- LSP Setup
 -- ============================================

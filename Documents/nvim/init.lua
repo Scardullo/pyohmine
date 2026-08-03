@@ -132,12 +132,11 @@ require("lazy").setup({
 -- ============================================
 -- Colorscheme
 -- ============================================
-require("vscode").setup({
-    style = "dark",
-    transparent = false,
-    italic_comments = true,
+require("tokyonight").setup({
+    style = "night",
 })
-require("vscode").load()
+
+vim.cmd.colorscheme("tokyonight")
 -- ============================================
 -- LSP Setup
 -- ============================================
