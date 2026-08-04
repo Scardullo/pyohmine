@@ -1,0 +1,18 @@
+#!/bin/bash
+# Usage: wallp2 /path/to/image
+# Sets wallpaper for HDMI-A-2 only
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 /path/to/wallpaper"
+    exit 1
+fi
+
+WALLPAPER="$1"
+
+# kill only the previous HDMI-A-2 wallpaper
+pkill -f "swaybg -o HDMI-A-2"
+
+# small delay to ensure cleanup
+sleep 0.2
+
+swaybg -o HDMI-A-2 -i "$WALLPAPER" -m fill &

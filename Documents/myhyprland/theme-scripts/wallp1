@@ -1,0 +1,18 @@
+#!/bin/bash
+# Usage: wallp1 /path/to/image
+# Sets wallpaper for DP-1 only
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 /path/to/wallpaper"
+    exit 1
+fi
+
+WALLPAPER="$1"
+
+# kill only the previous DP-1 wallpaper
+pkill -f "swaybg -o DP-1"
+
+# small delay to ensure cleanup
+sleep 0.2
+
+swaybg -o DP-1 -i "$WALLPAPER" -m fill &
