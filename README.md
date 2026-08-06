@@ -5,7 +5,7 @@ Gruvbox
 
 
 Dracula
-<img width="2560" height="1440" alt="2026-08-05_21-14-18" src="https://github.com/user-attachments/assets/51a1524a-ccf5-4ccc-ab2d-4bbab20e14ca" />
+<img width="2560" height="1440" alt="2026-08-05_21-17-20" src="https://github.com/user-attachments/assets/fe7b34ad-0bc1-4366-9a51-e28db0aab4d8" />
 
 
 Everforest
