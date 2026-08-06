@@ -89,8 +89,8 @@ hl.config({
         rounding       = 10,
         rounding_power = 2,
 
-        active_opacity   = 0.8,
-        inactive_opacity = 0.8,
+        active_opacity   = 0.9,
+        inactive_opacity = 0.9,
 
         shadow = {
             enabled      = true,
@@ -132,9 +132,9 @@ hl.animation({ leaf = "layersIn",      enabled = true, speed = 4,    bezier = "e
 hl.animation({ leaf = "layersOut",     enabled = true, speed = 1.5,  bezier = "linear",       style = "fade" })
 hl.animation({ leaf = "fadeLayersIn",  enabled = true, speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
-hl.animation({ leaf = "workspaces",    enabled = true, speed = 2,    bezier = "default" })
-hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 2,    bezier = "default", style = "fade" })
-hl.animation({ leaf = "workspacesOut", enabled = true, speed = 2,    bezier = "default", style = "fade" })
+hl.animation({ leaf = "workspaces",    enabled = true, speed = 2,    bezier = "default", style = "slide" })
+hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 2,    bezier = "default", style = "slide" })
+hl.animation({ leaf = "workspacesOut", enabled = true, speed = 2,    bezier = "default", style = "slide" })
 hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "quick" })
 
 -- Smart gaps ("no gaps when only") - commented out in your original conf, kept as-is

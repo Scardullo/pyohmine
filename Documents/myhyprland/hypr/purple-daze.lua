@@ -75,8 +75,8 @@ hl.config({
 
         col = {
             -- Catppuccin navy-blue gradient (top -> bottom)
-            active_border   = "rgba(d5c4a1ff)",
-            inactive_border = "rgba(a89984ff)",
+            active_border   = "rgba(515ea6ff)",
+            inactive_border = "rgba(515ea6ff)",
         },
 
         resize_on_border = false,
@@ -89,8 +89,8 @@ hl.config({
         rounding       = 10,
         rounding_power = 2,
 
-        active_opacity   = 0.8,
-        inactive_opacity = 0.8,
+        active_opacity   = 0.9,
+        inactive_opacity = 0.9,
 
         shadow = {
             enabled      = true,
@@ -132,9 +132,9 @@ hl.animation({ leaf = "layersIn",      enabled = true, speed = 4,    bezier = "e
 hl.animation({ leaf = "layersOut",     enabled = true, speed = 1.5,  bezier = "linear",       style = "fade" })
 hl.animation({ leaf = "fadeLayersIn",  enabled = true, speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
-hl.animation({ leaf = "workspaces",    enabled = true, speed = 2,    bezier = "default" })
-hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 2,    bezier = "default", style = "fade" })
-hl.animation({ leaf = "workspacesOut", enabled = true, speed = 2,    bezier = "default", style = "fade" })
+hl.animation({ leaf = "workspaces",    enabled = true, speed = 2,    bezier = "default", style = "slide" })
+hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 2,    bezier = "default", style = "slide" })
+hl.animation({ leaf = "workspacesOut", enabled = true, speed = 2,    bezier = "default", style = "slide" })
 hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "quick" })
 
 -- Smart gaps ("no gaps when only") - commented out in your original conf, kept as-is
@@ -260,7 +260,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/gruvbox.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/purple-daze.rasi"))
 
 -- Move current window to previous/next workspace (note: your original conf uses the
 -- "workspace" dispatcher here, not "movetoworkspace" -- that's a focus change, not a
@@ -293,7 +293,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/gruvbox.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/purple-daze.sh"))
 
 
 --------------------------------
