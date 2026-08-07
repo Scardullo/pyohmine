@@ -13,7 +13,7 @@ Everforest
 
 
 Catppuccin
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/7c43fd5b-b0de-474d-856e-ac9a1d24e594" />
+<img width="2560" height="1440" alt="2026-08-07_12-51-12" src="https://github.com/user-attachments/assets/e8cbfb1d-c8d8-418d-bdb7-36fdabaaab8d" />
 
 
 Nord
