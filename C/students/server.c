@@ -1,94 +1,123 @@
-#include "server.h"
 #include "student.h"
-#include <pthread.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
+#include <pthread.h>
+#include <sys/socket.h>
 #include <arpa/inet.h>
 
-static int server_fd;
-static pthread_t client_threads[MAX_CLIENTS];
-static int running = 0;
+#define PORT 12345
+#define MAX_CLIENTS 10
 
-typedef struct {
-    int sock;
-} ClientInfo;
+static int clients[MAX_CLIENTS];
+static pthread_mutex_t clients_lock = PTHREAD_MUTEX_INITIALIZER;
 
-static void* clientHandler(void *arg){
-    ClientInfo *ci = (ClientInfo*)arg;
-    char buffer[BUFFER_SIZE];
+/* Send message to all connected clients */
+void broadcast_to_clients(const char *msg) {
+    pthread_mutex_lock(&clients_lock);
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        if (clients[i] > 0) {
+            write(clients[i], msg, strlen(msg));
+        }
+    }
+    pthread_mutex_unlock(&clients_lock);
+}
 
-    while(1){
-	memset(buffer,0,sizeof(buffer));
-	int bytes = recv(ci->sock,buffer,sizeof(buffer)-1,0);
-	if(bytes<=0) break;
+void student_broadcast(const char *msg) {
+    broadcast_to_clients(msg);
+}
 
-	if(strncmp(buffer,"ADD ",4)==0){
-	    char name[NAME_LEN]; float grade;
-	    if(sscanf(buffer+4,"%49s %f",name,&grade)==2){
-		addStudent(name,grade);
-		send(ci->sock,"OK\n",3,0);
-	    } else send(ci->sock,"ERROR\n",6,0);
-	}
-	else if(strncmp(buffer,"LIST",4)==0){
-	    pthread_mutex_lock(&student_lock);
-	    Student *t=head;
-	    while(t){
-		char msg[128];
-		snprintf(msg,sizeof(msg),"%d %s %.2f\n",t->id,t->name,t->grade);
-		send(ci->sock,msg,strlen(msg),0);
-		t=t->next;
-	    }
-	    pthread_mutex_unlock(&student_lock);
-	}
-	else if(strncmp(buffer,"DELETE ",7)==0){
-	    int id; sscanf(buffer+7,"%d",&id);
-	    deleteStudent(id);
-	    send(ci->sock,"OK\n",3,0);
-	}
-	else if(strncmp(buffer,"EXIT",4)==0){
-	    break;
-	} else send(ci->sock,"UNKNOWN COMMAND\n",16,0);
+void *client_thread(void *arg) {
+    int sock = *(int *)arg;
+    free(arg);   // free heap copy
+
+    char buffer[128];
+    ssize_t n;
+
+    while ((n = read(sock, buffer, sizeof(buffer))) > 0) {
+        write(sock, buffer, n);
     }
 
-    close(ci->sock);
-    free(ci);
+    close(sock);
+
+    /* Remove from clients[] list */
+    pthread_mutex_lock(&clients_lock);
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        if (clients[i] == sock) {
+            clients[i] = 0;
+            break;
+        }
+    }
+    pthread_mutex_unlock(&clients_lock);
+
     return NULL;
 }
 
-void startServer(int port){
-    struct sockaddr_in addr;
-    server_fd = socket(AF_INET,SOCK_STREAM,0);
-    if(server_fd<0){ perror("socket"); return; }
-
-    int opt=1;
-    setsockopt(server_fd,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt));
-
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = INADDR_ANY;
-    addr.sin_port = htons(port);
-
-    if(bind(server_fd,(struct sockaddr*)&addr,sizeof(addr))<0){ perror("bind"); return; }
-    if(listen(server_fd,MAX_CLIENTS)<0){ perror("listen"); return; }
-
-    running=1;
-    printf("Server listening on port %d\n",port);
-
-    while(running){
-	int client_sock = accept(server_fd,NULL,NULL);
-	if(client_sock<0) continue;
-
-	ClientInfo *ci = malloc(sizeof(ClientInfo));
-	ci->sock = client_sock;
-
-	pthread_t tid;
-	pthread_create(&tid,NULL,clientHandler,ci);
-	pthread_detach(tid);
+int main() {
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_fd < 0) {
+        perror("socket");
+        exit(EXIT_FAILURE);
     }
-}
 
-void stopServer(){
-    running=0;
+    int opt = 1;
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(PORT);
+    addr.sin_addr.s_addr = INADDR_ANY;
+
+    if (bind(server_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+        perror("bind");
+        exit(EXIT_FAILURE);
+    }
+
+    if (listen(server_fd, 5) < 0) {
+        perror("listen");
+        exit(EXIT_FAILURE);
+    }
+
+    registerBroadcastCallback(student_broadcast);
+
+    printf("Server listening on port %d...\n", PORT);
+
+    while (1) {
+        int client_fd = accept(server_fd, NULL, NULL);
+        if (client_fd < 0) {
+            perror("accept");
+            continue;
+        }
+
+        /* Add client to global list */
+        pthread_mutex_lock(&clients_lock);
+        int added = 0;
+        for (int i = 0; i < MAX_CLIENTS; i++) {
+            if (clients[i] == 0) {
+                clients[i] = client_fd;
+                added = 1;
+                break;
+            }
+        }
+        pthread_mutex_unlock(&clients_lock);
+
+        if (!added) {
+            printf("Too many clients. Rejecting connection.\n");
+            close(client_fd);
+            continue;
+        }
+
+        // Allocate memory to safely pass socket to thread 
+        int *pclient = malloc(sizeof(int));
+        *pclient = client_fd;
+
+        pthread_t tid;
+        pthread_create(&tid, NULL, client_thread, pclient);
+        pthread_detach(tid);   // auto-cleanup thread
+    }
+
     close(server_fd);
+    return 0;
 }
