@@ -1,0 +1,34 @@
+new_student/ is built, tested, and clean. Summary of what's new compared to the original:
+
+Data model
+- Students now hold up to 8 course grades (Course{name,grade}) instead of one grade; average/GPA and a letter grade (A–F) are 
+  derived on demand.
+
+Data structures
+- Added an id→Student* hash table (student.c) as a secondary index so searchById/delete lookups are O(1) instead of walking the list; 
+  sorting still works on the list without needing a rebuild.
+- Replaced the "recompute max id every add" logic with a monotonic id counter (fixes silent id reuse after deleting the highest-id student).
+
+
+Features
+- Course management: add/edit/remove a course per student, list a student's course breakdown.
+- Search by average-grade range, paginated Display Students.
+- Richer dashboard: median, standard deviation, and an ASCII histogram of grade-letter distribution.
+- Lightweight admin auth (salted hash, first login sets the password) gating delete/remove-course/stop-server.
+- Command-line flags (--test, --port, --load-csv, --load-json, --help) via getopt_long.
+
+
+Networking — biggest upgrade
+- The broadcast server now understands a real line-based command protocol (LIST, SEARCH, RANGE, STATS, AUTH, ADD, EDIT, DEL, QUIT) with 
+  proper TCP line-framing, alongside the original free-form chat broadcast. Verified end-to-end with nc.
+- server.c/client.c were rewritten as thin wrappers over the same network.c protocol used by the interactive menu, instead of duplicating 
+  raw socket code that didn't even share a protocol with it.
+
+Storage
+- CSV/JSON/SQLite formats extended to persist courses (SQLite now uses a proper two-table relational schema with a transaction on save); 
+  JSON parsing was generalized into a reusable "next balanced object" scanner used for both the top-level array and nested course arrays.
+
+
+
+Everything compiles warning-free (-Wall -Wextra) and ./main --test passes with no leaks. One caveat worth knowing: the network AUTH 
+command's first-ever use (local or remote) sets the permanent admin password — noted in network.h and student.c.
