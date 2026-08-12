@@ -1,0 +1,13 @@
+static void htRemove(Student *s){
+    unsigned b = hashId(s->id);
+    Student **cur = &hashTable[b];
+    while(*cur){
+        if(*cur == s){ *cur = s->hnext; return; }
+        cur = &(*cur)->hnext;
+
+
+Expression	Type		Meaning
+======================================================
+cur		Student **	Address of a Student *
+*cur		Student *	Pointer to a Student
+**cur		Student		The actual Student

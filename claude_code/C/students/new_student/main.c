@@ -81,6 +81,14 @@ static int readCourseName(const char *prompt, char *buf, size_t size){
     }
 }
 
+// ANSI "move cursor home, clear to end of screen" - keeps the terminal
+// showing just the current menu or the current action's output instead of
+// letting every prior screen pile up in scrollback.
+static void clearScreen(void){
+    printf("\033[H\033[J");
+    fflush(stdout);
+}
+
 static int requireAdmin(){
     if(!isAdmin()){
         printf("Admin authentication required. Use menu option 24 to log in.\n");
@@ -176,8 +184,10 @@ int main(int argc, char **argv) {
     int id;
 
     while(1){
+        clearScreen();
         printMenu();
         if(!readInt("Choice: ", &choice)) break;   // EOF on stdin
+        clearScreen();
 
         switch(choice){
             case 1:
@@ -222,6 +232,7 @@ int main(int argc, char **argv) {
             case 8: {
                 int page = 1;
                 while(1){
+                    clearScreen();
                     displayStudents(page);
                     printf("[Enter]=next, b=back, q=stop paging: ");
                     if(!readLine(line,sizeof(line))) break;
@@ -324,6 +335,15 @@ int main(int argc, char **argv) {
                 return 0;
             default:
                 printf("Invalid choice!\n");
+        }
+
+        // Option 8 already pauses per-page inside its own loop, and option 27
+        // exits before reaching here. Everything else's output would otherwise
+        // get wiped by the clearScreen() at the top of the next iteration
+        // before the user has a chance to read it.
+        if(choice != 8){
+            printf("\nPress Enter to return to the menu...");
+            readLine(line, sizeof(line));
         }
     }
 
