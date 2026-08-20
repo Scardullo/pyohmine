@@ -54,6 +54,16 @@ window#waybar {
     color: #eceff4;
 }
 
+/* Cava */
+
+#custom-cava {
+    background: transparent;
+    color: #d8dee9;
+    margin: 0px;
+    padding: 0 10px;
+    font-weight: bold;
+}
+
 /* Modules */
 
 #clock,
@@ -76,8 +86,8 @@ window#waybar {
 }
 
 #cpu {
-    background: #ebcb8b;
-    color: #000000;
+    background: #2e3440;
+    color: #d8dee9;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -85,8 +95,8 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #a3be8c;
-    color: #000000;
+    background: #2e3440;
+    color: #d8dee9;
     font-weight: bold;
 
     border-radius: 0px 10px 10px 0px;
@@ -95,8 +105,8 @@ window#waybar {
 /* VOLUME */
 
 #pulseaudio {
-    background: #81a1c1;
-    color: #000000;
+    background:#2e3440;
+    color: #d8dee9;
     font-weight: bold;
     border-radius: 0px;
 }

@@ -6,8 +6,8 @@
 }
 
 window#waybar {
-    background: #1a1b26;
-    color: #7aa2f7;
+    background: rgba(33, 17, 5, 0.9);
+    color: #ebdbb2;
 
     border-radius: 16px;
 
@@ -17,8 +17,8 @@ window#waybar {
 }
 
 #custom-logo {
-    background: #7aa2f7;
-    color: #282a36;
+    background: #2da1c4;
+    color: #fff1e8;
     margin: 0px;
 
     padding-left: 20px;
@@ -37,7 +37,7 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #6272a4;
+    color: #2da1c4;
     margin: 0 2px;
     padding: 0 10px;
     border-radius: 8px;
@@ -45,20 +45,20 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #7aa2f7;
+    background: #2da1c4;
     color: #1a1b26;
 }
 
 #workspaces button:hover {
     background: #44475a;
-    color: #7aa2f7;
+    color: #2da1c4;
 }
 
 /* Cava */
 
 #custom-cava {
     background: transparent;
-    color: #7aa2f7;
+    color: #ebdbb2;
     margin: 0px;
     padding: 0 10px;
     font-weight: bold;
@@ -73,7 +73,7 @@ window#waybar {
 #pulseaudio,
 #tray {
     background: transparent;
-    color: #7aa2f7;
+    color: #ebdbb2;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
@@ -87,7 +87,7 @@ window#waybar {
 
 #cpu {
     background: #1a1b26;
-    color: #7aa2f7;
+    color: #ebdbb2;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -96,7 +96,7 @@ window#waybar {
 
 #memory {
     background: #1a1b26;
-    color: #7aa2f7;
+    color: #ebdbb2;
     font-weight: bold;
     border-radius: 0px 10px 10px 0px;
 }
@@ -105,7 +105,7 @@ window#waybar {
 
 #pulseaudio {
     background: #1a1b26;
-    color: #7aa2f7;
+    color: #ebdbb2;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -127,5 +127,5 @@ tooltip {
 }
 
 tooltip label {
-    color: #7aa2f7;
+    color: #2da1c4;
 }

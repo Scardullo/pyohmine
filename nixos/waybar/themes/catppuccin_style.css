@@ -6,16 +6,14 @@
 }
 
 window#waybar {
-    background: rgba(30, 30, 46, 0.90);
+    background: #1e1e2e;
     color: #cdd6f4;
+    border: none;
+    border-radius: 16px;
+    margin: 20px 50px 0px 50px;
 
-    border-bottom: 2px solid #313244;
+    padding: 0px 10px;
 
-    border-radius: 16px 0px 0px 16px;
-
-    margin: 6px 0px 6px 6px;
-
-    padding-left: 0px;
 }
 
 #custom-logo {
@@ -38,7 +36,7 @@ window#waybar {
 }
 
 #workspaces button {
-    background: rgba(30, 30, 46, 0.90);
+    background: #1e1e2e;
     color: #89B4FA;
     margin: 0 2px;
     padding: 0 10px;
@@ -56,6 +54,16 @@ window#waybar {
     color: #89B4FA;
 }
 
+/* Cava */
+
+#custom-cava {
+    background: transparent;
+    color: #89B4FA;
+    margin: 0px;
+    padding: 0 10px;
+    font-weight: bold;
+}
+
 /* Modules */
 
 #clock,
@@ -64,7 +72,7 @@ window#waybar {
 #network,
 #pulseaudio,
 #tray {
-    background: rgba(30, 30, 46, 0.90);
+    background: #1e1e2e;
     color: #89B4FA;
     margin: 0px;
     padding: 0 10px;
@@ -76,8 +84,8 @@ window#waybar {
 }
 
 #cpu {
-    background: #f9e2af;
-    color: #000000;
+    background: #1e1e2e;
+    color: #89B4FA;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -85,17 +93,17 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #a6e3a1;
-    color: #000000;
+    background: #1e1e2e;
+    color: #89B4FA;
     font-weight: bold;
-    border-radius: 0px;
+    border-radius: 0px 10px 10px 0px;
 }
 
 /* VOLUME */
 
 #pulseaudio {
-    background: #F38ba8;
-    color: #000000;
+    background: #1e1e2e;
+    color: #89B4FA;
     font-weight: bold;
     border-radius: 0px;
 }
