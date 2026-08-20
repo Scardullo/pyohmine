@@ -356,6 +356,8 @@
     zsh-syntax-highlighting
     cbonsai
     cmatrix
+    tty-clock
+    mc
 
     # -------------------------
     # AUDIO / MEDIA
