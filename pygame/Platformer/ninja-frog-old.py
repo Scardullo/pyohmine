@@ -18,7 +18,6 @@ pygame.display.set_caption("Platformer")
 WIDTH, HEIGHT = 1000, 800
 FPS = 60
 PLAYER_VEL = 5
-CULL_MARGIN = 300
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -193,9 +192,6 @@ class Checkpoints(pygame.sprite.Sprite):
     def draw(self, win, offset_x):
         win.blit(self.image, (self.rect.x - offset_x, self.rect.y))
 
-    def in_view(self, offset_x, width, margin=CULL_MARGIN):
-        return self.rect.right >= offset_x - margin and self.rect.left <= offset_x + width + margin
-
 
 class Object(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, name=None):
@@ -208,9 +204,6 @@ class Object(pygame.sprite.Sprite):
 
     def draw(self, win, offset_x):
         win.blit(self.image, (self.rect.x - offset_x, self.rect.y))
-
-    def in_view(self, offset_x, width, margin=CULL_MARGIN):
-        return self.rect.right >= offset_x - margin and self.rect.left <= offset_x + width + margin
 
 
 class Block(Object):
@@ -471,21 +464,21 @@ class Spikehead_x(Object):
 
 
 def get_background(name):
-    # The background never scrolls, so tile it into one pre-composited
-    # surface once instead of re-blitting every 64x64 tile every frame.
-    tile = pygame.image.load(join("assets", "Background", name)).convert()
-    width, height = tile.get_size()
+    image = pygame.image.load(join("assets", "Background", name))
+    _, _, width, height = image.get_rect()
+    tiles = []
 
-    background = pygame.Surface((WIDTH, HEIGHT))
     for i in range(WIDTH // width + 1):
         for j in range(HEIGHT // height + 1):
-            background.blit(tile, (i * width, j * height))
+            pos = (i * width, j * height)
+            tiles.append(pos)
 
-    return background
+    return tiles, image
 
 
-def draw(window, background, player, objects, checkpoints, offset_x):
-    window.blit(background, (0, 0))
+def draw(window, background, bg_image, player, objects, checkpoints, offset_x):
+    for tile in background:
+        window.blit(bg_image, tile)
 
     for obj in objects:
         obj.draw(window, offset_x)
@@ -514,29 +507,30 @@ def handle_vertical_collision(player, objects, dy):
 
 
 def collide(player, objects, dx):
-    # Only the rect moves here; the sprite (and therefore the mask) is
-    # unchanged, so there's no need to pay for player.update()'s
-    # pygame.mask.from_surface() call on every probe.
-    player.rect.x += dx
+    player.move(dx, 0)
+    player.update()
     collided_object = None
     for obj in objects:
         if pygame.sprite.collide_mask(player, obj):
             collided_object = obj
             break
 
-    player.rect.x -= dx
+    player.move(-dx, 0)
+    player.update()
     return collided_object
 
 
 def check_point(player, checkpoints, dx):
-    player.rect.x += dx
+    player.move(dx, 0)
+    player.update()
     collided_object = None
     for chk in checkpoints:
         if pygame.sprite.collide_mask(player, chk):
             collided_object = chk
             break
 
-    player.rect.x -= dx
+    player.move(-dx, 0)
+    player.update()
     return collided_object
 
 
@@ -657,7 +651,7 @@ def create_floors(block_size):
 
 def main(window):
     clock = pygame.time.Clock()
-    background = get_background("Purple.png")
+    background, bg_image = get_background("Purple.png")
 
     block_size = 96
     player = Player(100, 100, 50, 50)
@@ -698,30 +692,23 @@ def main(window):
         player.loop(FPS)
         flag.loop()
 
-        objects_in_view = [obj for obj in objects if obj.in_view(offset_x, WIDTH)]
-
         for f in fires:
-            if f.in_view(offset_x, WIDTH):
-                f.loop()
+            f.loop()
         for r in rockheads:
-            if r.in_view(offset_x, WIDTH):
-                r.loop()
+            r.loop()
         for s in spikeheads:
-            if s.in_view(offset_x, WIDTH):
-                s.loop()
+            s.loop()
         for fruit in fruits:
-            if fruit.in_view(offset_x, WIDTH):
-                fruit.loop()
+            fruit.loop()
 
-        if saw.in_view(offset_x, WIDTH):
-            saw.loop()
+        saw.loop()
 
         if player.player_hit >= 2:
             game_over = True
 
-        handle_move(player, objects_in_view, checkpoints, flag, *fruits)
+        handle_move(player, objects, checkpoints, flag, *fruits)
 
-        draw(window, background, player, objects_in_view, checkpoints, offset_x)
+        draw(window, background, bg_image, player, objects, checkpoints, offset_x)
 
         if game_over:
             game_over_text = font.render("GAME OVER", True, (161, 3, 252))
