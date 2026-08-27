@@ -1,5 +1,57 @@
 { config, lib, pkgs, ... }:
 
+let
+  # -------------------------
+  # SDDM THEME (sddm-astronaut, custom background + glass UI)
+  # -------------------------
+  sddmAstronautTheme =
+    let
+      baseTheme = pkgs.sddm-astronaut.override {
+        embeddedTheme = "astronaut";
+        themeConfig = {
+          # Background
+          Background = "Backgrounds/space.png";
+          CropBackground = "true";
+
+          # Clock
+          HourFormat = "h:mm AP";
+          DateFormat = "dddd, MMMM d";
+          TimeTextColor = "#ffffff";
+          DateTextColor = "#e6e6e6";
+
+          # Fully transparent login form (no blur, no tint box) - only text/icons are opaque
+          PartialBlur = "false";
+          FullBlur = "false";
+          HaveFormBackground = "false";
+          FormPosition = "center";
+          RoundCorners = "24";
+          DimBackground = "0";
+
+          LoginFieldBackgroundColor = "#00ffffff";
+          PasswordFieldBackgroundColor = "#00ffffff";
+          LoginFieldTextColor = "#ffffff";
+          PasswordFieldTextColor = "#ffffff";
+          PlaceholderTextColor = "#cccccc";
+
+          LoginButtonTextColor = "#ffffff";
+          LoginButtonBackgroundColor = "#00ffffff";
+
+          # Behavior
+          ForceLastUser = "true";
+          PasswordFocus = "true";
+          HideCompletePassword = "true";
+          HideVirtualKeyboard = "true";
+        };
+      };
+    in
+    pkgs.runCommand "sddm-astronaut-theme-custom" { } ''
+      mkdir -p $out/share/sddm/themes
+      cp -r ${baseTheme}/share/sddm/themes/sddm-astronaut-theme $out/share/sddm/themes/sddm-astronaut-theme
+      chmod -R u+w $out/share/sddm/themes/sddm-astronaut-theme
+      cp ${./wallpapers/space.png} $out/share/sddm/themes/sddm-astronaut-theme/Backgrounds/space.png
+    '';
+in
+
 {
   imports = [
     ./hardware-configuration.nix
@@ -130,6 +182,12 @@
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
+    theme = "sddm-astronaut-theme";
+    extraPackages = with pkgs.kdePackages; [
+      qtmultimedia
+      qtsvg
+      qtvirtualkeyboard
+    ];
   };
 
   services.desktopManager.gnome.enable = false;
@@ -287,7 +345,12 @@
   # PACKAGES
   # -------------------------
   environment.systemPackages = with pkgs; [
-  
+
+    # -------------------------
+    # SDDM THEME
+    # -------------------------
+    sddmAstronautTheme
+
     # -------------------------
     # WAYLAND / HYPRLAND
     # -------------------------
