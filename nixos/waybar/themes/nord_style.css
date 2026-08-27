@@ -7,12 +7,12 @@
 
 window#waybar {
     background: #2e3440;
-    color: #d8dee9;
+    color: #81a1c1;
     border: none;
-    border-radius: 16px;
-    margin: 20px 50px 0px 50px;
+    border-radius: 0px;
+    margin: 20px 0px 0px 0px;
 
-    padding: 0px 10px;
+    padding: 0px;
 }
 
 #custom-logo {
@@ -23,7 +23,7 @@ window#waybar {
     padding-left: 20px;
     padding-right: 24px;
 
-    border-radius: 16px 0px 0px 16px;
+    border-radius: 0px;
 
     font-size: 18px;
     font-weight: bold;
@@ -45,7 +45,7 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #d8dee9;
+    background: #81a1c1;
     color: #2e3440;
 }
 
@@ -58,7 +58,7 @@ window#waybar {
 
 #custom-cava {
     background: transparent;
-    color: #d8dee9;
+    color: #81a1c1;
     margin: 0px;
     padding: 0 10px;
     font-weight: bold;
@@ -73,7 +73,7 @@ window#waybar {
 #pulseaudio,
 #tray {
     background: transparent;
-    color: #d8dee9;
+    color: #81a1c1;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
@@ -87,7 +87,7 @@ window#waybar {
 
 #cpu {
     background: #2e3440;
-    color: #d8dee9;
+    color: #81a1c1;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -96,7 +96,7 @@ window#waybar {
 
 #memory {
     background: #2e3440;
-    color: #d8dee9;
+    color: #81a1c1;
     font-weight: bold;
 
     border-radius: 0px 10px 10px 0px;
@@ -106,7 +106,7 @@ window#waybar {
 
 #pulseaudio {
     background:#2e3440;
-    color: #d8dee9;
+    color: #81a1c1;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -128,5 +128,5 @@ tooltip {
 }
 
 tooltip label {
-    color: #d8dee9;
+    color: #81a1c1;
 }

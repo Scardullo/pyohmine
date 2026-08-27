@@ -9,11 +9,11 @@ window#waybar {
     background: #2d353b;
     color: #d3c6aa;
     border: none;
-    border-radius: 16px;
-    margin: 20px 50px 0px 50px;
+    border-radius: 0px;
+    margin: 20px 0px 0px 0px;
 
-    padding: 0px 10px;
-} 
+    padding: 0px;
+}
 #custom-logo {
     background: #a7c080;
     color: #2d353b;
@@ -22,7 +22,7 @@ window#waybar {
     padding-left: 20px;
     padding-right: 24px;
 
-    border-radius: 16px 0px 0px 16px;
+    border-radius: 0px;
 
     font-size: 18px;
     font-weight: bold;

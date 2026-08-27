@@ -9,22 +9,22 @@ window#waybar {
     background: #1e1e2e;
     color: #cdd6f4;
     border: none;
-    border-radius: 16px;
-    margin: 20px 50px 0px 50px;
+    border-radius: 0px;
+    margin: 20px 0px 0px 0px;
 
-    padding: 0px 10px;
+    padding: 0px;
 
 }
 
 #custom-logo {
-    background: #89b4fa;
-    color: #1e1e2e;
+    background: #1e1e2e;
+    color: #89B4FA;
     margin: 0px;
 
     padding-left: 20px;
     padding-right: 24px;
 
-    border-radius: 16px 0px 0px 16px;
+    border-radius: 0px;
 
     font-size: 18px;
     font-weight: bold;
@@ -113,6 +113,8 @@ window#waybar {
 }
 
 #custom-weather {
+    background: #1e1e2e;
+    color: #89b4fa;
     font-weight: bold;
 }
 

@@ -6,29 +6,29 @@
 }
 
 window#waybar {
-    background: #1a1b26;
-    color: #7aa2f7;
+    background: #2e3440;
+    color: #81a1c1;
+    border: none;
+    border-radius: 0px;
+    margin: 20px 0px 0px 0px;
 
-    border-radius: 16px;
-
-    margin: 20px 50px 0px 50px;
-
-    padding: 0px 10px;
+    padding: 0px;
 }
 
 #custom-logo {
-    background: #7aa2f7;
-    color: #282a36;
+    background: #81a1c1;
+    color: #2e3440;
     margin: 0px;
 
     padding-left: 20px;
     padding-right: 24px;
 
-    border-radius: 16px 0px 0px 16px;
+    border-radius: 0px;
 
     font-size: 18px;
     font-weight: bold;
 }
+
 /* Workspaces */
 
 #workspaces {
@@ -37,7 +37,7 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #6272a4;
+    color: #81a1c1;
     margin: 0 2px;
     padding: 0 10px;
     border-radius: 8px;
@@ -45,20 +45,20 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #7aa2f7;
-    color: #1a1b26;
+    background: #81a1c1;
+    color: #2e3440;
 }
 
 #workspaces button:hover {
-    background: #44475a;
-    color: #7aa2f7;
+    background: #4c566a;
+    color: #eceff4;
 }
 
 /* Cava */
 
 #custom-cava {
     background: transparent;
-    color: #7aa2f7;
+    color: #81a1c1;
     margin: 0px;
     padding: 0 10px;
     font-weight: bold;
@@ -73,7 +73,7 @@ window#waybar {
 #pulseaudio,
 #tray {
     background: transparent;
-    color: #7aa2f7;
+    color: #81a1c1;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
@@ -86,8 +86,8 @@ window#waybar {
 }
 
 #cpu {
-    background: #1a1b26;
-    color: #7aa2f7;
+    background: #2e3440;
+    color: #81a1c1;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -95,17 +95,18 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #1a1b26;
-    color: #7aa2f7;
+    background: #2e3440;
+    color: #81a1c1;
     font-weight: bold;
+
     border-radius: 0px 10px 10px 0px;
 }
 
 /* VOLUME */
 
 #pulseaudio {
-    background: #1a1b26;
-    color: #7aa2f7;
+    background:#2e3440;
+    color: #81a1c1;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -121,11 +122,11 @@ window#waybar {
 /* Tooltip */
 
 tooltip {
-    background: #1a1b26;
-    border: 2px solid #44475a;
+    background: #2e3440;
+    border: 2px solid #4c566a;
     border-radius: 10px;
 }
 
 tooltip label {
-    color: #7aa2f7;
+    color: #81a1c1;
 }
