@@ -11,7 +11,7 @@ sleep 0.5
 # -------------------------
 # WALLPAPER
 # -------------------------
-WALL="/home/anthony/Pictures/wallpaper/darker-space.webp"
+WALL="/home/anthony/Pictures/wallpaper/space.png"
 
 swaybg -o DP-1 -i "$WALL" -m fill \
        -o HDMI-A-1 -i "$WALL" -m fill &
