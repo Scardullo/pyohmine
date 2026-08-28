@@ -17,8 +17,8 @@ window#waybar {
 }
 
 #custom-logo {
-    background: #1e1e2e;
-    color: #89B4FA;
+    background: #89B4FA;
+    color: #1e1e2e;
     margin: 0px;
 
     padding-left: 20px;
