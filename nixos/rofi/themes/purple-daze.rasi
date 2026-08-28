@@ -49,9 +49,7 @@ inputbar {
 }
 
 prompt {
-    enabled: true;
-    text: "Search";
-    text-color: @selected;
+    enabled: false;
 }
 
 entry {

@@ -1,7 +1,7 @@
 configuration {
     modi: "drun";
     show-icons: true;
-    icon-theme: "Adwaita";
+    icon-theme: "candy-icons";
     font: "JetBrainsMono Nerd Font 11";
     drun-display-format: "{icon} {name}";
     sidebar-mode: false;
@@ -45,9 +45,7 @@ inputbar {
 }
 
 prompt {
-    enabled: true;
-    text: "Search";
-    text-color: @selected;
+    enabled: false;
 }
 
 entry {

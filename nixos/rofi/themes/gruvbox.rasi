@@ -26,6 +26,10 @@ inputbar {
     padding: 8px;
 }
 
+prompt {
+    enabled: false;
+}
+
 listview {
     spacing: 6px;
     lines: 8;

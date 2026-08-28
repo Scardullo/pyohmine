@@ -7,15 +7,15 @@ configuration {
 }
 
 * {
-    bg:     rgba(45, 53, 59, 0.85);
-    bg-alt: rgba(58, 66, 72, 0.75);
-    fg:     #d3c6aa;
+    bg:     rgba(74, 42, 18, 0.92);   /* #4a2a12 */
+    bg-alt: rgba(58, 33, 14, 0.90);   /* #3a210e */
+    fg:     #ebdbb2;
 
-    selected:#a7c080;
-    active: #83c092;
-    urgent: #e67e80;
+    selected: #6b3a14;
+    active:   #7a4218;
+    urgent:   #e67e80;
 
-    border-col: #a7c080;
+    border-col: #ebdbb2;
 
     background-color: transparent;
     text-color: @fg;
@@ -27,7 +27,7 @@ window {
     border-color: @border-col;
     border-radius: 14px;
     padding: 12px;
-    background-color: @bg;
+    background-color: #211105;
 }
 
 inputbar {
@@ -40,9 +40,7 @@ inputbar {
 }
 
 prompt {
-    enabled: true;
-    text: "Search";
-    text-color: @selected;
+    enabled: false;
 }
 
 entry {
@@ -61,17 +59,17 @@ element {
 
 element selected.normal {
     background-color: @selected;
-    text-color: #2d353b;
+    text-color: #ebdbb2;
 }
 
 element selected.active {
     background-color: @active;
-    text-color: #2d353b;
+    text-color: #ebdbb2;
 }
 
 element selected.urgent {
     background-color: @urgent;
-    text-color: #2d353b;
+    text-color: #ebdbb2;
 }
 
 element-icon {

@@ -1,7 +1,7 @@
 configuration {
     modi: "drun,run";
     show-icons: true;
-    icon-theme: "Gruvbox-Plus-Dark";
+    icon-theme: "Candy-icons";
     font: "JetBrainsMono Nerd Font 12";
 }
 
@@ -24,6 +24,10 @@ inputbar {
     background-color: rgba(60, 56, 54, 0.75);
     border-radius: 8px;
     padding: 8px;
+}
+
+prompt {
+    enabled: false;
 }
 
 listview {
