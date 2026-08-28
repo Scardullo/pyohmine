@@ -5,12 +5,11 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-WALLPAPER="$1"
+WALL="$1"
 
-# kill previous swaybg
 pkill swaybg
-
 sleep 0.2
 
-# start ONE swaybg instance (correct way)
-swaybg -i "$WALLPAPER" -m fill &
+# apply to BOTH monitors
+swaybg -o DP-1 -i "$WALL" -m fill &
+swaybg -o HDMI-A-1 -i "$WALL" -m fill &

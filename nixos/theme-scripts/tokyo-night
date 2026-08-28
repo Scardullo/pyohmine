@@ -1,6 +1,7 @@
-wallpp /home/anthony/Pictures/wallpaper/arch-dark-dracula.webp
+wallpp /home/anthony/Pictures/wallpaper/wayland-girl.jpg
 cp ~/.config/kitty/tokyo-night ~/.config/kitty/kitty.conf
+kitty @ load-config
 cp ~/.config/hypr/tokyo-night.conf ~/.config/hypr/hyprland.conf
-cp ~/Documents/color-themes/starship_toml_files/dark-arch.toml ~/.config/starship.toml
+cp ~/Documents/color-themes/starship_toml_files/tokyo-night_simple.toml ~/.config/starship.toml
 cp ~/.config/waybar/themes/tokyo-night_style.css ~/.config/waybar/style.css
 pkill waybar && waybar &
