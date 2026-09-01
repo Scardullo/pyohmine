@@ -6,19 +6,18 @@
 }
 
 window#waybar {
-    background: #1e1e2e;
-    color: #cdd6f4;
+    background: #2e3440;
+    color: #81a1c1;
     border: none;
     border-radius: 0px;
     margin: 20px 0px 0px 0px;
 
     padding: 0px;
-
 }
 
 #custom-logo {
-    background: #89B4FA;
-    color: #1e1e2e;
+    background: #81a1c1;
+    color: #2e3440;
     margin: 0px;
 
     padding-left: 20px;
@@ -29,6 +28,7 @@ window#waybar {
     font-size: 18px;
     font-weight: bold;
 }
+
 /* Workspaces */
 
 #workspaces {
@@ -36,8 +36,8 @@ window#waybar {
 }
 
 #workspaces button {
-    background: #1e1e2e;
-    color: #89B4FA;
+    background: transparent;
+    color: #81a1c1;
     margin: 0 2px;
     padding: 0 10px;
     border-radius: 8px;
@@ -45,20 +45,20 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #89B4FA;
-    color: #1e1e2e;
+    background: #81a1c1;
+    color: #2e3440;
 }
 
 #workspaces button:hover {
-    background: #313244;
-    color: #89B4FA;
+    background: #4c566a;
+    color: #eceff4;
 }
 
 /* Cava */
 
 #custom-cava {
     background: transparent;
-    color: #89B4FA;
+    color: #81a1c1;
     margin: 0px;
     padding: 0 10px;
     font-weight: bold;
@@ -73,20 +73,22 @@ window#waybar {
 #network,
 #pulseaudio,
 #tray {
-    background: #1e1e2e;
-    color: #89B4FA;
+    background: transparent;
+    color: #81a1c1;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
 }
+
+/* Right spacing */
 
 #tray {
     margin-right: 6px;
 }
 
 #cpu {
-    background: #1e1e2e;
-    color: #89B4FA;
+    background: #2e3440;
+    color: #81a1c1;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -94,17 +96,18 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #1e1e2e;
-    color: #89B4FA;
+    background: #2e3440;
+    color: #81a1c1;
     font-weight: bold;
+
     border-radius: 0px 10px 10px 0px;
 }
 
 /* VOLUME */
 
 #pulseaudio {
-    background: #1e1e2e;
-    color: #89B4FA;
+    background:#2e3440;
+    color: #81a1c1;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -114,17 +117,17 @@ window#waybar {
 }
 
 #custom-weather {
-    background: #1e1e2e;
-    color: #89b4fa;
     font-weight: bold;
 }
 
+/* Tooltip */
+
 tooltip {
-    background: #1e1e2e;
-    border: 2px solid #313244;
+    background: #2e3440;
+    border: 2px solid #4c566a;
     border-radius: 10px;
 }
 
 tooltip label {
-    color: #89B4FA;
+    color: #81a1c1;
 }
