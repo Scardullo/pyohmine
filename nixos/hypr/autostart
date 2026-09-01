@@ -5,13 +5,14 @@
 # -------------------------
 pkill swaybg 2>/dev/null
 pkill waybar 2>/dev/null
+pkill hypridle 2>/dev/null
 
 sleep 0.5
 
 # -------------------------
 # WALLPAPER
 # -------------------------
-WALL="/home/anthony/Pictures/wallpaper/space.png"
+WALL="/home/anthony/Pictures/wallpaper/nord_valley.png"
 
 swaybg -o DP-1 -i "$WALL" -m fill \
        -o HDMI-A-1 -i "$WALL" -m fill &
@@ -19,4 +20,10 @@ swaybg -o DP-1 -i "$WALL" -m fill \
 # -------------------------
 # WAYBAR
 # -------------------------
-waybar &
+mkdir -p ~/.cache/hypr
+waybar > ~/.cache/hypr/waybar.log 2>&1 &
+
+# -------------------------
+# IDLE DAEMON (screen off after timeout; respects waybar's idle inhibitor)
+# -------------------------
+hypridle &
