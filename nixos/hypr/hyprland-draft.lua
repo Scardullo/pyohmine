@@ -4,7 +4,7 @@
 -- Named "hyprland-draft.lua" (NOT "hyprland.lua") on purpose: Hyprland only auto-reads
 -- $XDG_CONFIG_HOME/hypr/hyprland.lua. This file is inert until you rename it.
 --
--- Verified 2026-08-18 against:
+-- Verified 2026-09-01 against:
 --   - https://github.com/hyprwm/hyprland-wiki (Binds, Dispatchers, Monitors,
 --     Window-Rules, Workspace-Rules, Autostart pages, raw source)
 --   - https://github.com/hyprwm/Hyprland/blob/main/example/hyprland.lua (official example)
@@ -45,7 +45,7 @@ hl.monitor({ output = "HDMI-A-1", mode = "1920x1080@60",     position = "2560x0"
 ---- MY PROGRAMS ----
 ---------------------
 
-local terminal    = "kitty"
+local terminal    = "kitty -1"
 local fileManager = "thunar"
 local menu        = "hyprlauncher"
 
@@ -90,15 +90,15 @@ hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
 
 hl.config({
     general = {
-        gaps_in  = 5,
-        gaps_out = 10,
+        gaps_in  = 10,
+        gaps_out = 20,
 
         border_size = 2,
 
         col = {
-            -- Nord blue, same color for active + inactive (matches your conf)
-            active_border   = "rgba(81a1c1ff)",
-            inactive_border = "rgba(81a1c1ff)",
+            -- Catppuccin navy-blue gradient (top -> bottom), same color for active + inactive (matches your conf)
+            active_border   = "rgba(7aa2f7ff)",
+            inactive_border = "rgba(7aa2f7ff)",
         },
 
         resize_on_border = false,
@@ -108,11 +108,11 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 10,
+        rounding       = 0,
         rounding_power = 2,
 
-        active_opacity   = 0.9,
-        inactive_opacity = 0.9,
+        active_opacity   = 0.85,
+        inactive_opacity = 0.85,
 
         shadow = {
             enabled      = true,
@@ -123,9 +123,9 @@ hl.config({
 
         blur = {
             enabled  = true,
-            size     = 3,
-            passes   = 1,
-            vibrancy = 0.05,
+            size     = 5,
+            passes   = 2,
+            vibrancy = 0.15,
         },
     },
 
@@ -154,9 +154,9 @@ hl.animation({ leaf = "layersIn",      enabled = true, speed = 4,    bezier = "e
 hl.animation({ leaf = "layersOut",     enabled = true, speed = 1.5,  bezier = "linear",       style = "fade" })
 hl.animation({ leaf = "fadeLayersIn",  enabled = true, speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.39, bezier = "almostLinear" })
-hl.animation({ leaf = "workspaces",    enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
+hl.animation({ leaf = "workspaces",    enabled = true, speed = 2,    bezier = "default" })
+hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 2,    bezier = "default", style = "fade" })
+hl.animation({ leaf = "workspacesOut", enabled = true, speed = 2,    bezier = "default", style = "fade" })
 hl.animation({ leaf = "zoomFactor",    enabled = true, speed = 7,    bezier = "quick" })
 
 -- Smart gaps ("no gaps when only") - commented out in your original conf, kept as-is
@@ -233,7 +233,7 @@ local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + X",      hl.dsp.window.close())
-hl.bind(mainMod .. " + M",      hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+hl.bind(mainMod .. " + M",      hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit"))
 hl.bind(mainMod .. " + E",      hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V",      hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R",      hl.dsp.exec_cmd(menu))
@@ -281,7 +281,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 
 -- anthonys binds
 -- rofi
-hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/nord.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/dracula.rasi"))
 
 -- NOTE: your original conf uses the "workspace" dispatcher here (a focus change),
 -- not "movetoworkspace" -- despite the comments below saying "move current window".
@@ -313,7 +313,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind("SUPER + Print", hl.dsp.exec_cmd('hyprshot -m output -m active -o "$HOME/Pictures/ScreenShots"'))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/nord.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/dracula.sh"))
 
 
 --------------------------------
