@@ -66,6 +66,7 @@ window#waybar {
 /* Modules */
 
 #clock,
+#idle_inhibitor,
 #cpu,
 #memory,
 #network,
@@ -111,10 +112,14 @@ window#waybar {
 
 #clock {
     font-weight: bold;
+    background: #1a1b26;
+    color: #7aa2f7;
 }
 
 #custom-weather {
     font-weight: bold;
+    background: #1a1b26;
+    color: #7aa2f7;
 }
 
 /* Tooltip */

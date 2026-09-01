@@ -65,6 +65,7 @@ window#waybar {
 /* Modules */
 
 #clock,
+#idle_inhibitor,
 #cpu,
 #memory,
 #network,

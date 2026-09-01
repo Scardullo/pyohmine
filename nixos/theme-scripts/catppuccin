@@ -4,4 +4,4 @@ kitty @ load-config
 cp ~/.config/hypr/catppuccin.conf ~/.config/hypr/hyprland.conf
 cp ~/Documents/color-themes/starship_toml_files/catppuccin_simple.toml ~/.config/starship.toml
 cp ~/.config/waybar/themes/catppuccin_style.css ~/.config/waybar/style.css
-pkill waybar && waybar &
+pkill waybar; sleep 0.3; waybar &

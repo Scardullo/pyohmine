@@ -12,6 +12,7 @@
     ],
 
     "modules-center": [
+        "idle_inhibitor",
         "clock"
     ],
 
@@ -41,8 +42,18 @@
 //        "interval": 2
 //    },
 
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰅶",
+            "deactivated": "󰛊"
+        },
+        "tooltip-format-activated": "Idle inhibitor active (screen won't sleep)",
+        "tooltip-format-deactivated": "Idle inhibitor inactive"
+    },
+
     "clock": {
-        "format": "  {:%I:%M %p}"
+        "format": "{:%I:%M %p}"
     },
 
     "custom/weather": {

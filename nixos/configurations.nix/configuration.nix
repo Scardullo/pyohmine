@@ -355,6 +355,7 @@ in
     # WAYLAND / HYPRLAND
     # -------------------------
     hyprland
+    hypridle
     waybar
     kitty
     rofi

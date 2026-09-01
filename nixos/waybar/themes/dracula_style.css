@@ -17,8 +17,8 @@ window#waybar {
 }
 
 #custom-logo {
-    background: #1a1b26;
-    color: #7aa2f7;
+    background: #7aa2f7;
+    color: #1a1b26;
     margin: 0px;
 
     padding-left: 20px;
@@ -67,6 +67,7 @@ window#waybar {
 /* Modules */
 
 #clock,
+#idle_inhibitor,
 #cpu,
 #memory,
 #network,
