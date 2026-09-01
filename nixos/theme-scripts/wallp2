@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ]; then
+    echo "Usage: wallp2 /path/to/wallpaper"
+    exit 1
+fi
+
+WALL="$1"
+OUTPUT="HDMI-A-1"
+
+pkill -f "swaybg -o $OUTPUT "
+sleep 0.2
+
+# apply to HDMI-A-1 only
+swaybg -o "$OUTPUT" -i "$WALL" -m fill &
