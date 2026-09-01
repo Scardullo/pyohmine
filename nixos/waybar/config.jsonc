@@ -1,14 +1,13 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 18,
+    "height": 25,
     "spacing": 6,
 
     "modules-left": [
         "custom/logo",
         "hyprland/workspaces",
-        "custom/cava",
-	"custom/media"
+        "custom/cava"
     ],
 
     "modules-center": [
