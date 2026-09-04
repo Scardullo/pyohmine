@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
+import math
 import pygame
+from functools import lru_cache
 from os import listdir
 from os.path import isfile, join
 from pygame import mixer
@@ -37,6 +39,7 @@ def flip(sprites):
     return [pygame.transform.flip(sprite, True, False) for sprite in sprites]
 
 
+@lru_cache(maxsize=None)
 def load_sprite_sheets(dir1, dir2, width, height, direction=False):
     path = join("assets", dir1, dir2)
     images = [f for f in listdir(path) if isfile(join(path, f))]
@@ -62,6 +65,7 @@ def load_sprite_sheets(dir1, dir2, width, height, direction=False):
     return all_sprites
 
 
+@lru_cache(maxsize=None)
 def load_sprite_3dir(dir1, dir2, dir3, width, height):
     path = join("assets", dir1, dir2, dir3)
     images = [f for f in listdir(path) if isfile(join(path, f))]
@@ -94,9 +98,14 @@ FLOATING_PLATFORM_X = TERRAIN_COLUMNS[3]
 FLOATING_PLATFORM_SKIN_Y = [0, 16, 32]
 
 
-def get_block(size, col=1, row=0):
+@lru_cache(maxsize=None)
+def _terrain_sheet():
     path = join("assets", "Terrain", "Terrain.png")
-    image = pygame.image.load(path).convert_alpha()
+    return pygame.image.load(path).convert_alpha()
+
+
+def get_block(size, col=1, row=0):
+    image = _terrain_sheet()
     surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
     rect = pygame.Rect(TERRAIN_COLUMNS[col], TERRAIN_ROWS[row], size, size)
     surface.blit(image, (0, 0), rect)
@@ -554,7 +563,7 @@ class FloatingPlatform(Object):
         height = self.NATIVE_HEIGHT * 2
         super().__init__(x, y, width, height, "floating_platform")
 
-        sheet = pygame.image.load(join("assets", "Terrain", "Terrain.png")).convert_alpha()
+        sheet = _terrain_sheet()
         bar_y = FLOATING_PLATFORM_SKIN_Y[skin]
         native_width = width // 2
         tile = pygame.Surface((native_width, self.NATIVE_HEIGHT), pygame.SRCALPHA, 32)
@@ -1320,7 +1329,6 @@ def build_level_5():
     extra_blocks = [
         Block(0, HEIGHT - block_size * 2, block_size, col=1),
         Block(block_size * 2, HEIGHT - block_size * 3, block_size, col=1),
-        Block(block_size * 4, HEIGHT - block_size * 4, block_size, col=1),
         Block(level_end - block_size * 6, HEIGHT - block_size * 2, block_size, col=1),
         Block(level_end - block_size * 5, HEIGHT - block_size * 2, block_size, col=1),
     ]
@@ -1399,7 +1407,7 @@ class LivesIcon:
         self.animation_count = 0
 
     def loop(self):
-        self.animation_count += 0
+        self.animation_count += 1
 
     @property
     def image(self):
@@ -1431,14 +1439,15 @@ class Button:
         self.rect = self.image.get_rect(center=center)
         self.label = label
 
-    def draw(self, surface, mouse_pos):
-        hovered = self.rect.collidepoint(mouse_pos)
+    def draw(self, surface, mouse_pos, offset=(0, 0)):
+        draw_rect = self.rect.move(offset)
+        hovered = draw_rect.collidepoint(mouse_pos)
         if hovered:
-            pygame.draw.rect(surface, BLACK, self.rect.inflate(10, 10), 3, border_radius=8)
-        surface.blit(self.image, self.rect)
+            pygame.draw.rect(surface, BLACK, draw_rect.inflate(10, 10), 3, border_radius=8)
+        surface.blit(self.image, draw_rect)
         if self.label:
             draw_text(surface, self.label, LABEL_FONT, BLACK,
-                      (self.rect.centerx, self.rect.bottom + 18))
+                      (draw_rect.centerx, draw_rect.bottom + 18))
         return hovered
 
     def clicked(self, mouse_pos, mouse_click):
@@ -1473,6 +1482,52 @@ def get_click():
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             return "escape", click
     return None, click
+
+
+SLIDE_STEPS = 30
+
+
+def slide_menu_in(panel_rect, direction, render_frame):
+    """Eases a menu onto screen from off one edge of the window.
+
+    render_frame(offset) must draw one full frame of the menu (background +
+    panel + buttons) shifted by the given (dx, dy) pixel offset -- reuse the
+    exact same drawing code the menu's interactive loop already uses, just
+    called with a non-zero offset while sliding and offset=(0, 0) once at rest.
+
+    The offset itself follows a sine ease-out curve (the same "cos velocity /
+    sin position" curve Alien Adventures' scroll() uses): fast at the start,
+    smoothly decelerating into place, instead of moving at a constant speed.
+
+    Only ever two things get drawn each frame -- the frozen background and
+    the menu itself -- regardless of how far off-screen the menu currently
+    is, so there's no per-pixel or per-object cost tied to how much of it is
+    still out of view (SDL clips off-screen blits for free).
+    """
+    if direction == "top":
+        start_offset = (0, -panel_rect.bottom)
+    elif direction == "bottom":
+        start_offset = (0, HEIGHT - panel_rect.top)
+    elif direction == "left":
+        start_offset = (-panel_rect.right, 0)
+    elif direction == "right":
+        start_offset = (WIDTH - panel_rect.left, 0)
+    else:
+        raise ValueError(f"unknown slide direction: {direction!r}")
+
+    for step in range(SLIDE_STEPS + 1):
+        clock.tick(FPS)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return "quit"
+
+        eased = math.sin((step / SLIDE_STEPS) * (math.pi / 2))
+        remaining = 1 - eased
+        offset = (round(start_offset[0] * remaining), round(start_offset[1] * remaining))
+
+        render_frame(offset)
+        pygame.display.update()
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -1518,6 +1573,17 @@ def main_menu_screen(snapshot):
         for i, (result, image, label) in enumerate(entries)
     ]
 
+    def render(offset=(0, 0), mouse=(-1, -1)):
+        window.blit(snapshot, (0, 0))
+        draw_panel(window, panel.move(offset))
+        draw_text(window, "pyohmine ninjas", TITLE_FONT, BLACK,
+                  (WIDTH // 2 + offset[0], panel.top + 70 + offset[1]))
+        for _, btn in buttons:
+            btn.draw(window, mouse, offset=offset)
+
+    if slide_menu_in(panel, "top", render) == "quit":
+        return "quit"
+
     while True:
         clock.tick(FPS)
         action, click = get_click()
@@ -1525,14 +1591,7 @@ def main_menu_screen(snapshot):
             return "quit"
 
         mouse = pygame.mouse.get_pos()
-
-        window.blit(snapshot, (0, 0))
-        draw_panel(window, panel)
-        draw_text(window, "pyohmine ninjas", TITLE_FONT, BLACK, (WIDTH // 2, panel.top + 70))
-
-        for _, btn in buttons:
-            btn.draw(window, mouse)
-
+        render(mouse=mouse)
         pygame.display.update()
 
         if click:
@@ -1562,6 +1621,19 @@ def level_select_screen(snapshot):
     panel = pygame.Rect(0, 0, panel_width, 420)
     panel.center = (WIDTH // 2, HEIGHT // 2 - 20)
 
+    def render(offset=(0, 0), mouse=(-1, -1)):
+        window.blit(snapshot, (0, 0))
+        draw_panel(window, panel.move(offset))
+        draw_text(window, "Choose a Level", HEADING_FONT, BLACK,
+                  (WIDTH // 2 + offset[0], panel.top + 50 + offset[1]))
+
+        for btn in level_buttons:
+            btn.draw(window, mouse, offset=offset)
+        back_btn.draw(window, mouse, offset=offset)
+
+    if slide_menu_in(panel, "bottom", render) == "quit":
+        return "quit", None
+
     while True:
         clock.tick(FPS)
         action, click = get_click()
@@ -1571,15 +1643,7 @@ def level_select_screen(snapshot):
             return "back", None
 
         mouse = pygame.mouse.get_pos()
-
-        window.blit(snapshot, (0, 0))
-        draw_panel(window, panel)
-        draw_text(window, "Choose a Level", HEADING_FONT, BLACK, (WIDTH // 2, panel.top + 50))
-
-        for btn in level_buttons:
-            btn.draw(window, mouse)
-        back_btn.draw(window, mouse)
-
+        render(mouse=mouse)
         pygame.display.update()
 
         if click:
@@ -1614,6 +1678,29 @@ def character_select_screen(snapshot, preselected="NinjaFrog"):
         rect.center = (int(start_x + i * spacing), y)
         tile_rects[name] = rect
 
+    def render(offset=(0, 0), mouse=(-1, -1)):
+        window.blit(snapshot, (0, 0))
+        draw_panel(window, panel.move(offset))
+        draw_text(window, "Choose Your Ninja", HEADING_FONT, BLACK,
+                  (WIDTH // 2 + offset[0], panel.top + 50 + offset[1]))
+
+        for name, rect in tile_rects.items():
+            draw_rect = rect.move(offset)
+            border = 5 if name == selected else 1
+            pygame.draw.rect(window, BLACK, draw_rect, border, border_radius=10)
+            portrait_rect = portraits[name].get_rect(center=draw_rect.center)
+            window.blit(portraits[name], portrait_rect)
+            draw_text(window, name, LABEL_FONT, BLACK, (draw_rect.centerx, draw_rect.bottom + 22))
+
+        draw_text(window, f"Selected: {selected}", LABEL_FONT, BLACK,
+                  (WIDTH // 2 + offset[0], panel.top + 100 + offset[1]))
+
+        play_btn.draw(window, mouse, offset=offset)
+        back_btn.draw(window, mouse, offset=offset)
+
+    if slide_menu_in(panel, "left", render) == "quit":
+        return "quit", None
+
     while True:
         clock.tick(FPS)
         action, click = get_click()
@@ -1623,24 +1710,7 @@ def character_select_screen(snapshot, preselected="NinjaFrog"):
             return "back", None
 
         mouse = pygame.mouse.get_pos()
-
-        window.blit(snapshot, (0, 0))
-        draw_panel(window, panel)
-        draw_text(window, "Choose Your Ninja", HEADING_FONT, BLACK, (WIDTH // 2, panel.top + 50))
-
-        for name, rect in tile_rects.items():
-            border = 5 if name == selected else 1
-            pygame.draw.rect(window, BLACK, rect, border, border_radius=10)
-            portrait_rect = portraits[name].get_rect(center=rect.center)
-            window.blit(portraits[name], portrait_rect)
-            draw_text(window, name, LABEL_FONT, BLACK, (rect.centerx, rect.bottom + 22))
-
-        draw_text(window, f"Selected: {selected}", LABEL_FONT, BLACK,
-                  (WIDTH // 2, panel.top + 100))
-
-        play_btn.draw(window, mouse)
-        back_btn.draw(window, mouse)
-
+        render(mouse=mouse)
         pygame.display.update()
 
         if click:
@@ -1673,6 +1743,17 @@ def pause_overlay():
 
     base = window.copy()
 
+    def render(offset=(0, 0), mouse=(-1, -1)):
+        window.blit(base, (0, 0))
+        draw_panel(window, panel.move(offset))
+        draw_text(window, "Paused", HEADING_FONT, BLACK,
+                  (WIDTH // 2 + offset[0], panel.top + 60 + offset[1]))
+        for _, btn in buttons:
+            btn.draw(window, mouse, offset=offset)
+
+    if slide_menu_in(panel, "right", render) == "quit":
+        return "quit"
+
     while True:
         clock.tick(FPS)
         action, click = get_click()
@@ -1682,14 +1763,7 @@ def pause_overlay():
             return "resume"
 
         mouse = pygame.mouse.get_pos()
-
-        window.blit(base, (0, 0))
-        draw_panel(window, panel)
-        draw_text(window, "Paused", HEADING_FONT, BLACK, (WIDTH // 2, panel.top + 60))
-
-        for _, btn in buttons:
-            btn.draw(window, mouse)
-
+        render(mouse=mouse)
         pygame.display.update()
 
         if click:
@@ -1718,6 +1792,17 @@ def end_of_level_overlay(title, has_next):
 
     base = window.copy()
 
+    def render(offset=(0, 0), mouse=(-1, -1)):
+        window.blit(base, (0, 0))
+        draw_panel(window, panel.move(offset))
+        draw_text(window, title, HEADING_FONT, BLACK,
+                  (WIDTH // 2 + offset[0], panel.top + 60 + offset[1]))
+        for _, btn in buttons:
+            btn.draw(window, mouse, offset=offset)
+
+    if slide_menu_in(panel, "bottom", render) == "quit":
+        return "quit"
+
     while True:
         clock.tick(FPS)
         action, click = get_click()
@@ -1725,14 +1810,7 @@ def end_of_level_overlay(title, has_next):
             return "quit"
 
         mouse = pygame.mouse.get_pos()
-
-        window.blit(base, (0, 0))
-        draw_panel(window, panel)
-        draw_text(window, title, HEADING_FONT, BLACK, (WIDTH // 2, panel.top + 60))
-
-        for _, btn in buttons:
-            btn.draw(window, mouse)
-
+        render(mouse=mouse)
         pygame.display.update()
 
         if click:
@@ -1753,10 +1831,9 @@ def play_level(level_index, character_name):
     fruits = level["fruits"]
 
     offset_x = 0
-    scroll_area_width = 300
-    run = True
+    scroll_area_width = 200
 
-    while run:
+    while True:
         clock.tick(FPS)
 
         for event in pygame.event.get():
@@ -1819,7 +1896,6 @@ def play_level(level_index, character_name):
         pygame.display.update()
 
         if player.player_hit >= 100 or player.rect.top > HEIGHT:
-            has_next = level_index + 1 < len(LEVELS)
             result = end_of_level_overlay("Game Over", False)
             return result
 
@@ -1840,8 +1916,6 @@ def play_level(level_index, character_name):
             or (player.rect.left - offset_x <= scroll_area_width and actual_dx < 0)
         ):
             offset_x += actual_dx
-
-    return "levels"
 
 
 # ---------------------------------------------------------------------------
@@ -1895,7 +1969,7 @@ def main():
                 break
             elif result == "restart":
                 state = ("playing", state[1])
-            elif result == "levels" or result == "Game Over" or result is None:
+            elif result == "levels":
                 state = "levels"
             elif isinstance(result, tuple) and result[0] == "play_index":
                 state = ("playing", result[1])
