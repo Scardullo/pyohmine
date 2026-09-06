@@ -1,5 +1,5 @@
 -- ============================================
--- tokyonight.lua - Modern Neovim Setup (Tokyo Night theme)
+-- kanagawa.lua - Modern Neovim Setup (Kanagawa theme)
 -- Copy this over init.lua to switch color themes.
 -- ============================================
 
@@ -32,7 +32,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 
   -- Color scheme
-  { "folke/tokyonight.nvim" },
+  { "rebelot/kanagawa.nvim" },
 
   -- Treesitter
   {
@@ -129,11 +129,16 @@ require("lazy").setup({
 -- ============================================
 -- Colorscheme
 -- ============================================
-require("tokyonight").setup({
-  style = "night",  -- darkest variant
+require("kanagawa").setup({
+  -- "wave" = default mid-contrast variant (others: "dragon", "lotus")
+  theme = "wave",
+  background = {
+    dark = "wave",
+    light = "lotus",
+  },
 })
 
-vim.cmd.colorscheme("tokyonight")
+vim.cmd.colorscheme("kanagawa")
 
 -- ============================================
 -- LSP Setup
