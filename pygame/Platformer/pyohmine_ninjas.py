@@ -1034,7 +1034,6 @@ def build_level_3():
     extra_blocks = [
         Block(0, HEIGHT - block_size * 2, block_size, col=0),
         Block(block_size * 2, HEIGHT - block_size * 3, block_size, col=0),
-        Block(block_size * 4, HEIGHT - block_size * 4, block_size, col=0),
         Block(block_size * 6, HEIGHT - block_size * 5, block_size, col=0),
         Block(block_size * 7, HEIGHT - block_size * 5, block_size, col=0),
         Block(level_end - block_size * 6, HEIGHT - block_size * 2, block_size, col=0),
@@ -1495,8 +1494,8 @@ def slide_menu_in(panel_rect, direction, render_frame):
     exact same drawing code the menu's interactive loop already uses, just
     called with a non-zero offset while sliding and offset=(0, 0) once at rest.
 
-    The offset itself follows a sine ease-out curve (the same "cos velocity /
-    sin position" curve Alien Adventures' scroll() uses): fast at the start,
+    The offset itself follows a sine ease-out curve "cos velocity /
+    sin position", fast at the start,
     smoothly decelerating into place, instead of moving at a constant speed.
 
     Only ever two things get drawn each frame -- the frozen background and
