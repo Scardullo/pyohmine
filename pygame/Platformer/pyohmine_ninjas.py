@@ -554,7 +554,7 @@ class Trampoline(Object):
 
 
 class FloatingPlatform(Object):
-    """A thin solid platform (Terrain.png's [0][4] plank tiles) that ferries
+    """A thin solid platform (Terrain.png's [0][3] plank tiles) that ferries
     the player back and forth between x_left and x_right, like Saw/Spikehead_x."""
     NATIVE_TILE_WIDTH = 48
     NATIVE_HEIGHT = 5
@@ -1830,7 +1830,7 @@ def play_level(level_index, character_name):
     fruits = level["fruits"]
 
     offset_x = 0
-    scroll_area_width = 200
+    scroll_area_width = 300
 
     while True:
         clock.tick(FPS)
