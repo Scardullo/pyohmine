@@ -1118,14 +1118,12 @@ def build_level_4():
     floating_platforms = [
         FloatingPlatform(block_size * 25, HEIGHT - block_size * 3, block_size * 27, block_size * 25, speed=3, skin=0),
         FloatingPlatform(block_size * 28, HEIGHT - block_size * 3 - 30, block_size * 30, block_size * 27, speed=3, skin=1),
-        FloatingPlatform(block_size * 31, HEIGHT - block_size * 3, block_size * 33, block_size * 30, speed=3, skin=2),
     ]
 
     # gauntlet B: higher & faster, 4 platforms across a second, wider pit
     floating_platforms += [
         FloatingPlatform(block_size * 60, HEIGHT - block_size * 4, block_size * 62, block_size * 60, speed=4, skin=0),
         FloatingPlatform(block_size * 63, HEIGHT - block_size * 4 - 40, block_size * 65, block_size * 62, speed=4, skin=1),
-        FloatingPlatform(block_size * 66, HEIGHT - block_size * 4, block_size * 68, block_size * 65, speed=4, skin=2),
         FloatingPlatform(block_size * 69, HEIGHT - block_size * 4 - 40, block_size * 71, block_size * 68, speed=4, skin=0),
     ]
 
