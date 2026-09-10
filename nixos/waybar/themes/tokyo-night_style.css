@@ -7,7 +7,7 @@
 
 window#waybar {
     background: #000000;
-    color: #7aa2f7;
+    color: #4889be;
 
     border-bottom: 2px solid #3b4261;
     border: none;
@@ -18,7 +18,7 @@ window#waybar {
 }
 
 #custom-logo {
-    background: #5884d4;
+    background: #61afef;
     color: #171717;
     margin: 0px;
 
@@ -45,20 +45,20 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #5884d4;
+    background: #61afef;
     color: #171717;
 }
 
 #workspaces button:hover {
     background: #3b4261;
-    color: #7aa2f7;
+    color: #4889be;
 }
 
 /* Cava */
 
 #custom-cava {
     background: transparent;
-    color: #5884d4;
+    color: #61afef;
     margin: 0px;
     padding: 0 10px;
     font-weight: bold;
@@ -74,7 +74,7 @@ window#waybar {
 #pulseaudio,
 #tray {
     background: transparent;
-    color: #5884d4;
+    color: #61afef;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
@@ -88,7 +88,7 @@ window#waybar {
 
 #cpu {
     background: #000000;
-    color: #5884d4;
+    color: #61afef;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -97,7 +97,7 @@ window#waybar {
 
 #memory {
     background: #000000;
-    color: #5884d4;
+    color: #61afef;
     font-weight: bold;
     border-radius: 0px 10px 10px 0px;
 }
@@ -106,7 +106,7 @@ window#waybar {
 
 #pulseaudio {
     background: #000000;
-    color: #5884d4;
+    color: #61afef;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -130,5 +130,5 @@ tooltip {
 }
 
 tooltip label {
-    color: #5884d4;
+    color: #61afef;
 }
