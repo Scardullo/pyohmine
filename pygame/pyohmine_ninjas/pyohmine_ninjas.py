@@ -1738,8 +1738,8 @@ def character_select_screen(snapshot, preselected="NinjaFrog"):
 
         for name, rect in tile_rects.items():
             draw_rect = rect.move(offset)
-            border = 5 if name == selected else 1
-            pygame.draw.rect(window, BLACK, draw_rect, border, border_radius=10)
+            if name == selected:
+                pygame.draw.rect(window, BLACK, draw_rect, 5, border_radius=10)
             portrait_rect = portraits[name].get_rect(center=draw_rect.center)
             window.blit(portraits[name], portrait_rect)
             draw_text(window, name, LABEL_FONT, BLACK, (draw_rect.centerx, draw_rect.bottom + 22))
