@@ -1,5 +1,12 @@
 Its jenk but its my jenk
 
+## pyohmine ninjas (pygame)
+![pyohmine ninjas demo](pygame/Platformer/demo.gif)
+
+---
+
+## Hyprland dotfiles (screenshots below)
+
 Gruvbox
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/cf6502e6-eab8-42a0-86de-ab8758363179" />
 
