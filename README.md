@@ -26,7 +26,7 @@ Catppuccin
 
 
 Nord
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/efe5e250-c236-402d-935b-a71ec211dc05" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/72f2ff47-46cc-44a2-9d56-543e381e3c8f" />
 
 
 Tokyo-night
@@ -35,6 +35,7 @@ Tokyo-night
 
 Purple-daze
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f261786e-45d9-49cf-840c-c880a7a12612" />
+
 
 Elemental
 <img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/b7fb14b5-7cb9-409a-ba03-9699f4788423" />
