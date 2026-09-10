@@ -1,7 +1,9 @@
 Its jenk but its my jenk
 
 ## pyohmine ninjas (pygame)
-![pyohmine ninjas demo](pygame/Platformer/demo.gif)
+<p align="center">
+  <img src="pygame/Platformer/demo.gif" alt="pyohmine ninjas demo">
+</p>
 
 ---
 
