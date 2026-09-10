@@ -2,7 +2,7 @@ Its jenk but its my jenk
 
 ## pyohmine ninjas (pygame)
 <p align="center">
-  <img src="pygame/Platformer/demo.gif" alt="pyohmine ninjas demo">
+  <img src="pygame/pyohmine_ninjas/demo.gif" alt="pyohmine ninjas demo">
 </p>
 
 ---
