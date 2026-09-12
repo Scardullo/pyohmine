@@ -1408,7 +1408,7 @@ def render_bitmap_text(text, scale):
     x = 0
     for ch in text:
         if ch == " ":
-            x += space_w + gap
+            x += space_w
             continue
         glyph = BITMAP_GLYPHS.get(ch)
         if glyph is not None:
