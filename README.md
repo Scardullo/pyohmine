@@ -10,7 +10,7 @@ Its jenk but its my jenk
 ## Hyprland dotfiles (screenshots below)
 
 Gruvbox
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/b25ee591-8c5d-4aa2-9b1a-da0821cb03d4" />
+<img width="2560" height="1440" alt="2026-09-13-173646_hyprshot" src="https://github.com/user-attachments/assets/451fa174-c552-4f75-ae51-f278581f4adf" />
 
 
 Dracula
