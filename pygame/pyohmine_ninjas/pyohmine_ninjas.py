@@ -22,7 +22,6 @@ WHITE = (255, 255, 255)
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
 LABEL_FONT = pygame.font.SysFont("Arial", 26, bold=True)
-BIG_FONT = pygame.font.SysFont("Arial", 64, bold=True)
 
 CHARACTERS = ["NinjaFrog", "MaskDude", "PinkMan", "VirtualGuy"]
 
@@ -1402,7 +1401,7 @@ def render_bitmap_text(text, scale):
     glyph_w, glyph_h = BITMAP_GLYPH_W * scale, BITMAP_GLYPH_H * scale
     space_w, gap = glyph_w, scale
 
-    width = sum((space_w if ch == " " else glyph_w) + gap for ch in text) - gap
+    width = sum(glyph_w + gap for ch in text) - gap
     surf = pygame.Surface((max(width, 1), glyph_h), pygame.SRCALPHA, 32)
 
     x = 0
@@ -1485,7 +1484,7 @@ def draw_lives_hud(surface, icon_image, lives_left):
 
 
 class Button:
-    def __init__(self, image, center, scale=4, label=None):
+    def __init__(self, image, center, scale=3, label=None):
         w, h = image.get_size()
         self.image = pygame.transform.scale(image, (int(w * scale), int(h * scale)))
         self.rect = self.image.get_rect(center=center)
@@ -1610,7 +1609,7 @@ def make_menu_background():
 # ---------------------------------------------------------------------------
 
 def main_menu_screen(snapshot):
-    panel = pygame.Rect(0, 0, 640, 400)  # width kept wide enough for the "pyohmine ninjas" title
+    panel = pygame.Rect(0, 0, 480, 300)  # width kept wide enough for the "pyohmine ninjas" title
     panel.center = (WIDTH // 2, HEIGHT // 2)
 
     entries = [
@@ -1618,18 +1617,18 @@ def main_menu_screen(snapshot):
         ("levels", BTN_IMAGES["levels"], "Levels"),
         ("quit", BTN_IMAGES["close"], "Close"),
     ]
-    spacing = 200
+    spacing = 150
     start_x = WIDTH // 2 - spacing * (len(entries) - 1) / 2
     buttons = [
-        (result, Button(image, (int(start_x + i * spacing), panel.top + 260), label=label))
+        (result, Button(image, (int(start_x + i * spacing), panel.top + 195), label=label))
         for i, (result, image, label) in enumerate(entries)
     ]
 
     def render(offset=(0, 0), mouse=(-1, -1)):
         window.blit(snapshot, (0, 0))
         draw_panel(window, panel.move(offset))
-        draw_bitmap_text(window, "pyohmine ninjas", 4,
-                          (WIDTH // 2 + offset[0], panel.top + 70 + offset[1]))
+        draw_bitmap_text(window, "pyohmine ninjas", 3,
+                          (WIDTH // 2 + offset[0], panel.top + 52 + offset[1]))
         for _, btn in buttons:
             btn.draw(window, mouse, offset=offset)
 
@@ -1653,9 +1652,9 @@ def main_menu_screen(snapshot):
 
 
 def level_select_screen(snapshot):
-    icon_scale = 6
-    max_spacing = 260
-    panel_width = 860
+    icon_scale = 5
+    max_spacing = 195
+    panel_width = 645
     n = len(LEVELS)
     # shrink icon spacing (instead of letting the panel grow past the
     # screen) once there are enough levels that max_spacing would overflow it
@@ -1668,16 +1667,16 @@ def level_select_screen(snapshot):
                     scale=icon_scale, label=lvl["title"])
         level_buttons.append(btn)
 
-    back_btn = Button(BTN_IMAGES["back"], (100, HEIGHT - 80), scale=3, label="Back")
+    back_btn = Button(BTN_IMAGES["back"], (75, HEIGHT - 60), scale=2, label="Back")
 
-    panel = pygame.Rect(0, 0, panel_width, 420)
-    panel.center = (WIDTH // 2, HEIGHT // 2 - 20)
+    panel = pygame.Rect(0, 0, panel_width, 315)
+    panel.center = (WIDTH // 2, HEIGHT // 2 - 15)
 
     def render(offset=(0, 0), mouse=(-1, -1)):
         window.blit(snapshot, (0, 0))
         draw_panel(window, panel.move(offset))
-        draw_bitmap_text(window, "Choose a Level", 4,
-                          (WIDTH // 2 + offset[0], panel.top + 50 + offset[1]))
+        draw_bitmap_text(window, "Choose a Level", 3,
+                          (WIDTH // 2 + offset[0], panel.top + 38 + offset[1]))
 
         for btn in level_buttons:
             btn.draw(window, mouse, offset=offset)
@@ -1708,33 +1707,33 @@ def level_select_screen(snapshot):
 
 def character_select_screen(snapshot, preselected="NinjaFrog"):
     selected = preselected
-    tile_size = 170
-    spacing = 210
+    tile_size = 128
+    spacing = 158
     start_x = WIDTH // 2 - spacing * (len(CHARACTERS) - 1) / 2
-    y = HEIGHT // 2 - 30
+    y = HEIGHT // 2 - 22
 
     portraits = {}
     for name in CHARACTERS:
         frame = ALL_CHARACTER_SPRITES[name]["idle_right"][0]
         portraits[name] = pygame.transform.scale(frame, (tile_size, tile_size))
 
-    play_btn = Button(BTN_IMAGES["play"], (WIDTH // 2, HEIGHT - 150), label="Start")
-    back_btn = Button(BTN_IMAGES["back"], (100, HEIGHT - 80), scale=3, label="Back")
+    play_btn = Button(BTN_IMAGES["play"], (WIDTH // 2, HEIGHT - 112), label="Start")
+    back_btn = Button(BTN_IMAGES["back"], (75, HEIGHT - 60), scale=2, label="Back")
 
-    panel = pygame.Rect(0, 0, 820, 460)
-    panel.center = (WIDTH // 2, HEIGHT // 2 - 40)
+    panel = pygame.Rect(0, 0, 615, 345)
+    panel.center = (WIDTH // 2, HEIGHT // 2 - 30)
 
     tile_rects = {}
     for i, name in enumerate(CHARACTERS):
-        rect = pygame.Rect(0, 0, tile_size + 20, tile_size + 20)
+        rect = pygame.Rect(0, 0, tile_size + 15, tile_size + 15)
         rect.center = (int(start_x + i * spacing), y)
         tile_rects[name] = rect
 
     def render(offset=(0, 0), mouse=(-1, -1)):
         window.blit(snapshot, (0, 0))
         draw_panel(window, panel.move(offset))
-        draw_bitmap_text(window, "Choose Your Ninja", 4,
-                          (WIDTH // 2 + offset[0], panel.top + 50 + offset[1]))
+        draw_bitmap_text(window, "Choose Your Ninja", 3,
+                          (WIDTH // 2 + offset[0], panel.top + 38 + offset[1]))
 
         for name, rect in tile_rects.items():
             draw_rect = rect.move(offset)
@@ -1745,7 +1744,7 @@ def character_select_screen(snapshot, preselected="NinjaFrog"):
             draw_text(window, name, LABEL_FONT, BLACK, (draw_rect.centerx, draw_rect.bottom + 22))
 
         draw_text(window, f"Selected: {selected}", LABEL_FONT, BLACK,
-                  (WIDTH // 2 + offset[0], panel.top + 100 + offset[1]))
+                  (WIDTH // 2 + offset[0], panel.top + 75 + offset[1]))
 
         play_btn.draw(window, mouse, offset=offset)
         back_btn.draw(window, mouse, offset=offset)
@@ -1783,13 +1782,13 @@ def pause_overlay():
         ("levels", BTN_IMAGES["levels"], "Levels"),
         ("quit", BTN_IMAGES["close"], "Close"),
     ]
-    spacing = 170
-    panel = pygame.Rect(0, 0, spacing * (len(entries) - 1) + 300, 360)
+    spacing = 128
+    panel = pygame.Rect(0, 0, spacing * (len(entries) - 1) + 225, 270)
     panel.center = (WIDTH // 2, HEIGHT // 2)
 
     start_x = WIDTH // 2 - spacing * (len(entries) - 1) / 2
     buttons = [
-        (result, Button(image, (int(start_x + i * spacing), panel.top + 220), scale=3, label=label))
+        (result, Button(image, (int(start_x + i * spacing), panel.top + 165), scale=2, label=label))
         for i, (result, image, label) in enumerate(entries)
     ]
 
@@ -1798,8 +1797,8 @@ def pause_overlay():
     def render(offset=(0, 0), mouse=(-1, -1)):
         window.blit(base, (0, 0))
         draw_panel(window, panel.move(offset))
-        draw_bitmap_text(window, "Paused", 4,
-                          (WIDTH // 2 + offset[0], panel.top + 60 + offset[1]))
+        draw_bitmap_text(window, "Paused", 3,
+                          (WIDTH // 2 + offset[0], panel.top + 45 + offset[1]))
         for _, btn in buttons:
             btn.draw(window, mouse, offset=offset)
 
@@ -1832,13 +1831,13 @@ def end_of_level_overlay(title, has_next):
     entries.append(("levels", BTN_IMAGES["levels"], "Levels"))
     entries.append(("quit", BTN_IMAGES["close"], "Close"))
 
-    spacing = 170
-    panel = pygame.Rect(0, 0, spacing * (len(entries) - 1) + 300, 360)
+    spacing = 128
+    panel = pygame.Rect(0, 0, spacing * (len(entries) - 1) + 225, 270)
     panel.center = (WIDTH // 2, HEIGHT // 2)
 
     start_x = WIDTH // 2 - spacing * (len(entries) - 1) / 2
     buttons = [
-        (result, Button(image, (int(start_x + i * spacing), panel.top + 220), scale=3, label=label))
+        (result, Button(image, (int(start_x + i * spacing), panel.top + 165), scale=2, label=label))
         for i, (result, image, label) in enumerate(entries)
     ]
 
@@ -1847,8 +1846,8 @@ def end_of_level_overlay(title, has_next):
     def render(offset=(0, 0), mouse=(-1, -1)):
         window.blit(base, (0, 0))
         draw_panel(window, panel.move(offset))
-        draw_bitmap_text(window, title, 4,
-                          (WIDTH // 2 + offset[0], panel.top + 60 + offset[1]))
+        draw_bitmap_text(window, title, 3,
+                          (WIDTH // 2 + offset[0], panel.top + 45 + offset[1]))
         for _, btn in buttons:
             btn.draw(window, mouse, offset=offset)
 
@@ -1939,7 +1938,7 @@ def play_level(level_index, character_name):
         fruits_in_view = [f for f in fruits if f.in_view(offset_x, WIDTH)]
         checkpoints_in_view = [c for c in checkpoints if c.in_view(offset_x, WIDTH)]
 
-        reached_flag = handle_move(player, objects_in_view, checkpoints_in_view, flag, fruits)
+        reached_flag = handle_move(player, objects_in_view, checkpoints_in_view, flag, fruits_in_view)
 
         draw(window, level["background"], player, [*objects_in_view, *fruits_in_view],
              checkpoints_in_view, offset_x)
