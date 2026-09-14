@@ -56,7 +56,7 @@
     },
 
     "custom/weather": {
-        "exec": "curl -s 'wttr.in/?format=%t' | sed 's/+//'",
+        "exec": "~/.config/waybar/scripts/weather.sh",
         "interval": 1800,
         "format": " {}",
         "tooltip": false
