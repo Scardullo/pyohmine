@@ -1,55 +1,17 @@
+#include "network.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/select.h>
 
+#define DEFAULT_PORT 12345
+#define DEFAULT_IP   "127.0.0.1"
 
-#define PORT 12345
-#define SERVER_IP "127.0.0.1"
-
-int main(){
-    int sock = socket(AF_INET,SOCK_STREAM,0);
-    struct sockaddr_in server_addr;
-    memset(&server_addr, 0, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(PORT);
-    inet_pton(AF_INET,SERVER_IP,&server_addr.sin_addr);
-
-    if(connect(sock,(struct sockaddr*)&server_addr,sizeof(server_addr))<0){
-        perror("Connect failed"); return 1;
-    }
-
-    printf("Connected to server %s:%d\n", SERVER_IP, PORT);
-
-    fd_set read_fds;
-    char buffer[128];
-
-    while(1){
-        FD_ZERO(&read_fds);
-        FD_SET(sock,&read_fds);
-        FD_SET(STDIN_FILENO,&read_fds);
-        int max_fd = sock>STDIN_FILENO?sock:STDIN_FILENO;
-        select(max_fd+1,&read_fds,NULL,NULL,NULL);
-
-        if(FD_ISSET(sock,&read_fds)){
-            int n = read(sock, buffer,sizeof(buffer)-1);
-            if(n<=0){ printf("Disconnected\n"); break; }
-            buffer[n]=0;
-            printf("[Server] %s\n",buffer);
-        }
-
-        if(FD_ISSET(STDIN_FILENO,&read_fds)){
-            if(!fgets(buffer,sizeof(buffer),stdin)){
-                printf("Input closed, disconnecting.\n");
-                break;
-            }
-            buffer[strcspn(buffer,"\n")]=0;
-            write(sock, buffer, strlen(buffer));
-        }
-    }
-
-    close(sock);
+// Standalone client binary: connects to a running server (main --port N, or
+// the standalone `server` binary) and drops into the same interactive
+// command session available from the menu's "Connect as Client" option.
+// Usage: ./client [ip] [port]
+int main(int argc, char **argv){
+    const char *ip = argc > 1 ? argv[1] : DEFAULT_IP;
+    int port = argc > 2 ? atoi(argv[2]) : DEFAULT_PORT;
+    runClientSession(ip, port);
     return 0;
 }
