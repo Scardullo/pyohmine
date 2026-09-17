@@ -68,15 +68,15 @@ hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
 
 hl.config({
     general = {
-        gaps_in  = 5,
-        gaps_out = 10,
+        gaps_in  = 10,
+        gaps_out = 20,
 
         border_size = 2,
 
         col = {
             -- Catppuccin navy-blue gradient (top -> bottom)
-            active_border   = "rgba(d5c4a1ff)",
-            inactive_border = "rgba(a89984ff)",
+            active_border   = "rgba(282828ff)",
+            inactive_border = "rgba(282828ff)",
         },
 
         resize_on_border = false,
@@ -86,11 +86,11 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 10,
+        rounding       = 0,
         rounding_power = 2,
 
-        active_opacity   = 0.9,
-        inactive_opacity = 0.9,
+        active_opacity   = 0.95,
+        inactive_opacity = 0.95,
 
         shadow = {
             enabled      = true,

@@ -2,12 +2,15 @@
 
 sleep 2 && pkill swaybg
 
-swaybg -o DP-1 -i /home/anthony/Pictures/wallpaper/gruvbox_tux.png -m fill &
-swaybg -o HDMI-A-2 -i /home/anthony/Pictures/wallpaper/gruvbox_tux.png -m fill &
+swaybg -o DP-1 -i /home/anthony/Pictures/wallpaper/boy-cat.webp -m fill &
+swaybg -o HDMI-A-2 -i /home/anthony/Pictures/wallpaper/boy-cat.webp -m fill &
 
 
 # Waybar
 waybar &
+
+# Idle daemon
+hypridle &
 
 # Audio Visualizer
 cava &
