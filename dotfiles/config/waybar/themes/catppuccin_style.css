@@ -49,6 +49,7 @@ window#waybar {
 /* Modules */
 
 #clock,
+#custom-hypridle,
 #cpu,
 #memory,
 #network,
@@ -91,6 +92,12 @@ window#waybar {
 }
 
 #clock {
+    font-weight: bold;
+}
+
+/* Hypridle toggle */
+
+#custom-hypridle {
     font-weight: bold;
 }
 

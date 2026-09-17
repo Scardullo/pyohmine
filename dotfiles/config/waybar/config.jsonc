@@ -12,6 +12,7 @@
     ],
 
     "modules-center": [
+        "custom/hypridle",
         "clock"
     ],
 
@@ -42,8 +43,15 @@
 //        "interval": 2
 //    },
 
+    "custom/hypridle": {
+        "exec": "/home/anthony/.config/waybar/scripts/hypridle-toggle.sh",
+        "on-click": "/home/anthony/.config/waybar/scripts/hypridle-toggle.sh --toggle",
+        "return-type": "json",
+        "interval": 2
+    },
+
     "clock": {
-        "format": "  {:%I:%M %p}"
+        "format": "{:%I:%M %p}"
     },
 
     "custom/weather": {
@@ -58,7 +66,7 @@
     },
 
     "memory": {
-        "format": "RAM 󰓅 {percentage}%"
+        "format": "RAM  {percentage}%"
     },
 
     "network": {

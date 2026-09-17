@@ -42,9 +42,15 @@ setopt HIST_REDUCE_BLANKS    # remove empty lines
 # -------------------------------
 alias dfree='df -hTx tmpfs'
 alias datec='date | wl-copy'
-alias ls='eza -a --group-directories-first --icons --color=auto'
-alias ll='eza -la --group-directories-first --icons --color=auto'
-alias la='eza -la --group-directories-first --icons --color=auto'
+
+#alias ls='eza -a --group-directories-first --icons --color=auto'
+#alias ll='eza -la --group-directories-first --icons --color=auto'
+#alias la='eza -la --group-directories-first --icons --color=auto'
+
+alias ls='ls -AG --color=auto --group-directories-first'
+alias ll='ls -lAG --no-group --color=auto --group-directories-first'
+alias la='ls -lAG --no-group --color=auto --group-directories-first'
+
 alias nerds='kitty +list-fonts --configured'
 
 # -------------------------------
@@ -71,4 +77,3 @@ fi
 
 [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && \
     source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-export PATH="$HOME/.local/bin:$PATH"
