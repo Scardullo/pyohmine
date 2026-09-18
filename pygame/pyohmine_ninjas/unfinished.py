@@ -1692,6 +1692,7 @@ def build_level_6():
     ]
 
     saws = [
+        Saw(block_size * 34, 350, 38, 42, block_size * 38, block_size * 34, speed=6),
         Saw(block_size * 38, 250, 38, 42, block_size * 45, block_size * 38, speed=6),
         Saw(block_size * 54, 250, 38, 42, block_size * 57, block_size * 53, speed=6),
         Saw(block_size * 88, HEIGHT - block_size * 5, 38, 42, block_size * 92, block_size * 86, speed=6),
@@ -1746,6 +1747,8 @@ def build_level_6():
         FloatingPlatform(block_size * 76, HEIGHT - block_size * 3, block_size * 78, block_size * 76, speed=4, skin=2),
     ]
     drop_platforms = [
+        DropPlatform(block_size * 60, HEIGHT - block_size * 3),
+        DropPlatform(block_size * 64, HEIGHT - block_size * 4),
         DropPlatform(block_size * 74, HEIGHT - block_size * 3),
     ]
 
@@ -1753,7 +1756,7 @@ def build_level_6():
     flag.on()
 
     ice_range = range(12, 20)
-    pit_ranges = [range(71, 79)]
+    pit_ranges = [range(71, 79), range(21, 23), range(59, 70)]
 
     floor = [
         (IceBlock(i * block_size, HEIGHT - block_size) if i in ice_range
