@@ -1743,7 +1743,6 @@ def build_level_6():
     # a compact pit -- one ferry, one drop platform -- as the only callback
     # to the old gauntlet style, much shorter than before
     floating_platforms += [
-        FloatingPlatform(block_size * 71, HEIGHT - block_size * 3, block_size * 73, block_size * 71, speed=4, skin=0),
         FloatingPlatform(block_size * 76, HEIGHT - block_size * 3, block_size * 78, block_size * 76, speed=4, skin=2),
     ]
     drop_platforms = [
