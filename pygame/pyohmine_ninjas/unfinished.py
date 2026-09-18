@@ -21,10 +21,7 @@ WHITE = (255, 255, 255)
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
-TITLE_FONT = pygame.font.SysFont("Arial", 54, bold=True)
-HEADING_FONT = pygame.font.SysFont("Arial", 30, bold=True)
 LABEL_FONT = pygame.font.SysFont("Arial", 20, bold=True)
-BIG_FONT = pygame.font.SysFont("Arial", 48, bold=True)
 
 CHARACTERS = ["NinjaFrog", "MaskDude", "PinkMan", "VirtualGuy"]
 
@@ -1696,6 +1693,7 @@ def build_level_6():
 
     saws = [
         Saw(block_size * 38, 250, 38, 42, block_size * 45, block_size * 38, speed=6),
+        Saw(block_size * 54, 250, 38, 42, block_size * 57, block_size * 53, speed=6),
         Saw(block_size * 88, HEIGHT - block_size * 5, 38, 42, block_size * 92, block_size * 86, speed=6),
     ]
 
@@ -2066,6 +2064,63 @@ def draw_text(surface, text, font, color, center):
     return rect
 
 
+# The "Text (Black) (8x10)" sheet is a fixed 10-col grid of 8x10 glyphs; rows
+# are A-J/K-T/U-Z (padded), 0-9, then punctuation -- see assets/Menu/Text/.
+BITMAP_FONT_SHEET = pygame.image.load(
+    join("assets", "Menu", "Text", "Text (Black) (8x10).png")).convert_alpha()
+BITMAP_GLYPH_W, BITMAP_GLYPH_H = 8, 10
+BITMAP_FONT_ROWS = [
+    "ABCDEFGHIJ",
+    "KLMNOPQRST",
+    "UVWXYZ",
+    "0123456789",
+    ".,:?!()+-",
+]
+
+
+def _build_bitmap_glyphs():
+    glyphs = {}
+    for row, chars in enumerate(BITMAP_FONT_ROWS):
+        for col, ch in enumerate(chars):
+            rect = pygame.Rect(col * BITMAP_GLYPH_W, row * BITMAP_GLYPH_H,
+                                BITMAP_GLYPH_W, BITMAP_GLYPH_H)
+            glyph = pygame.Surface((BITMAP_GLYPH_W, BITMAP_GLYPH_H), pygame.SRCALPHA, 32)
+            glyph.blit(BITMAP_FONT_SHEET, (0, 0), rect)
+            glyphs[ch] = glyph
+    return glyphs
+
+
+BITMAP_GLYPHS = _build_bitmap_glyphs()
+
+
+def render_bitmap_text(text, scale):
+    """Builds a Surface of `text` using the black pixel-font glyph sheet."""
+    text = text.upper()
+    glyph_w, glyph_h = BITMAP_GLYPH_W * scale, BITMAP_GLYPH_H * scale
+    space_w, gap = glyph_w, scale
+
+    width = sum(glyph_w + gap for ch in text) - gap
+    surf = pygame.Surface((max(width, 1), glyph_h), pygame.SRCALPHA, 32)
+
+    x = 0
+    for ch in text:
+        if ch == " ":
+            x += space_w
+            continue
+        glyph = BITMAP_GLYPHS.get(ch)
+        if glyph is not None:
+            surf.blit(pygame.transform.scale(glyph, (glyph_w, glyph_h)), (x, 0))
+        x += glyph_w + gap
+    return surf
+
+
+def draw_bitmap_text(surface, text, scale, center):
+    surf = render_bitmap_text(text, scale)
+    rect = surf.get_rect(center=center)
+    surface.blit(surf, rect)
+    return rect
+
+
 PANEL_TEXTURE = pygame.image.load(join("assets", "Background", "Brown.png")).convert()
 
 
@@ -2270,8 +2325,8 @@ def main_menu_screen(snapshot):
     def render(offset=(0, 0), mouse=(-1, -1)):
         window.blit(snapshot, (0, 0))
         draw_panel(window, panel.move(offset))
-        draw_text(window, "pyohmine ninjas", TITLE_FONT, BLACK,
-                  (WIDTH // 2 + offset[0], panel.top + 53 + offset[1]))
+        draw_bitmap_text(window, "pyohmine ninjas", 3,
+                          (WIDTH // 2 + offset[0], panel.top + 53 + offset[1]))
         for _, btn in buttons:
             btn.draw(window, mouse, offset=offset)
 
@@ -2320,8 +2375,8 @@ def level_select_screen(snapshot):
     def render(offset=(0, 0), mouse=(-1, -1)):
         window.blit(snapshot, (0, 0))
         draw_panel(window, panel.move(offset))
-        draw_text(window, "Choose a Level", HEADING_FONT, BLACK,
-                  (WIDTH // 2 + offset[0], panel.top + 38 + offset[1]))
+        draw_bitmap_text(window, "Choose a Level", 3,
+                          (WIDTH // 2 + offset[0], panel.top + 38 + offset[1]))
 
         for btn in level_buttons:
             btn.draw(window, mouse, offset=offset)
@@ -2377,13 +2432,13 @@ def character_select_screen(snapshot, preselected: str | None = "NinjaFrog"):
     def render(offset=(0, 0), mouse=(-1, -1)):
         window.blit(snapshot, (0, 0))
         draw_panel(window, panel.move(offset))
-        draw_text(window, "Choose Your Ninja", HEADING_FONT, BLACK,
-                  (WIDTH // 2 + offset[0], panel.top + 38 + offset[1]))
+        draw_bitmap_text(window, "Choose Your Ninja", 3,
+                          (WIDTH // 2 + offset[0], panel.top + 38 + offset[1]))
 
         for name, rect in tile_rects.items():
             draw_rect = rect.move(offset)
-            border = 5 if name == selected else 1
-            pygame.draw.rect(window, BLACK, draw_rect, border, border_radius=10)
+            if name == selected:
+                pygame.draw.rect(window, BLACK, draw_rect, 5, border_radius=10)
             portrait_rect = portraits[name].get_rect(center=draw_rect.center)
             window.blit(portraits[name], portrait_rect)
             draw_text(window, name, LABEL_FONT, BLACK, (draw_rect.centerx, draw_rect.bottom + 17))
@@ -2442,8 +2497,8 @@ def pause_overlay():
     def render(offset=(0, 0), mouse=(-1, -1)):
         window.blit(base, (0, 0))
         draw_panel(window, panel.move(offset))
-        draw_text(window, "Paused", HEADING_FONT, BLACK,
-                  (WIDTH // 2 + offset[0], panel.top + 45 + offset[1]))
+        draw_bitmap_text(window, "Paused", 3,
+                          (WIDTH // 2 + offset[0], panel.top + 45 + offset[1]))
         for _, btn in buttons:
             btn.draw(window, mouse, offset=offset)
 
@@ -2491,8 +2546,8 @@ def end_of_level_overlay(title, has_next):
     def render(offset=(0, 0), mouse=(-1, -1)):
         window.blit(base, (0, 0))
         draw_panel(window, panel.move(offset))
-        draw_text(window, title, HEADING_FONT, BLACK,
-                  (WIDTH // 2 + offset[0], panel.top + 45 + offset[1]))
+        draw_bitmap_text(window, title, 3,
+                          (WIDTH // 2 + offset[0], panel.top + 45 + offset[1]))
         for _, btn in buttons:
             btn.draw(window, mouse, offset=offset)
 
