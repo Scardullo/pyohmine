@@ -41,24 +41,39 @@ setopt HIST_REDUCE_BLANKS    # remove empty lines
 # Aliases
 # -------------------------------
 alias dfree='df -hTx tmpfs'
-alias ls='eza -a --group-directories-first --icons --color=auto'
-alias ll='eza -la --group-directories-first --icons --color=auto'
-alias la='eza -la --group-directories-first --icons --color=auto'
+alias datec='date | wl-copy'
+
+#alias ls='eza -a --group-directories-first --icons --color=auto'
+#alias ll='eza -la --group-directories-first --icons --color=auto'
+#alias la='eza -la --group-directories-first --icons --color=auto'
+
+alias ls='ls -AG --color=auto --group-directories-first'
+alias ll='ls -lAG --no-group --color=auto --group-directories-first'
+alias la='ls -lAG --no-group --color=auto --group-directories-first'
+
 alias nerds='kitty +list-fonts --configured'
 
 # -------------------------------
 # Node / Python / other optional envs
 # -------------------------------
-# export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # -------------------------------
 # Powerlevel10k config
 # -------------------------------
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
+
 # -------------------------------
-# Pokémon greeting
+# Pokémon + fastfetch greeting
 # -------------------------------
-if command -v pokemon-colorscripts &>/dev/null; then
-    pokemon-colorscripts -r --no-title
+if [[ -n "$KITTY_WINDOW_ID" ]] && command -v pokemon-colorscripts &>/dev/null && command -v fastfetch &>/dev/null; then
+    fastfetch --config ~/.config/fastfetch/config-pokemon.jsonc --file-raw <(pokemon-colorscripts -r --no-title | sed $'s/$/\e[0m/')
 fi
+
+#--------------------------------
+# zsh-syntax-highlighting
+#------------------------------
+
+[[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && \
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
