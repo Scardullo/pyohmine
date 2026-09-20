@@ -1832,12 +1832,14 @@ def build_level_6():
 
 
 # ---------------------------------------------------------------------------
-# level 7 -- "Frozen Depths": longer than level 6 (and every other level),
-# equally advanced -- the same new toolkit (ice, pendulum, spring-pad shaft,
-# fan wall) recombined with a second pendulum and a longer pit gauntlet
-# instead of just faster/denser versions of the old formula. Its extra length
-# also means room for taller, more varied terrain clusters than level 6 gets --
-# an ice bypass that peaks noticeably higher, rolling hills, a closing bump.
+# level 7 -- "Frozen Depths": the longest level, and an all-ice one. Every
+# floor block is ice, so the whole level plays like the opening slide: two
+# pits with drop platforms over them right away (fruit hangs above the
+# platforms, out of reach from the ground), then the rest of the level keeps
+# escalating those two ideas -- three more pits, each bigger than the last,
+# with the biggest one adding the level's only moving platform -- alongside
+# floating "bands" of ice blocks up off the floor: a shelf, a band with a saw
+# patrolling it, a staircase of bands, and a trampoline-launched summit.
 # Teal terrain.
 # ---------------------------------------------------------------------------
 
@@ -1845,153 +1847,148 @@ def build_level_7():
     block_size = BLOCK_SIZE
     level_end = WIDTH * 13
 
+    def ice_band(first_col, last_col, k):
+        """A floating run of ice blocks, k blocks up from the bottom of the
+        screen (k=1 would be floor level)."""
+        return [IceBlock(col * block_size, HEIGHT - block_size * k)
+                for col in range(first_col, last_col + 1)]
+
     fruits = [
         Fruits(block_size * 6, HEIGHT - block_size * 3 - 50, 32, 32, "Apple"),
-        # at the peak of the mixed-height bypass above the ice slide -- the
-        # ice below is still walkable, this is the alternate (non-slippery)
-        # route
         Fruits(block_size * 15, HEIGHT - block_size * 3 - 50, 32, 32, "Bananas"),
         # timed past the first swinging ball
         Fruits(block_size * 21, HEIGHT - block_size * 4 - 50, 32, 32, "Cherries"),
-        # atop the elevator shaft's landing platform
-        Fruits(block_size * 47, 352 - 50, 32, 32, "Strawberry"),
-        # in open air just past the fan wall, grabbed mid-flight
-        Fruits(block_size * 70, 300, 32, 32, "Kiwi"),
-        Fruits(block_size * 78, HEIGHT - block_size * 4 - 50, 32, 32, "Melon"),
-        # timed past the second swinging ball
-        Fruits(block_size * 87, HEIGHT - block_size * 4 - 50, 32, 32, "Melon"),
-        # over the pit gauntlet
-        Fruits(block_size * 102, HEIGHT - block_size * 3 - 60, 32, 32, "Pineapple"),
-        Fruits(block_size * 130, HEIGHT - block_size * 4 - 50, 32, 32, "Orange"),
+        # on the first floating ice band -- a double jump up from the floor
+        Fruits(block_size * 43 + 16, HEIGHT - block_size * 4 - 100, 32, 32, "Kiwi"),
+        # pit 1: hangs above the second drop platform, too high to grab from
+        # either edge of the pit
+        Fruits(block_size * 56 + 16, 300, 32, 32, "Melon"),
+        # on the saw's band, above the saw's path
+        Fruits(block_size * 67 + 16, 300, 32, 32, "Strawberry"),
+        # pit 2: one above each of the two higher drop platforms
+        Fruits(block_size * 81 + 16, 300, 32, 32, "Orange"),
+        Fruits(block_size * 83 + 16, 190, 32, 32, "Pineapple"),
+        # top of the ice staircase
+        Fruits(block_size * 98 + 16, 200, 32, 32, "Kiwi"),
+        # pit 3: above the drop platform before the ferry, and above the one
+        # after it
+        Fruits(block_size * 108 + 16, 300, 32, 32, "Apple"),
+        Fruits(block_size * 116 + 16, 300, 32, 32, "Melon"),
+        # the trampoline-launched summit band
+        Fruits(block_size * 128 + 16, 300, 32, 32, "Bananas"),
     ]
 
     fires = []
-    for base in (block_size * 8, block_size * 35, block_size * 62, block_size * 90, block_size * 124):
+    # 8 and 35 are the opening's; 66 guards the floor under the saw's band,
+    # 94/98 the floor under the top of the ice staircase
+    for base in (block_size * 8, block_size * 35, block_size * 66, block_size * 94, block_size * 98):
         for off in (0, 35):
             f = Fire(base + off, HEIGHT - block_size - 64, 16, 32)
             f.on()
             fires.append(f)
 
     rockheads = [
-        RockHead(block_size * 72, -200, 42, 42, 400),
-        RockHead(block_size * 92, -180, 42, 42, 380),
-        RockHead(block_size * 112, -200, 42, 42, 420),
+        RockHead(block_size * 73, -200, 42, 42, 400),
+        RockHead(block_size * 101, -200, 42, 42, 400),
     ]
 
+    # both patrol a runway with open sky above -- never under a band, where
+    # there'd be no room to jump them
     spikeheads = [
-        Spikehead_x(block_size * 55, HEIGHT - block_size * 2, 54, 52, block_size * 58, block_size * 54, speed=5),
-        Spikehead_x(block_size * 76, HEIGHT - block_size * 2, 54, 52, block_size * 79, block_size * 75, speed=5),
-        Spikehead_x(block_size * 93, HEIGHT - block_size * 2, 54, 52, block_size * 96, block_size * 92, speed=5),
-        Spikehead_x(block_size * 118, HEIGHT - block_size * 2, 54, 52, block_size * 121, block_size * 117, speed=5),
+        Spikehead_x(block_size * 41, HEIGHT - block_size * 4 - 100, 54, 52, block_size * 48, block_size * 41, speed=5),
+        Spikehead_x(block_size * 120, HEIGHT - block_size * 2, 54, 52, block_size * 122, block_size * 120, speed=5),
     ]
 
+    # rides the top of the band over the floor fire -- a hop over it, on ice
     saws = [
-        Saw(block_size * 60, HEIGHT - block_size * 5, 38, 42, block_size * 64, block_size * 58, speed=6),
-        Saw(block_size * 111, HEIGHT - block_size * 5, 38, 42, block_size * 115, block_size * 109, speed=6),
+        Saw(block_size * 64, HEIGHT - block_size * 4 - 84, 38, 42, block_size * 69, block_size * 64, speed=4),
     ]
 
-    # right where the ice ends -- overshoot the slide and you skid into these
+    # the opening's: right where the second pit lands
     spikes = [
         Spikes(block_size * 25, HEIGHT - block_size - 32),
         Spikes(block_size * 25 + 32, HEIGHT - block_size - 32),
-        Spikes(block_size * 130, HEIGHT - block_size - 32),
     ]
 
+    # launches up to the summit band: the arc peaks a bit above it, so the
+    # player comes down onto its top instead of bonking the underside
     trampolines = [
-        Trampoline(block_size * 72, HEIGHT - block_size - 56),
+        Trampoline(block_size * 40, HEIGHT - block_size - 56),
+        Trampoline(block_size * 126, HEIGHT - block_size - 56),
     ]
 
-    # ballistic spring-pad arc -- the landing platform below sits well past
-    # the arc's apex, so it's caught while descending, not bonked from below
-    spring_pads = [SpringPad(block_size * 42, HEIGHT - block_size - 36)]
-    trampolines += spring_pads
-
-    # fan-powered updraft -- carries the player up and over a solid wall that
-    # blocks the floor path entirely, no ground route around it
-    fans = [Fan(block_size * 66, HEIGHT - block_size - 16)]
-    wall = [
-        Block(block_size * 68, HEIGHT - block_size - k * block_size, block_size, col=0, row=2)
-        for k in range(1, 6)
-    ]
-
-    # two big pendulum wrecking balls, spaced far apart -- each swings low
-    # enough to threaten the floor, so crossing means timing the walk past
+    # 7/15/20/30 are the opening's; one swings over the middle of pit 1 and
+    # one over the middle of pit 3
     swinging_balls = [
         SwingingBall(block_size * 7, 250, 400, max_angle=42, speed=0.035),
         SwingingBall(block_size * 15, 250, 400, max_angle=42, speed=0.035),
         SwingingBall(block_size * 20, 250, 400, max_angle=42, speed=0.035),
-        SwingingBall(block_size * 30, 250, 400, max_angle=45, speed=0.035),
-        SwingingBall(block_size * 84, 250, 400, max_angle=42, speed=0.035),
+        SwingingBall(block_size * 30, 250, 400, max_angle=60, speed=0.035),
+        SwingingBall(block_size * 44, 10, 300, max_angle=45, speed=0.035),
+        SwingingBall(block_size * 55 + 48, 250, 400, max_angle=42, speed=0.035),
+        SwingingBall(block_size * 111, 250, 400, max_angle=42, speed=0.03),
     ]
 
-    # elevator shaft: spring pad up to the wide landing, then a vertical
-    # platform -- boarded at a standstill, no ballistic timing needed --
-    # carries the rest of the way up
+    # the level's one moving platform: the only way across the middle of pit 3,
+    # a gap of 7 blocks between the drop platform at 108 and the one at 116 --
+    # wider than any jump
     floating_platforms = [
-        VerticalPlatform(block_size * 50, 352, y_top=100, y_bottom=352, speed=2),
+        FloatingPlatform(block_size * 110, HEIGHT - block_size * 3, block_size * 114, block_size * 110, speed=4, skin=2),
     ]
 
-    # a longer pit than level 6's -- two ferries alternating with two drop
-    # platforms, the extra length that makes this level longer overall
-    floating_platforms += [
-        FloatingPlatform(block_size * 98, HEIGHT - block_size * 3, block_size * 100, block_size * 98, speed=4, skin=0),
-        FloatingPlatform(block_size * 103, HEIGHT - block_size * 3, block_size * 105, block_size * 103, speed=4, skin=2),
-    ]
+    # rising steps / zig-zags over each pit: 21 is the opening's; each pit
+    # after it is bigger than the last
     drop_platforms = [
         DropPlatform(block_size * 21, HEIGHT - block_size * 3),
-        DropPlatform(block_size * 101, HEIGHT - block_size * 3),
-        DropPlatform(block_size * 106, HEIGHT - block_size * 3),
+        # pit 1 (cols 52-58)
+        DropPlatform(block_size * 54, HEIGHT - block_size * 2),
+        DropPlatform(block_size * 56, HEIGHT - block_size * 3),
+        # pit 2 (cols 77-85): three rising steps
+        DropPlatform(block_size * 79, HEIGHT - block_size * 2),
+        DropPlatform(block_size * 81, HEIGHT - block_size * 3),
+        DropPlatform(block_size * 83, HEIGHT - block_size * 4),
+        # pit 3 (cols 104-117): two, then the ferry, then one more
+        DropPlatform(block_size * 106, HEIGHT - block_size * 2),
+        DropPlatform(block_size * 108, HEIGHT - block_size * 3),
+        DropPlatform(block_size * 116, HEIGHT - block_size * 3),
     ]
 
     flag = Flag(level_end - (block_size * 4), HEIGHT - (block_size * 2 + 30), 64, 64)
     flag.on()
 
-    ice_range = range(0, 35)
-    pit_ranges = [range(14, 17), range(19, 25), range(97, 109)]
+    pit_ranges = [
+        range(14, 17), range(19, 25), range(41, 48),  # the opening's
+        range(52, 59), range(77, 86), range(104, 118),
+    ]
 
+    # everything from block 0 on is ice; only the off-screen run-up to the
+    # left of the start stays plain terrain
     floor = [
-        (IceBlock(i * block_size, HEIGHT - block_size) if i in ice_range
+        (IceBlock(i * block_size, HEIGHT - block_size) if i >= 0
          else Block(i * block_size, HEIGHT - block_size, block_size, col=0, row=2))
         for i in range(-WIDTH // block_size, level_end // block_size)
         if not any(i in pit for pit in pit_ranges)
     ]
 
-    # a hill between the fire pair at block 35 and the spring pad -- kept
-    # clear of the fire on one side and the pad on the other
-    hills = [
-        Block(block_size * 36, HEIGHT - block_size * 2, block_size, col=0, row=2),
-        Block(block_size * 37, HEIGHT - block_size * 3, block_size, col=0, row=2),
-        Block(block_size * 38, HEIGHT - block_size * 4, block_size, col=0, row=2),
-        Block(block_size * 39, HEIGHT - block_size * 3, block_size, col=0, row=2),
-        Block(block_size * 40, HEIGHT - block_size * 2, block_size, col=0, row=2),
+    # floating bands of ice, up off the floor
+    #   A: a shelf 3 up -- a double jump from the floor, walkable underneath
+    #   B: 4 up, with a floating step 3 up leading onto it
+    #   C/D/E: a staircase of three bands, each one block higher than the last
+    #   F: 4 up, the trampoline's summit
+    ice_bands = [
+        *ice_band(42, 46, 4),
+        *ice_band(61, 62, 3), *ice_band(63, 70, 4),
+        *ice_band(89, 91, 3), *ice_band(93, 95, 4), *ice_band(97, 99, 5),
+        *ice_band(127, 130, 4),
     ]
 
-    # a small closing bump well clear of the last fire and the end-of-level
-    # stepping stones
-    bump = [
-        Block(block_size * 126, HEIGHT - block_size * 2, block_size, col=0, row=2),
-        Block(block_size * 127, HEIGHT - block_size * 3, block_size, col=0, row=2),
-        Block(block_size * 128, HEIGHT - block_size * 2, block_size, col=0, row=2),
-    ]
-
-    # elevator shaft: a wide landing pad well past the spring pad's arc apex,
-    # then the vertical platform continues to a landing at the top
-    shaft_landing = [
-        Block(i * block_size, 352, block_size, col=0, row=2)
-        for i in range(45, 50)
-    ]
-    shaft_top = [
-        Block(i * block_size, 100, block_size, col=0, row=2)
-        for i in range(51, 54)
-    ]
-
+    # stepping stones beside the flag
     extra_blocks = [
-        Block(level_end - block_size * 6, HEIGHT - block_size * 2, block_size, col=0, row=2),
-        Block(level_end - block_size * 5, HEIGHT - block_size * 2, block_size, col=0, row=2),
+        IceBlock(level_end - block_size * 6, HEIGHT - block_size * 2),
+        IceBlock(level_end - block_size * 5, HEIGHT - block_size * 2),
     ]
 
-    blocks = [*floor, *shaft_landing, *shaft_top, *wall, *extra_blocks,
-              *hills, *bump]
+    blocks = [*floor, *ice_bands, *extra_blocks]
     objects = [*blocks, *fires, *rockheads, *spikeheads, *saws, *spikes, *trampolines,
                *floating_platforms, *drop_platforms, *swinging_balls]
 
@@ -2007,7 +2004,6 @@ def build_level_7():
         "floating_platforms": floating_platforms,
         "drop_platforms": drop_platforms,
         "swinging_balls": swinging_balls,
-        "fans": fans,
         "fruits": fruits,
         "flag": flag,
         "start_pos": (100, 100),
