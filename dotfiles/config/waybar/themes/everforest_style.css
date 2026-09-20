@@ -6,7 +6,7 @@
 }
 
 window#waybar {
-    background: rgba(45, 53, 59, 0.90);
+    background: #2d353b;
     color: #d3c6aa;
     border-bottom: 2px solid #3d474e;
 }
@@ -70,7 +70,7 @@ window#waybar {
 }
 
 #cpu {
-    background: rgba(45, 53, 59, 0.90);
+    background: #2d353b;
     color: #d3c6aa;
     font-weight: bold;
     border-radius: 0px;
@@ -79,7 +79,7 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: rgba(45, 53, 59, 0.90);
+    background: #2d353b;
     color: #d3c6aa;
     font-weight: bold;
     border-radius: 0px;
@@ -88,7 +88,7 @@ window#waybar {
 /* VOLUME */
 
 #pulseaudio {
-    background: rgba(45, 53, 59, 0.90);
+    background: #2d353b;
     color: #d3c6aa;
     font-weight: bold;
     border-radius: 0px;
