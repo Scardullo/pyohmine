@@ -1634,18 +1634,18 @@ def build_level_5():
 
 
 # ---------------------------------------------------------------------------
-# level 6 -- "Wind Spire": as long as level 5, but built around a completely
-# different toolkit instead of more/faster pits -- a slick ice slide, a
-# swinging wrecking ball, a spring-pad-powered elevator shaft, and a fan
-# updraft, with only a short nod to the old ferry/drop-platform pit near the
-# end. A handful of mixed-height terrain clusters (a bypass over the ice, a
-# hill, a bump) break up the flat stretches instead of one uniform band
-# height. Blue-gray brick terrain.
+# level 6 -- "Wind Spire": built around a completely different toolkit
+# instead of more/faster pits -- a slick ice slide, a swinging wrecking ball,
+# a spring-pad-powered elevator shaft, and a fan updraft, with only a short
+# nod to the old ferry/drop-platform pit at the end. The level stops right
+# after that last pit: only the final fruit and the flag sit past it. A couple
+# of mixed-height terrain clusters (a bypass over the ice, a hill) break up the
+# flat stretches instead of one uniform band height. Blue-gray brick terrain.
 # ---------------------------------------------------------------------------
 
 def build_level_6():
     block_size = BLOCK_SIZE
-    level_end = WIDTH * 11
+    level_end = block_size * 89
 
     fruits = [
         Fruits(block_size * 6, HEIGHT - block_size * 4 - 50, 32, 32, "Apple"),
@@ -1662,7 +1662,8 @@ def build_level_6():
         Fruits(block_size * 64, HEIGHT - block_size * 4 - 50, 32, 32, "Melon"),
         # over the pit gauntlet
         Fruits(block_size * 74, HEIGHT - block_size * 3 - 60, 32, 32, "Pineapple"),
-        Fruits(block_size * 110, HEIGHT - block_size * 4 - 50, 32, 32, "Orange"),
+        # just past the last pit, on the way to the flag
+        Fruits(block_size * 81, HEIGHT - block_size * 4 - 50, 32, 32, "Orange"),
     ]
 
     fires = []
@@ -1672,7 +1673,7 @@ def build_level_6():
     # placing it a couple columns further in (under the hill's floating
     # steps) left it in a pocket most players jump straight over without
     # ever touching it
-    for base in (block_size * 8, block_size * 30, block_size * 66, block_size * 90):
+    for base in (block_size * 8, block_size * 30, block_size * 66):
         for off in (0, 35):
             f = Fire(base + off, HEIGHT - block_size - 64, 16, 32)
             f.on()
@@ -1682,31 +1683,25 @@ def build_level_6():
         RockHead(block_size * 4, 0, 42, 42, 260),
         RockHead(block_size * 30, -150, 42, 42, 340),
         RockHead(block_size * 65, -200, 42, 42, 400),
-        RockHead(block_size * 100, -180, 42, 42, 380),
     ]
 
     spikeheads = [
         Spikehead_x(block_size * 50, HEIGHT - block_size * 2, 54, 52, block_size * 53, block_size * 49, speed=5),
-        Spikehead_x(block_size * 82, HEIGHT - block_size * 2, 54, 52, block_size * 85, block_size * 81, speed=5),
-        Spikehead_x(block_size * 102, HEIGHT - block_size * 2, 54, 52, block_size * 105, block_size * 101, speed=5),
     ]
 
     saws = [
         Saw(block_size * 34, 350, 38, 42, block_size * 38, block_size * 34, speed=6),
         Saw(block_size * 38, 250, 38, 42, block_size * 45, block_size * 38, speed=6),
         Saw(block_size * 54, 250, 38, 42, block_size * 57, block_size * 53, speed=6),
-        Saw(block_size * 88, HEIGHT - block_size * 5, 38, 42, block_size * 92, block_size * 86, speed=6),
     ]
 
     # right where the ice ends -- overshoot the slide and you skid into these
     spikes = [
         Spikes(block_size * 20, HEIGHT - block_size - 32),
         Spikes(block_size * 20 + 32, HEIGHT - block_size - 32),
-        Spikes(block_size * 92, HEIGHT - block_size - 32),
     ]
 
     trampolines = [
-        Trampoline(block_size * 98, HEIGHT - block_size - 56),
         Trampoline(block_size * 13, HEIGHT - block_size - 56),
     ]
 
@@ -1755,7 +1750,7 @@ def build_level_6():
     flag.on()
 
     ice_range = range(12, 20)
-    pit_ranges = [range(71, 79), range(21, 23), range(59, 70)]
+    pit_ranges = [range(71, 80), range(21, 23), range(59, 70)]
 
     floor = [
         (IceBlock(i * block_size, HEIGHT - block_size) if i in ice_range
@@ -1794,13 +1789,6 @@ def build_level_6():
         Block(block_size * 55, HEIGHT - block_size * 4, block_size, col=3, row=1),
     ]
 
-    # a small bump between the ground spikes and the trampoline
-    bump = [
-        Block(block_size * 94, HEIGHT - block_size * 2, block_size, col=3, row=1),
-        Block(block_size * 95, HEIGHT - block_size * 3, block_size, col=3, row=1),
-        Block(block_size * 96, HEIGHT - block_size * 2, block_size, col=3, row=1),
-    ]
-
     # elevator shaft: a wide landing pad well past the spring pad's arc apex
     # (so it's caught while descending, not bonked from below), then the
     # vertical platform continues to a landing at the top
@@ -1820,7 +1808,7 @@ def build_level_6():
     ]
 
     blocks = [*floor, *shaft_landing, *shaft_top, *wall, *extra_blocks,
-              *ice_bypass, *hill, *fan_ramp, *bump]
+              *ice_bypass, *hill, *fan_ramp]
     objects = [*blocks, *fires, *rockheads, *spikeheads, *saws, *spikes, *trampolines,
                *floating_platforms, *drop_platforms, *swinging_balls]
 
