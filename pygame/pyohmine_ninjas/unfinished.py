@@ -1846,13 +1846,13 @@ def build_level_7():
     level_end = WIDTH * 13
 
     fruits = [
-        Fruits(block_size * 6, HEIGHT - block_size * 4 - 50, 32, 32, "Apple"),
+        Fruits(block_size * 6, HEIGHT - block_size * 3 - 50, 32, 32, "Apple"),
         # at the peak of the mixed-height bypass above the ice slide -- the
         # ice below is still walkable, this is the alternate (non-slippery)
         # route
-        Fruits(block_size * 15, HEIGHT - block_size * 6 - 50, 32, 32, "Bananas"),
+        Fruits(block_size * 15, HEIGHT - block_size * 3 - 50, 32, 32, "Bananas"),
         # timed past the first swinging ball
-        Fruits(block_size * 29, HEIGHT - block_size * 4 - 50, 32, 32, "Cherries"),
+        Fruits(block_size * 21, HEIGHT - block_size * 4 - 50, 32, 32, "Cherries"),
         # atop the elevator shaft's landing platform
         Fruits(block_size * 47, 352 - 50, 32, 32, "Strawberry"),
         # in open air just past the fan wall, grabbed mid-flight
@@ -1873,8 +1873,6 @@ def build_level_7():
             fires.append(f)
 
     rockheads = [
-        RockHead(block_size * 4, 0, 42, 42, 260),
-        RockHead(block_size * 32, -150, 42, 42, 340),
         RockHead(block_size * 72, -200, 42, 42, 400),
         RockHead(block_size * 92, -180, 42, 42, 380),
         RockHead(block_size * 112, -200, 42, 42, 420),
@@ -1919,7 +1917,10 @@ def build_level_7():
     # two big pendulum wrecking balls, spaced far apart -- each swings low
     # enough to threaten the floor, so crossing means timing the walk past
     swinging_balls = [
-        SwingingBall(block_size * 26, 250, 400, max_angle=45, speed=0.03),
+        SwingingBall(block_size * 7, 250, 400, max_angle=42, speed=0.035),
+        SwingingBall(block_size * 15, 250, 400, max_angle=42, speed=0.035),
+        SwingingBall(block_size * 20, 250, 400, max_angle=42, speed=0.035),
+        SwingingBall(block_size * 30, 250, 400, max_angle=45, speed=0.035),
         SwingingBall(block_size * 84, 250, 400, max_angle=42, speed=0.035),
     ]
 
@@ -1937,6 +1938,7 @@ def build_level_7():
         FloatingPlatform(block_size * 103, HEIGHT - block_size * 3, block_size * 105, block_size * 103, speed=4, skin=2),
     ]
     drop_platforms = [
+        DropPlatform(block_size * 21, HEIGHT - block_size * 3),
         DropPlatform(block_size * 101, HEIGHT - block_size * 3),
         DropPlatform(block_size * 106, HEIGHT - block_size * 3),
     ]
@@ -1944,32 +1946,14 @@ def build_level_7():
     flag = Flag(level_end - (block_size * 4), HEIGHT - (block_size * 2 + 30), 64, 64)
     flag.on()
 
-    ice_range = range(12, 24)
-    pit_ranges = [range(97, 109)]
+    ice_range = range(0, 35)
+    pit_ranges = [range(14, 17), range(19, 25), range(97, 109)]
 
     floor = [
         (IceBlock(i * block_size, HEIGHT - block_size) if i in ice_range
          else Block(i * block_size, HEIGHT - block_size, block_size, col=0, row=2))
         for i in range(-WIDTH // block_size, level_end // block_size)
         if not any(i in pit for pit in pit_ranges)
-    ]
-
-    # a mixed-height bypass over the ice slide -- climbs faster and peaks
-    # noticeably higher than level 6's version (there's more room here before
-    # the first pendulum's swing, which starts around block 23), then holds
-    # the peak for a few blocks before descending; a non-slippery alternate
-    # to the ice below
-    ice_bypass = [
-        Block(block_size * 12, HEIGHT - block_size * 3, block_size, col=0, row=2),
-        Block(block_size * 13, HEIGHT - block_size * 4, block_size, col=0, row=2),
-        Block(block_size * 14, HEIGHT - block_size * 5, block_size, col=0, row=2),
-        Block(block_size * 15, HEIGHT - block_size * 6, block_size, col=0, row=2),
-        Block(block_size * 16, HEIGHT - block_size * 6, block_size, col=0, row=2),
-        Block(block_size * 17, HEIGHT - block_size * 6, block_size, col=0, row=2),
-        Block(block_size * 18, HEIGHT - block_size * 5, block_size, col=0, row=2),
-        Block(block_size * 19, HEIGHT - block_size * 5, block_size, col=0, row=2),
-        Block(block_size * 20, HEIGHT - block_size * 4, block_size, col=0, row=2),
-        Block(block_size * 21, HEIGHT - block_size * 3, block_size, col=0, row=2),
     ]
 
     # a hill between the fire pair at block 35 and the spring pad -- kept
@@ -2002,20 +1986,18 @@ def build_level_7():
     ]
 
     extra_blocks = [
-        Block(0, HEIGHT - block_size * 2, block_size, col=0, row=2),
-        Block(block_size * 2, HEIGHT - block_size * 3, block_size, col=0, row=2),
         Block(level_end - block_size * 6, HEIGHT - block_size * 2, block_size, col=0, row=2),
         Block(level_end - block_size * 5, HEIGHT - block_size * 2, block_size, col=0, row=2),
     ]
 
     blocks = [*floor, *shaft_landing, *shaft_top, *wall, *extra_blocks,
-              *ice_bypass, *hills, *bump]
+              *hills, *bump]
     objects = [*blocks, *fires, *rockheads, *spikeheads, *saws, *spikes, *trampolines,
                *floating_platforms, *drop_platforms, *swinging_balls]
 
     return {
         "name": "Level 7",
-        "background": get_background("Yellow.png"),
+        "background": get_background("Blue.png"),
         "objects": objects,
         "fires": fires,
         "rockheads": rockheads,
