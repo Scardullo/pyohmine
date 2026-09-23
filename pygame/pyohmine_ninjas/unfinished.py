@@ -1925,7 +1925,7 @@ def build_level_7():
         SwingingBall(block_size * 20, 250, 400, max_angle=42, speed=0.035),
         SwingingBall(block_size * 30, 250, 400, max_angle=60, speed=0.035),
         SwingingBall(block_size * 44, 10, 300, max_angle=45, speed=0.035),
-        SwingingBall(block_size * 55 + 48, 250, 400, max_angle=42, speed=0.035),
+        SwingingBall(block_size * 55 + 5, 70, 400, max_angle=55, speed=0.045),
         SwingingBall(block_size * 111, 250, 400, max_angle=42, speed=0.03),
     ]
 
@@ -1957,7 +1957,7 @@ def build_level_7():
     flag.on()
 
     pit_ranges = [
-        range(14, 17), range(19, 25), range(41, 48),  # the opening's
+        range(14, 17), range(19, 25), range(41, 51),  # the opening's
         range(52, 59), range(77, 86), range(104, 118),
     ]
 
