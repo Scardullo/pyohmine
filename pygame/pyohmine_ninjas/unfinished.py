@@ -1868,20 +1868,12 @@ def build_level_7():
         # pit 2: one above each of the two higher drop platforms
         Fruits(block_size * 81 + 16, 300, 32, 32, "Orange"),
         Fruits(block_size * 83 + 16, 190, 32, 32, "Pineapple"),
-        # top of the ice staircase
-        Fruits(block_size * 98 + 16, 200, 32, 32, "Kiwi"),
-        # pit 3: above the drop platform before the ferry, and above the one
-        # after it
-        Fruits(block_size * 108 + 16, 300, 32, 32, "Apple"),
-        Fruits(block_size * 116 + 16, 300, 32, 32, "Melon"),
-        # the trampoline-launched summit band
-        Fruits(block_size * 128 + 16, 300, 32, 32, "Bananas"),
     ]
 
     fires = []
     # 8 and 35 are the opening's; 66 guards the floor under the saw's band,
     # 94/98 the floor under the top of the ice staircase
-    for base in (block_size * 8, block_size * 35, block_size * 66, block_size * 94, block_size * 98):
+    for base in (block_size * 8, block_size * 35, block_size * 94, block_size * 98):
         for off in (0, 35):
             f = Fire(base + off, HEIGHT - block_size - 64, 16, 32)
             f.on()
@@ -1924,6 +1916,7 @@ def build_level_7():
         SwingingBall(block_size * 15, 250, 400, max_angle=42, speed=0.035),
         SwingingBall(block_size * 20, 250, 400, max_angle=42, speed=0.035),
         SwingingBall(block_size * 30, 250, 400, max_angle=60, speed=0.035),
+        SwingingBall(block_size * 35, 250, 400, max_angle=42, speed=0.035),
         SwingingBall(block_size * 44, 10, 300, max_angle=45, speed=0.035),
         SwingingBall(block_size * 55 + 5, 70, 400, max_angle=55, speed=0.045),
         SwingingBall(block_size * 111, 250, 400, max_angle=42, speed=0.03),
@@ -1943,6 +1936,7 @@ def build_level_7():
         # pit 1 (cols 52-58)
         DropPlatform(block_size * 54, HEIGHT - block_size * 2),
         DropPlatform(block_size * 56, HEIGHT - block_size * 3),
+        DropPlatform(block_size * 59, HEIGHT - block_size * 4),
         # pit 2 (cols 77-85): three rising steps
         DropPlatform(block_size * 79, HEIGHT - block_size * 2),
         DropPlatform(block_size * 81, HEIGHT - block_size * 3),
@@ -1958,7 +1952,7 @@ def build_level_7():
 
     pit_ranges = [
         range(14, 17), range(19, 25), range(41, 51),  # the opening's
-        range(52, 59), range(77, 86), range(104, 118),
+        range(52, 74), range(77, 86), range(104, 118),
     ]
 
     # everything from block 0 on is ice; only the off-screen run-up to the
@@ -1976,10 +1970,8 @@ def build_level_7():
     #   C/D/E: a staircase of three bands, each one block higher than the last
     #   F: 4 up, the trampoline's summit
     ice_bands = [
-        *ice_band(42, 46, 4),
-        *ice_band(61, 62, 3), *ice_band(63, 70, 4),
-        *ice_band(89, 91, 3), *ice_band(93, 95, 4), *ice_band(97, 99, 5),
-        *ice_band(127, 130, 4),
+        *ice_band(42, 46, 4), *ice_band(64, 70, 4), *ice_band(89, 91, 3), 
+        *ice_band(93, 95, 4), *ice_band(97, 99, 5), *ice_band(127, 130, 4),
     ]
 
     # stepping stones beside the flag
