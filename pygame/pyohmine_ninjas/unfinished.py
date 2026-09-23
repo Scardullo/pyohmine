@@ -1913,7 +1913,7 @@ def build_level_7():
     swinging_balls = [
         SwingingBall(block_size * 7, 250, 400, max_angle=42, speed=0.035),
         SwingingBall(block_size * 15, 250, 400, max_angle=42, speed=0.035),
-        SwingingBall(block_size * 20, 250, 400, max_angle=42, speed=0.035),
+        SwingingBall(block_size * 20, 250, 400, max_angle=65, speed=0.045),
         SwingingBall(block_size * 30, 250, 400, max_angle=60, speed=0.035),
         SwingingBall(block_size * 35, 250, 400, max_angle=42, speed=0.035),
         SwingingBall(block_size * 44, 10, 300, max_angle=45, speed=0.035),
