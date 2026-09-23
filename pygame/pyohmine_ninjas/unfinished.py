@@ -1893,7 +1893,7 @@ def build_level_7():
 
     # rides the top of the band over the floor fire -- a hop over it, on ice
     saws = [
-        Saw(block_size * 64, HEIGHT - block_size * 4 - 84, 38, 42, block_size * 69, block_size * 64, speed=4),
+        Saw(block_size * 64, HEIGHT - block_size * 4 - 84, 38, 42, block_size * 69, block_size * 64, speed=5),
     ]
 
     # the opening's: right where the second pit lands
@@ -1906,7 +1906,6 @@ def build_level_7():
     # player comes down onto its top instead of bonking the underside
     trampolines = [
         Trampoline(block_size * 40, HEIGHT - block_size - 56),
-        Trampoline(block_size * 126, HEIGHT - block_size - 56),
     ]
 
     # 7/15/20/30 are the opening's; one swings over the middle of pit 1 and
@@ -1919,7 +1918,7 @@ def build_level_7():
         SwingingBall(block_size * 35, 250, 400, max_angle=42, speed=0.035),
         SwingingBall(block_size * 44, 10, 300, max_angle=45, speed=0.035),
         SwingingBall(block_size * 55 + 5, 70, 400, max_angle=55, speed=0.045),
-        SwingingBall(block_size * 111, 250, 400, max_angle=42, speed=0.03),
+        SwingingBall(block_size * 111, 50, 400, max_angle=42, speed=0.045),
     ]
 
     # the level's one moving platform: the only way across the middle of pit 3,
@@ -1970,7 +1969,7 @@ def build_level_7():
     #   C/D/E: a staircase of three bands, each one block higher than the last
     #   F: 4 up, the trampoline's summit
     ice_bands = [
-        *ice_band(42, 46, 4), *ice_band(64, 70, 4), *ice_band(89, 91, 3), 
+        *ice_band(42, 46, 4), *ice_band(64, 69, 4), *ice_band(89, 91, 3), 
         *ice_band(93, 95, 4), *ice_band(97, 99, 5), *ice_band(127, 130, 4),
     ]
 
