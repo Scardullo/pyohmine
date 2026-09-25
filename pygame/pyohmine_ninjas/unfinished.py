@@ -2007,8 +2007,22 @@ LEVELS = [
     {"title": "Level 4", "builder": build_level_4, "icon": "04.png"},
     {"title": "Level 5", "builder": build_level_5, "icon": "05.png"},
     {"title": "Level 6", "builder": build_level_6, "icon": "06.png"},
-    {"title": "Level 7", "builder": build_level_7, "icon": "07.png"},
+    {"title": "Level 7", "builder": build_level_7, "icon": "07.png", "music": "boss_loop.ogg"},
 ]
+
+MENU_MUSIC = "menu_loop.ogg"
+LEVEL_MUSIC = "upbeat_loop.ogg"
+_current_music = None
+
+
+def play_music(track):
+    """Start looping `track` unless it's already playing."""
+    global _current_music
+    if track == _current_music:
+        return
+    mixer.music.load(join("assets", track))
+    mixer.music.play(-1)
+    _current_music = track
 
 
 # ---------------------------------------------------------------------------
@@ -2655,9 +2669,6 @@ def play_level(level_index, character_name):
 # ---------------------------------------------------------------------------
 
 def main():
-    mixer.music.load(join("assets", "upbeat_loop.ogg"))
-    mixer.music.play(-1)
-
     snapshot = make_menu_background()
 
     state = "menu"
@@ -2665,6 +2676,11 @@ def main():
     pending_level_index = 0
 
     while True:
+        if isinstance(state, tuple) and state[0] == "playing":
+            play_music(LEVELS[state[1]].get("music", LEVEL_MUSIC))
+        else:
+            play_music(MENU_MUSIC)
+
         if state == "menu":
             result = main_menu_screen(snapshot)
             if result == "quit":
