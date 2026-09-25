@@ -1957,8 +1957,7 @@ def build_level_7():
     # everything from block 0 on is ice; only the off-screen run-up to the
     # left of the start stays plain terrain
     floor = [
-        (IceBlock(i * block_size, HEIGHT - block_size) if i >= 0
-         else Block(i * block_size, HEIGHT - block_size, block_size, col=0, row=2))
+        (IceBlock(i * block_size, HEIGHT - block_size))
         for i in range(-WIDTH // block_size, level_end // block_size)
         if not any(i in pit for pit in pit_ranges)
     ]
