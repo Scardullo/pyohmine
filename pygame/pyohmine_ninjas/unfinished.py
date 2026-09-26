@@ -2554,7 +2554,7 @@ def play_level(level_index, character_name):
     fruits = level["fruits"]
 
     offset_x = 0
-    scroll_area_width = 200
+    scroll_area_width = 300
 
     while True:
         clock.tick(FPS)
