@@ -20,23 +20,7 @@
         "separator": " - "
     },
     "modules": [
-        {
-            "type": "custom",
-            "format": "{#blue} _____ _____ _____ _____ _____ _____ _____ _____ _____"
-        },
-        {
-            "type": "custom",
-            "format": "{#blue}|   __|  _  |   __|_   _|   __|   __|_   _|     |  |  |"
-        },
-        {
-            "type": "custom",
-            "format": "{#blue}|   __|     |__   | | | |   __|   __| | | |   --|     |"
-        },
-        {
-            "type": "custom",
-            "format": "{#blue}|__|  |__|__|_____| |_| |__|  |_____| |_| |_____|__|__|"
-        },
-        "break",
+	"break",
         {
             "type": "title",
             "key": "HOSTNAME",
@@ -146,6 +130,7 @@
             "keyColor": "cyan"
         },
         "break",
+	"colors",
         "break"
     ]
 }
