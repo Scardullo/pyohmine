@@ -1,5 +1,8 @@
 configuration {
     modi: "drun";
+    display-drun: "";
+    display-run: "";
+    display-window: "";
     show-icons: true;
     icon-theme: "candy-icons";
     font: "JetBrainsMono Nerd Font 11";

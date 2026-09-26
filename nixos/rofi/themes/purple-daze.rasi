@@ -1,5 +1,8 @@
 configuration {
     modi: "drun,run";
+    display-drun: "";
+    display-run: "";
+    display-window: "";
     show-icons: true;
     icon-theme: "candy-icons";
     font: "JetBrainsMono Nerd Font 12";
@@ -9,8 +12,8 @@ configuration {
 
 * {
     /* 🌑 slightly brighter purple base */
-    bg:            rgba(32, 24, 42, 0.88);
-    bg-alt:        rgba(44, 34, 58, 0.75);
+    bg:            rgba(26, 24, 42, 0.88);
+    bg-alt:        rgba(38, 34, 58, 0.75);
 
     fg:            #e6e0f3;
 

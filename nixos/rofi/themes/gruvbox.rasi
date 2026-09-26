@@ -1,5 +1,8 @@
 configuration {
     modi: "drun,run";
+    display-drun: "";
+    display-run: "";
+    display-window: "";
     show-icons: true;
     icon-theme: "Gruvbox-Plus-Dark";
     font: "JetBrainsMono Nerd Font 12";

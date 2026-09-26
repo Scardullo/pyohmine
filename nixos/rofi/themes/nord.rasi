@@ -1,7 +1,10 @@
 configuration {
     modi: "drun";
+    display-drun: "";
+    display-run: "";
+    display-window: "";
     show-icons: true;
-    icon-theme: "Gruvbox-Plus-Dark";
+    icon-theme: "candy-icons";
     font: "Agave Nerd Font Mono 11";
     drun-display-format: "{icon} {name}";
 }

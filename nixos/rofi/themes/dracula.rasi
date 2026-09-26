@@ -1,5 +1,8 @@
 configuration {
     modi: "drun";
+    display-drun: "";
+    display-run: "";
+    display-window: "";
     show-icons: true;
     icon-theme: "candy-icons";
     font: "JetBrainsMono Nerd Font 11";
@@ -12,11 +15,11 @@ configuration {
     bg-alt:        rgba(49, 50, 68, 0.75);
     fg:            #cdd6f4;
 
-    selected:      #7a83e0;
+    selected:      #9a7ae0;
     active:        #a6e3a1;
     urgent:        #f38ba8;
 
-    border-col:    #7a83e0;
+    border-col:    #9a7ae0;
 
     background-color: transparent;
     text-color: @fg;

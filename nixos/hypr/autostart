@@ -1,29 +1,19 @@
-#!/usr/bin/env bash
+# Set wallpapers with swaybg
 
-# -------------------------
-# KILL OLD INSTANCES CLEANLY
-# -------------------------
-pkill swaybg 2>/dev/null
-pkill waybar 2>/dev/null
-pkill hypridle 2>/dev/null
+sleep 2 && pkill swaybg
 
-sleep 0.5
+# Restore the last wallpaper set by wallpp/wallp1/wallp2 (falls back to the default)
+DEFAULT_WALL=/home/anthony/Pictures/wallpaper/boy-cat.webp
+WALL_STATE="${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper"
+for mon in DP-1 HDMI-A-2; do
+    wall=$(cat "$WALL_STATE/$mon" 2>/dev/null)
+    [ -f "$wall" ] || wall=$DEFAULT_WALL
+    swaybg -o "$mon" -i "$wall" -m fill &
+done
 
-# -------------------------
-# WALLPAPER
-# -------------------------
-WALL="/home/anthony/Pictures/wallpaper/nord_valley.png"
 
-swaybg -o DP-1 -i "$WALL" -m fill \
-       -o HDMI-A-1 -i "$WALL" -m fill &
+# Waybar
+waybar &
 
-# -------------------------
-# WAYBAR
-# -------------------------
-mkdir -p ~/.cache/hypr
-waybar > ~/.cache/hypr/waybar.log 2>&1 &
-
-# -------------------------
-# IDLE DAEMON (screen off after timeout; respects waybar's idle inhibitor)
-# -------------------------
-hypridle &
+# Audio Visualizer
+cava &

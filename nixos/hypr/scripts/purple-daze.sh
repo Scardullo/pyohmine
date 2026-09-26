@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 cat <<EOF | rofi -dmenu -i -p "Hyprland Keybinds" \
 -theme ~/.config/rofi/themes/purple-daze.rasi
