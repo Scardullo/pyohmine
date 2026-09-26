@@ -50,6 +50,48 @@ let
       chmod -R u+w $out/share/sddm/themes/sddm-astronaut-theme
       cp ${./wallpapers/space.png} $out/share/sddm/themes/sddm-astronaut-theme/Backgrounds/space.png
     '';
+
+  # -------------------------
+  # POKEMON-COLORSCRIPTS (not in nixpkgs, packaged from upstream)
+  # -------------------------
+  pokemon-colorscripts = pkgs.stdenv.mkDerivation rec {
+    pname = "pokemon-colorscripts";
+    version = "unstable-2024-10-19";
+
+    src = pkgs.fetchFromGitLab {
+      owner = "phoneybadger";
+      repo = "pokemon-colorscripts";
+      rev = "5802ff67520be2ff6117a0abc78a08501f6252ad";
+      hash = "sha256-gKVmpHKt7S2XhSxLDzbIHTjJMoiIk69Fch202FZffqU=";
+    };
+
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+
+    dontBuild = true;
+
+    installPhase = ''
+      runHook preInstall
+
+      mkdir -p $out/share/pokemon-colorscripts
+      cp -r colorscripts $out/share/pokemon-colorscripts/
+      cp pokemon.json $out/share/pokemon-colorscripts/
+      cp pokemon-colorscripts.py $out/share/pokemon-colorscripts/
+
+      mkdir -p $out/bin
+      makeWrapper ${pkgs.python3}/bin/python3 $out/bin/pokemon-colorscripts \
+        --add-flags "$out/share/pokemon-colorscripts/pokemon-colorscripts.py"
+
+      runHook postInstall
+    '';
+
+    meta = with pkgs.lib; {
+      description = "CLI tool that prints out colorscripts of pokemon to the terminal";
+      homepage = "https://gitlab.com/phoneybadger/pokemon-colorscripts";
+      license = licenses.mit;
+      mainProgram = "pokemon-colorscripts";
+      platforms = platforms.all;
+    };
+  };
 in
 
 {
@@ -172,6 +214,7 @@ in
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
+    withUWSM = true;
   };
 
   # -------------------------
@@ -191,10 +234,6 @@ in
   };
 
   services.desktopManager.gnome.enable = false;
-
-  services.displayManager.sessionPackages = [
-    pkgs.hyprland
-  ];
 
   xdg.portal = {
     enable = true;
@@ -350,6 +389,7 @@ in
     # SDDM THEME
     # -------------------------
     sddmAstronautTheme
+    pokemon-colorscripts
 
     # -------------------------
     # WAYLAND / HYPRLAND
@@ -376,6 +416,7 @@ in
     glib
     dconf
     bibata-cursors
+    nwg-look
 
     qt6.qtwayland
     qt5.qtwayland
@@ -402,6 +443,7 @@ in
     neovim
     gcc
     python3
+    claude-code    
 
     ripgrep
     fd
@@ -473,5 +515,5 @@ in
   # -------------------------
   # STATE VERSION
   # -------------------------
-  system.stateVersion = "25.05";
+  system.stateVersion = "26.05";
 }
