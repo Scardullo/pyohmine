@@ -1,7 +1,14 @@
-wallpp /home/anthony/Pictures/wallpaper/wayland-girl.jpg
+#!/usr/bin/env bash
+# Switch to the tokyo-night theme: wallpaper, kitty, hyprland, waybar.
+set -e
+
+wallpp "/home/anthony/Pictures/wallpaper/boy-cat.webp"
+
 cp ~/.config/kitty/tokyo-night ~/.config/kitty/kitty.conf
-kitty @ load-config
-cp ~/.config/hypr/tokyo-night.conf ~/.config/hypr/hyprland.conf
-cp ~/Documents/color-themes/starship_toml_files/tokyo-night_simple.toml ~/.config/starship.toml
+
+cp ~/.config/hypr/tokyo-night.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
 cp ~/.config/waybar/themes/tokyo-night_style.css ~/.config/waybar/style.css
-pkill waybar; sleep 0.3; waybar &
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown

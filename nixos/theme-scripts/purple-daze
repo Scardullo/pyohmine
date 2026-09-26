@@ -1,7 +1,14 @@
-wallpp /home/anthony/Pictures/wallpaper/mountain.jpg 
+#!/usr/bin/env bash
+# Switch to the purple-daze theme: wallpaper, kitty, hyprland, waybar.
+set -e
+
+wallpp "/home/anthony/Pictures/wallpaper/boy-cat.webp"
+
 cp ~/.config/kitty/purple-daze ~/.config/kitty/kitty.conf
-kitty @ load-config
-cp ~/.config/hypr/purple-daze.conf ~/.config/hypr/hyprland.conf
-cp ~/Documents/color-themes/starship_toml_files/purple-daze.toml ~/.config/starship.toml
+
+cp ~/.config/hypr/purple-daze.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
 cp ~/.config/waybar/themes/purple-daze_style.css ~/.config/waybar/style.css
-pkill waybar; sleep 0.3; waybar &
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown

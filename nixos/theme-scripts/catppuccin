@@ -1,7 +1,14 @@
-wallpp /home/anthony/Pictures/wallpaper/boy-cat.webp 
+#!/usr/bin/env bash
+# Switch to the catppuccin theme: wallpaper, kitty, hyprland, waybar.
+set -e
+
+wallpp "/home/anthony/Pictures/wallpaper/boy-cat.webp"
+
 cp ~/.config/kitty/catppuccin ~/.config/kitty/kitty.conf
-kitty @ load-config
-cp ~/.config/hypr/catppuccin.conf ~/.config/hypr/hyprland.conf
-cp ~/Documents/color-themes/starship_toml_files/catppuccin_simple.toml ~/.config/starship.toml
+
+cp ~/.config/hypr/catppuccin.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
 cp ~/.config/waybar/themes/catppuccin_style.css ~/.config/waybar/style.css
-pkill waybar; sleep 0.3; waybar &
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown

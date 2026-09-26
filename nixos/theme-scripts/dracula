@@ -1,7 +1,14 @@
-wallpp /home/anthony/Pictures/wallpaper/town-in-space.webp 
+#!/usr/bin/env bash
+# Switch to the dracula theme: wallpaper, kitty, hyprland, waybar.
+set -e
+
+wallpp "/home/anthony/Pictures/wallpaper/town-in-space.webp"
+
 cp ~/.config/kitty/dracula ~/.config/kitty/kitty.conf
-kitty @ load-config
-cp ~/.config/hypr/dracula.conf ~/.config/hypr/hyprland.conf
-cp ~/Documents/color-themes/starship_toml_files/dracula_simple.toml ~/.config/starship.toml
+
+cp ~/.config/hypr/dracula.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
 cp ~/.config/waybar/themes/dracula_style.css ~/.config/waybar/style.css
-pkill waybar; sleep 0.3; waybar &
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown

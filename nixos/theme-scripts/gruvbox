@@ -1,7 +1,14 @@
-wallpp /home/anthony/Pictures/wallpaper/village-square.jpg
+#!/usr/bin/env bash
+# Switch to the gruvbox theme: wallpaper, kitty, hyprland, waybar.
+set -e
+
+wallpp "/home/anthony/Pictures/wallpaper/village-square.jpg"
+
 cp ~/.config/kitty/gruvbox ~/.config/kitty/kitty.conf
-kitty @ load-config
-cp ~/.config/hypr/gruvbox.conf ~/.config/hypr/hyprland.conf
-cp ~/Documents/color-themes/starship_toml_files/gruvbox_simple.toml ~/.config/starship.toml
+
+cp ~/.config/hypr/gruvbox.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
 cp ~/.config/waybar/themes/gruvbox_style.css ~/.config/waybar/style.css
-pkill waybar; sleep 0.3; waybar &
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown

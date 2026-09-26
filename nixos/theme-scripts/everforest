@@ -1,7 +1,14 @@
-wallpp /home/anthony/Pictures/wallpaper/everforest_steps.webp
+#!/usr/bin/env bash
+# Switch to the everforest theme: wallpaper, kitty, hyprland, waybar.
+set -e
+
+wallpp "/home/anthony/Pictures/wallpaper/mist_forest_1.png"
+
 cp ~/.config/kitty/everforest ~/.config/kitty/kitty.conf
-kitty @ load-config
-cp ~/.config/hypr/everforest.conf ~/.config/hypr/hyprland.conf
-cp ~/Documents/color-themes/starship_toml_files/everforest_simple.toml ~/.config/starship.toml
+
+cp ~/.config/hypr/everforest.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
 cp ~/.config/waybar/themes/everforest_style.css ~/.config/waybar/style.css
-pkill waybar; sleep 0.3; waybar &
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown
