@@ -2,15 +2,30 @@
 
 sleep 2 && pkill swaybg
 
-swaybg -o DP-1 -i /home/anthony/Pictures/wallpaper/boy-cat.webp -m fill &
-swaybg -o HDMI-A-2 -i /home/anthony/Pictures/wallpaper/boy-cat.webp -m fill &
+# Restore the last wallpaper set by wallpp/wallp1/wallp2 (falls back to the default)
+DEFAULT_WALL=/home/anthony/Pictures/wallpaper/boy-cat.webp
+WALL_STATE="${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper"
+for mon in DP-1 HDMI-A-1; do
+    wall=$(cat "$WALL_STATE/$mon" 2>/dev/null)
+    [ -f "$wall" ] || wall=$DEFAULT_WALL
+    swaybg -o "$mon" -i "$wall" -m fill &
+done
 
 
 # Waybar
 waybar &
 
-# Idle daemon
-hypridle &
+# Idle daemon (retries if it exits early at login; output logged to ~/.cache/hypridle.log)
+# NOTE: hypridle must be backgrounded here (setsid -f), otherwise this loop blocks on its
+# lifetime instead of sleeping 5s between checks — which meant it kept respawning hypridle
+# for up to 5 restarts any time it died later in the session (e.g. via the waybar toggle),
+# not just during the login window it was meant for.
+# NOTE 2: this loop can't tell "hypridle crashed" apart from "user clicked the waybar toggle
+# to turn it off" — both just look like "not running" to pgrep. If you disabled it via the
+# waybar cup icon within the first 25s of login, this loop used to turn it back on behind
+# your back. hypridle-toggle.sh now drops a marker file on manual disable; honor it here.
+rm -f ~/.cache/hypridle-disabled
+( for i in 1 2 3 4 5; do [ -f ~/.cache/hypridle-disabled ] || { pgrep -x hypridle >/dev/null || setsid -f hypridle >> ~/.cache/hypridle.log 2>&1; }; sleep 5; done ) &
 
 # Audio Visualizer
 cava &
