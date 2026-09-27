@@ -78,12 +78,12 @@ hl.config({
         gaps_in  = 10,
         gaps_out = 20,
 
-        border_size = 2,
+        border_size = 0,
 
         col = {
             -- Catppuccin navy-blue gradient (top -> bottom)
-            active_border   = "rgba(282828ff)",
-            inactive_border = "rgba(282828ff)",
+            active_border   = "rgba(89b4faff)",
+            inactive_border = "rgba(6893d9ff)",
         },
 
         resize_on_border = false,
@@ -243,8 +243,8 @@ hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
 
 -- Scroll through existing workspaces with mainMod + scroll
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "m+1" }))
+hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "m-1" }))
 
 -- Move/resize windows with mainMod + LMB/RMB and dragging
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
@@ -267,13 +267,13 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/gruvbox.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/catppuccin.rasi"))
 
 -- Move current window to previous/next workspace (note: your original conf uses the
 -- "workspace" dispatcher here, not "movetoworkspace" -- that's a focus change, not a
 -- window move. Translated as-is/faithfully, not "fixed".)
-hl.bind(mainMod .. " + SHIFT + left",  hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + SHIFT + right", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + SHIFT + left",  hl.dsp.focus({ workspace = "m-1" }))
+hl.bind(mainMod .. " + SHIFT + right", hl.dsp.focus({ workspace = "m+1" }))
 
 -- Launch Firefox with SUPER + B
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("firefox"))
@@ -300,7 +300,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/gruvbox.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/catppuccin.sh"))
 
 
 --------------------------------
