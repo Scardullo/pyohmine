@@ -71,8 +71,7 @@ window#waybar {
 #cpu,
 #memory,
 #network,
-#pulseaudio,
-#tray {
+#pulseaudio {
     background: #1e1e2e;
     color: #89B4FA;
     margin: 0px;
@@ -80,9 +79,6 @@ window#waybar {
     border-radius: 10px;
 }
 
-#tray {
-    margin-right: 6px;
-}
 
 #cpu {
     background: #1e1e2e;

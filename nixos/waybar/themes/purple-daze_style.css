@@ -70,19 +70,12 @@ window#waybar {
 #cpu,
 #memory,
 #network,
-#pulseaudio,
-#tray {
+#pulseaudio {
     background: transparent;
     color: #7aa2f7;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
-}
-
-/* Right spacing */
-
-#tray {
-    margin-right: 6px;
 }
 
 #cpu {

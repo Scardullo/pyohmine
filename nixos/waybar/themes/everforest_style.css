@@ -15,7 +15,7 @@ window#waybar {
     padding: 0px;
 }
 #custom-logo {
-    background: #a7c080;
+    background: #83a598;
     color: #2d353b;
     margin: 0px;
 
@@ -69,19 +69,12 @@ window#waybar {
 #cpu,
 #memory,
 #network,
-#pulseaudio,
-#tray {
+#pulseaudio {
     background: transparent;
     color: #d3c6aa;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
-}
-
-/* Right spacing */
-
-#tray {
-    margin-right: 6px;
 }
 
 #cpu {
