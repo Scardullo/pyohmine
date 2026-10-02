@@ -2,7 +2,7 @@
 
 nextcloud_config.php.bak   # /var/www/nextcloud
 
-----ubuntu server static ip-------------
+------------ubuntu server static ip-------------
 50-cloud-init.yaml.bak  # /etc/netplan/
 
 
@@ -10,11 +10,20 @@ nextcloud_config.php.bak   # /var/www/nextcloud
 ALTER USER anthony WITH SUPERUSER;
 
 
--------git commands-------
+-------------------git commands---------------------------
+
+#workflow
 
 git add .
 git commit -m "message here" 
 git push origin main
+
+
+#Reset the whole repo to the last commit (discards all uncommitted changes):
+
+git checkout -- .
+# or
+git restore 
 
  
 --------Describe table postgres--------
@@ -62,3 +71,5 @@ swaybg -o DP-1 -i /home/anthony/Pictures/wallpaper/mountain.jpg -m fill \
 command$> "nwg-look" (for thunar icons)
 
 $ nwg-look
+
+
