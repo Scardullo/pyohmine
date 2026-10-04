@@ -2,7 +2,7 @@
 # Switch to the tokyo-night theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/boy-cat.webp"
+wallpp "/home/anthony/Pictures/wallpaper/wall-04.webp"
 
 cp ~/.config/kitty/tokyo-night ~/.config/kitty/kitty.conf
 

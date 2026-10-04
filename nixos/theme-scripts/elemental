@@ -2,7 +2,7 @@
 # Switch to the elemental theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/boy-cat.webp"
+wallpp "/home/anthony/Pictures/wallpaper/orange-desert.jpg"
 
 cp ~/.config/kitty/elemental ~/.config/kitty/kitty.conf
 

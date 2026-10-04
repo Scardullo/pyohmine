@@ -2,7 +2,7 @@
 # Switch to the purple-daze theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/boy-cat.webp"
+wallpp "/home/anthony/Pictures/wallpaper/wayland-girl.jpg"
 
 cp ~/.config/kitty/purple-daze ~/.config/kitty/kitty.conf
 

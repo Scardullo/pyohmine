@@ -5,7 +5,7 @@ set -e
 wallpp "/home/anthony/Pictures/wallpaper/boy-cat.webp"
 
 cp ~/.config/kitty/catppuccin ~/.config/kitty/kitty.conf
-
+cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
 cp ~/.config/hypr/catppuccin.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 

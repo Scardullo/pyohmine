@@ -5,7 +5,7 @@ set -e
 wallpp "/home/anthony/Pictures/wallpaper/village-square.jpg"
 
 cp ~/.config/kitty/gruvbox ~/.config/kitty/kitty.conf
-
+cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
 cp ~/.config/hypr/gruvbox.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 

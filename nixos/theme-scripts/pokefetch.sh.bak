@@ -1,32 +1,17 @@
 #!/usr/bin/env bash
-# Pipes a pokemon-colorscripts sprite into fastfetch as the logo,
+# Pipes a random pokemon-colorscripts sprite into fastfetch as the logo,
 # sizing the logo to the sprite's real dimensions so the info text never
 # overlaps it and stays top-aligned with the sprite.
-#
-# Cycles sequentially through POKEMON_ROTATION on each new terminal,
-# wrapping back to the start. Position is remembered in ROTATION_FILE.
 set -euo pipefail
-
-POKEMON_ROTATION=(nidoqueen nidoking blastoise qwilfish altaria rhydon)
 
 CONFIG="$HOME/.config/fastfetch/config-pokemon.jsonc"
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/pokefetch"
 mkdir -p "$CACHE_DIR"
-find "$CACHE_DIR" -type f -mmin +60 ! -name '.rotation_index' -delete 2>/dev/null
-
-ROTATION_FILE="$CACHE_DIR/.rotation_index"
-INDEX=0
-if [[ -f "$ROTATION_FILE" ]]; then
-    INDEX="$(<"$ROTATION_FILE")"
-fi
-[[ "$INDEX" =~ ^[0-9]+$ ]] || INDEX=0
-INDEX=$(( INDEX % ${#POKEMON_ROTATION[@]} ))
-
-echo "$(( (INDEX + 1) % ${#POKEMON_ROTATION[@]} ))" > "$ROTATION_FILE"
+find "$CACHE_DIR" -type f -mmin +60 -delete 2>/dev/null
 
 SPRITE="$(mktemp -p "$CACHE_DIR")"
 
-pokemon-colorscripts --no-title -n "${POKEMON_ROTATION[$INDEX]}" > "$SPRITE"
+pokemon-colorscripts --no-title -r > "$SPRITE"
 
 read -r LOGO_LINES LOGO_WIDTH < <(python3 - "$SPRITE" <<'PY'
 import re, sys

@@ -5,7 +5,7 @@ set -e
 wallpp "/home/anthony/Pictures/wallpaper/mist_forest_1.png"
 
 cp ~/.config/kitty/everforest ~/.config/kitty/kitty.conf
-
+cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
 cp ~/.config/hypr/everforest.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 
