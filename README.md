@@ -30,7 +30,7 @@ Nord
 
 
 Tokyo-night
-<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/63d17dfa-f2fe-4b78-9a9e-669fd512f36a" />
+<img width="2560" height="1440" alt="image" src="https://github.com/user-attachments/assets/f594d922-460a-4cb9-b81c-fd8f8a482e50" />
 
 
 Purple-daze
