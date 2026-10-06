@@ -2,10 +2,9 @@
 # Switch to the dracula theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/sunset-lake.webp"
+wallpp "/home/anthony/Pictures/wallpaper/town-in-space.webp"
 
 cp ~/.config/kitty/dracula ~/.config/kitty/kitty.conf
-cp ~/.config/nvim/tokyonight.lua ~/.config/nvim/init.lua
 cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
 cp ~/.config/hypr/dracula.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true

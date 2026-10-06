@@ -82,8 +82,8 @@ hl.config({
 
         col = {
             -- Catppuccin navy-blue gradient (top -> bottom)
-            active_border   = "rgba(d5c4a1ff)",
-            inactive_border = "rgba(a89984ff)",
+            active_border   = "rgba(d3c6aaff)",
+            inactive_border = "rgba(d3c6aaff)",
         },
 
         resize_on_border = false,

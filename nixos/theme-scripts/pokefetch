@@ -7,7 +7,7 @@
 # wrapping back to the start. Position is remembered in ROTATION_FILE.
 set -euo pipefail
 
-POKEMON_ROTATION=(nidoqueen nidoking blastoise qwilfish altaria rhydon cloyster)
+POKEMON_ROTATION=(nidoqueen nidoking qwilfish altaria rhydon cloyster)
 
 CONFIG="$HOME/.config/fastfetch/config-pokemon.jsonc"
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/pokefetch"

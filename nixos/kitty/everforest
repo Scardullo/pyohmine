@@ -2,10 +2,9 @@
 # This work is licensed under the terms of the MIT license.
 # For a copy, see https://opensource.org/licenses/MIT.
 # font_family JetBrainsMono Nerd Font
-confirm_os_window_close 0
-allow_remote_control yes
-
 font_size 14.0
+
+confirm_os_window_close 0
 
 # The basic colors
 foreground              #d3c6aa
@@ -67,7 +66,7 @@ color7  #d3c6aa
 color15 #d3c6aa
 
 # BEGIN_KITTY_FONTS
-font_family      family="Agave Nerd Font"
+font_family      family="Agave Nerd Font Mono"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto

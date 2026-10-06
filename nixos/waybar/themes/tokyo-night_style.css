@@ -6,20 +6,19 @@
 }
 
 window#waybar {
-    background: #000000;
-    color: #4889be;
+    background: #1a1b26;
+    color: #c0caf5;
 
-    border-bottom: 2px solid #3b4261;
-    border: none;
     border-radius: 0px;
+
     margin: 20px 0px 0px 0px;
 
     padding: 0px;
 }
 
 #custom-logo {
-    background: #61afef;
-    color: #171717;
+    background: #7aa2f7;
+    color: #1a1b26;
     margin: 0px;
 
     padding-left: 20px;
@@ -30,6 +29,7 @@ window#waybar {
     font-size: 18px;
     font-weight: bold;
 }
+/* Workspaces */
 
 #workspaces {
     margin: 3px 0;
@@ -37,7 +37,7 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #565f89;
+    color: #6272a4;
     margin: 0 2px;
     padding: 0 10px;
     border-radius: 8px;
@@ -45,20 +45,20 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #61afef;
-    color: #171717;
+    background: #c0caf5;
+    color: #1a1b26;
 }
 
 #workspaces button:hover {
-    background: #3b4261;
-    color: #4889be;
+    background: #44475a;
+    color: #c0caf5;
 }
 
 /* Cava */
 
 #custom-cava {
     background: transparent;
-    color: #61afef;
+    color: #c0caf5;
     margin: 0px;
     padding: 0 10px;
     font-weight: bold;
@@ -73,15 +73,15 @@ window#waybar {
 #network,
 #pulseaudio {
     background: transparent;
-    color: #61afef;
+    color: #c0caf5;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
 }
 
 #cpu {
-    background: #000000;
-    color: #61afef;
+    background: #1a1b26;
+    color: #c0caf5;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -89,8 +89,8 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #000000;
-    color: #61afef;
+    background: #1a1b26;
+    color: #c0caf5;
     font-weight: bold;
     border-radius: 0px 10px 10px 0px;
 }
@@ -98,13 +98,11 @@ window#waybar {
 /* VOLUME */
 
 #pulseaudio {
-    background: #000000;
-    color: #61afef;
+    background: #1a1b26;
+    color: #c0caf5;
     font-weight: bold;
     border-radius: 0px;
 }
-
-/* CLOCK */
 
 #clock {
     font-weight: bold;
@@ -117,11 +115,11 @@ window#waybar {
 /* Tooltip */
 
 tooltip {
-    background: #171717;
-    border: 2px solid #3b4261;
+    background: #1a1b26;
+    border: 2px solid #44475a;
     border-radius: 10px;
 }
 
 tooltip label {
-    color: #61afef;
+    color: #c0caf5;
 }

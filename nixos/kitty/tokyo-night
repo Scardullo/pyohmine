@@ -7,54 +7,54 @@ allow_remote_control yes
 
 font_size 14.0
 
-background  #171717
-foreground  #ffffff
+foreground #a9b1d6
+background #1a1b26
 
-cursor                #8656e3
+# Black
+color0 #414868
+color8 #414868
 
-selection_foreground  #afb1db
-selection_background  #8656e3
+# Red
+color1 #f7768e
+color9 #f7768e
 
-color0  #ffffff
-color8  #97a9cf
+# Green
+color2  #73daca
+color10 #73daca
 
-# red
-color1                #9fb5f5
-# light red
-color9                #9fb5f5
+# Yellow
+color3  #e0af68
+color11 #e0af68
 
-# green
-color2                #72e7ed
-# light green
-color10               #72e7ed
+# Blue
+color4  #7aa2f7
+color12 #7aa2f7
 
-# yellow
-color3                #fcca8d
-# light yellow
-color11               #fcca8d
+# Magenta
+color5  #bb9af7
+color13 #bb9af7
 
-# blue
-color4                #5884d4
-# light blue
-color12               #5f90ea
+# Cyan
+color6  #7dcfff
+color14 #7dcfff
 
-# magenta
-color5                #7a44e3
-# light magenta
-color13               #8656e3
+# White
+color7  #c0caf5
+color15 #c0caf5
 
-# cyan
-color6                #95f0f5
-# lighy cyan
-color14               #95f0f5
+# Cursor
+cursor #c0caf5
+cursor_text_color #1a1b26
 
-# light gray
-color7                #afb1db
-# dark gray
-color15               #afb1db
+# Selection highlight
+selection_foreground none
+selection_background #28344a
+
+# The color for highlighting URLs on mouse-over
+url_color #9ece6a
 
 # BEGIN_KITTY_FONTS
-font_family      family="Agave Nerd Font"
+font_family      family="Agave Nerd Font Mono"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto

@@ -82,8 +82,8 @@ hl.config({
 
         col = {
             -- Catppuccin navy-blue gradient (top -> bottom)
-            active_border   = "rgba(89b4faff)",
-            inactive_border = "rgba(6893d9ff)",
+            active_border   = "rgba(d3c6aaff)",
+            inactive_border = "rgba(d3c6aaff)",
         },
 
         resize_on_border = false,
@@ -267,7 +267,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/catppuccin.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/everforest.rasi"))
 
 -- Move current window to previous/next workspace (note: your original conf uses the
 -- "workspace" dispatcher here, not "movetoworkspace" -- that's a focus change, not a
@@ -300,7 +300,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/catppuccin.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/everforest.sh"))
 
 
 --------------------------------

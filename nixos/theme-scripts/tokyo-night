@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Switch to the tokyo-night theme: wallpaper, kitty, hyprland, waybar.
+# Switch to the dracula theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/wall-04.webp"
+wallpp "/home/anthony/Pictures/wallpaper/sunset-lake.webp"
 
 cp ~/.config/kitty/tokyo-night ~/.config/kitty/kitty.conf
-
-cp ~/.config/hypr/tokyo-night.lua ~/.config/hypr/hyprland.lua
+cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
+cp ~/.config/hypr/dracula.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 
 cp ~/.config/waybar/themes/tokyo-night_style.css ~/.config/waybar/style.css
