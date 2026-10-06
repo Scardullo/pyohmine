@@ -14,11 +14,11 @@ configuration {
     bg-alt: rgba(58, 66, 72, 0.75);
     fg:     #d3c6aa;
 
-    selected:#83a598;
+    selected:#84a583;
     active: #83c092;
     urgent: #e67e80;
 
-    border-col: #83a598;
+    border-col: #84a583;
 
     background-color: transparent;
     text-color: @fg;
