@@ -1,0 +1,37 @@
+REFERENCE · NIXOS GARBAGE COLLECTION
+Deleting Old Generations
+
+How to remove old system generations by number, free disk space, and refresh
+the boot menu — without touching the generations you want to keep.
+
+--------------------------------------------------------------------------------
+1 · List generations                                          (nothing deleted)
+--------------------------------------------------------------------------------
+
+  sudo nix-env --list-generations -p /nix/var/nix/profiles/system
+
+--------------------------------------------------------------------------------
+2 · Delete by generation number                         (keeps the rest intact)
+--------------------------------------------------------------------------------
+
+Say the numbers run 81 to 90, with 90 current. To delete the oldest five:
+
+  sudo nix-env --delete-generations 81 82 83 84 85 \
+    -p /nix/var/nix/profiles/system
+
+--------------------------------------------------------------------------------
+3 · Free disk space and refresh the boot menu
+--------------------------------------------------------------------------------
+
+  sudo nix-collect-garbage
+  sudo nixos-rebuild boot --flake /etc/nixos#nixos
+
+Rebuilding is what actually removes the deleted entries from the
+systemd-boot menu.
+
+--------------------------------------------------------------------------------
+WARNING
+--------------------------------------------------------------------------------
+
+Don't use nix-collect-garbage -d — it deletes *all* old generations, not
+just the ones picked above.

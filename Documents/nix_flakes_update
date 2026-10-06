@@ -1,0 +1,127 @@
+Editing configuration.nix and running nixos-rebuild switch never touches
+flake.lock at all. The lock only records input pins (your nixpkgs revision);
+module edits don't change inputs, so switch just rebuilds against the same
+pin.
+
+nix flake update (not nixos flake update — it's a nix subcommand, run as
+your normal user, no sudo needed since it's just writing a file you own)
+does rewrite flake.lock — but only the local copy on whichever machine you
+ran it on. There is no live/network sync between the two machines' lock
+files. "Shared lock" describes the design (one file governs both hosts'
+nixpkgs pin) — git is what actually keeps the two copies in sync, and only
+when you move commits through it. So the real flow when you want to bump
+nixpkgs:
+
+  1. On one machine: cd /etc/nixos && nix flake update
+     → rewrites flake.lock locally
+  2. git add flake.lock && git commit && git push
+  3. On the other machine: git pull --ff-only
+     → now it has the same lock
+  4. sudo nixos-rebuild switch --flake /etc/nixos#<attr>
+     on each machine, whenever you're ready to actually activate the new
+     pin there
+
+Until step 3 happens on the second machine, its flake.lock is stale relative
+to the first — same as today, where git pull is what carried the
+restructure over, not some automatic mechanism. If you skip pushing/pulling
+and just run nix flake update independently on both machines, they'll
+likely drift to different nixpkgs revisions (defeating the whole point of
+combining them).
+
+================================================================================
+
+REFERENCE · NIXOS FLAKES
+Dual-Host NixOS Workflow
+
+How edits, rebuilds, and the shared flake.lock flow between your two
+machines, both tracked through ~/pyohmine/nixos/flakes.
+
+  PC — Hyprland   #nixos
+  Proxmox VM      #vm_nixos
+
+--------------------------------------------------------------------------------
+1 · Edit a host's config                                    (either machine)
+--------------------------------------------------------------------------------
+
+Each host only ever reads its own subdirectory — editing one never touches
+the other. Hardware files are machine-detected; leave them alone.
+
+  # on the PC
+  $EDITOR /etc/nixos/hosts/nixos/configuration.nix
+
+  # on the VM
+  $EDITOR /etc/nixos/hosts/vm_nixos/configuration.nix
+
+--------------------------------------------------------------------------------
+2 · Apply the change                                 (same machine you edited)
+--------------------------------------------------------------------------------
+
+Build first if you want to compile without activating anything. Switch
+builds and activates immediately.
+
+  # test only — nothing activates
+  sudo nixos-rebuild build --flake /etc/nixos#nixos
+
+  # activate now
+  sudo nixos-rebuild switch --flake /etc/nixos#nixos
+
+  # bad switch? roll back —
+  sudo nixos-rebuild switch --rollback
+
+--------------------------------------------------------------------------------
+3 · Sync the edit to the other machine                                   (git)
+--------------------------------------------------------------------------------
+
+Nothing propagates automatically — git push/pull is the only mechanism
+between the two machines, same as any other repo.
+
+  - On the machine you edited:
+      git add -A && git commit -m "…" && git push
+  - On the other machine:
+      git pull --ff-only
+      (Fails loudly instead of merge-committing if histories diverged — see
+      the note below.)
+  - Rebuild there too, only if you want this host's generation to change:
+      sudo nixos-rebuild switch --flake /etc/nixos#<attr>
+
+--------------------------------------------------------------------------------
+4 · Bump nixpkgs                                          (flake.lock is shared)
+--------------------------------------------------------------------------------
+
+One lock file pins both hosts to the same nixpkgs revision. Updating it is
+a deliberate, cross-machine action — not a side effect of switching.
+
+  - On one machine:
+      cd /etc/nixos && nix flake update
+      (No sudo — this just rewrites a file you own.)
+  - git add flake.lock && git commit -m "update nixpkgs" && git push
+  - On the other machine, before rebuilding it:
+      git pull --ff-only
+      (Skip this and the two hosts drift onto different nixpkgs revisions.)
+  - Activate on each host whenever ready:
+      sudo nixos-rebuild switch --flake /etc/nixos#<attr>
+
+--------------------------------------------------------------------------------
+MENTAL MODEL
+--------------------------------------------------------------------------------
+
+  - Editing configuration.nix and running switch never touches flake.lock.
+  - flake.lock only changes via nix flake update (or
+    nix flake lock --update-input …).
+  - Each host reads only its own hosts/<name>/configuration.nix — no
+    cross-contamination.
+  - `result` symlinks left by build/switch are harmless and already
+    gitignored — rm them if they bother your prompt.
+
+--------------------------------------------------------------------------------
+CONCEPT — What --ff-only actually does
+--------------------------------------------------------------------------------
+
+Short for "fast-forward only." A fast-forward is possible only when your
+local branch has made no commits the remote doesn't already have — git can
+just slide your branch pointer forward to match, no merge required. With
+--ff-only, if your local history has diverged instead, git pull refuses
+outright rather than silently creating a merge commit. For a two-machine
+setup, that's the safety you want: each machine should always just catch up
+to what the other pushed, never auto-merge two different edits.
+</content>

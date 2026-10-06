@@ -1,0 +1,79 @@
+REFERENCE · NIXOS UPDATES
+Keeping NixOS Current
+
+The NixOS equivalent of `apt update && apt upgrade` or `pacman -Syu` — why
+there isn't a single command, and the two-step model that replaces it.
+
+--------------------------------------------------------------------------------
+THE TWO-STEP MODEL
+--------------------------------------------------------------------------------
+
+NixOS splits "what version could I have" from "what version do I have" into
+two separate, deliberate steps. Arch's -Syu collapses both into one atomic
+action; NixOS keeps them apart on purpose.
+
+--------------------------------------------------------------------------------
+1 · Pull in newer package definitions                       ("-Sy" equivalent)
+--------------------------------------------------------------------------------
+
+  cd /etc/nixos
+  sudo nix flake update
+
+Rewrites flake.lock to point at a newer nixpkgs commit. This makes newer
+package versions available — nothing on the running system changes yet.
+
+--------------------------------------------------------------------------------
+2 · Build and apply those packages                           ("-u" equivalent)
+--------------------------------------------------------------------------------
+
+  sudo nixos-rebuild switch --flake /etc/nixos#nixos
+
+Rebuilds the system using whatever's now pinned in flake.lock, and activates
+it.
+
+--------------------------------------------------------------------------------
+ONE-LINER                                                   (closest to -Syu)
+--------------------------------------------------------------------------------
+
+  cd /etc/nixos && sudo nix flake update && \
+    sudo nixos-rebuild switch --flake .#nixos
+
+--------------------------------------------------------------------------------
+WHY IT'S SPLIT
+--------------------------------------------------------------------------------
+
+flake.lock is a record of an exact decision — "I want precisely this commit
+of nixpkgs" — that persists across rebuilds until deliberately changed. That's
+what makes a known-good pin possible to roll back to.
+
+Running nixos-rebuild switch alone (no flake update first) rebuilds against
+the same pinned versions already in flake.lock — nothing new gets pulled in.
+This is the safe, everyday command for config-only changes (adding a package,
+tweaking a Hyprland setting, etc.) — no surprises.
+
+--------------------------------------------------------------------------------
+RECOMMENDED CADENCE
+--------------------------------------------------------------------------------
+
+  - Config changes only → nixos-rebuild switch --flake /etc/nixos#nixos
+      No flake update needed. Fast, deterministic.
+
+  - Actual version bumps → every couple weeks to a month
+      Deliberate, not constant. Low-risk on a stable 26.05 branch
+      (backports/bugfixes only, not a release jump).
+
+  - Before nixos-rebuild boot (not switch) after a flake update, especially
+    anything graphics/Hyprland-related → always leave a way back without
+    disturbing the current running session.
+
+  - Commit flake.lock to git after every successful update+rebuild, so
+    there's always a known-good pin to fall back to.
+
+--------------------------------------------------------------------------------
+CHECKING STATE                                          (no changes, just info)
+--------------------------------------------------------------------------------
+
+  nixos-version
+
+Reports the currently-running system's version/commit — confirms what's
+actually running before deciding whether an update is worth doing.
