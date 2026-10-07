@@ -108,8 +108,8 @@ hl.config({
 
         blur = {
             enabled  = true,
-            size     = 3,    -- medium radius
-            passes   = 1,    -- moderate number of blur passes
+            size     = 5,    -- medium radius
+            passes   = 2,    -- moderate number of blur passes
             vibrancy = 0.05, -- slightly noticeable background enhancement
         },
     },
