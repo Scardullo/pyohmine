@@ -2,7 +2,7 @@
 # Switch to the cynthia theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/cynthia.webp"
+wallpp "/home/anthony/Pictures/wallpaper/sky-blue.webp"
 
 cp ~/.config/kitty/cynthia ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc

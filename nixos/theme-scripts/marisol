@@ -2,7 +2,7 @@
 # Switch to the marisol theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/marisol.webp"
+wallpp "/home/anthony/Pictures/wallpaper/solid-blue.webp"
 
 cp ~/.config/kitty/marisol ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc

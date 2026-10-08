@@ -2,7 +2,7 @@
 # Switch to the yael theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/yael.webp"
+wallpp "/home/anthony/Pictures/wallpaper/gh0stzk/yael/wall-03.webp"
 
 cp ~/.config/kitty/yael ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc

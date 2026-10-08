@@ -7,7 +7,7 @@
 
 window#waybar {
     background: #161616;
-    color: #ffffff;
+    color: #33b1ff;
 
     border: none;
     border-radius: 0px;
@@ -19,7 +19,7 @@ window#waybar {
 /* Arch Logo */
 
 #custom-logo {
-    background: #42be65;
+    background: #33b1ff;
     color: #161616;
 
     margin: 0px;
@@ -49,20 +49,20 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #42be65;
+    background: #33b1ff;
     color: #161616;
 }
 
 #workspaces button:hover {
     background: #393939;
-    color: #ffffff;
+    color: #33b1ff;
 }
 
 /* Cava */
 
 #custom-cava {
     background: transparent;
-    color: #ffffff;
+    color: #33b1ff;
     margin: 0px;
     padding: 0 10px;
     font-weight: bold;
@@ -77,7 +77,7 @@ window#waybar {
 #network,
 #pulseaudio {
     background: transparent;
-    color: #ffffff;
+    color: #33b1ff;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
@@ -87,7 +87,7 @@ window#waybar {
 
 #cpu {
     background: #161616;
-    color: #ffffff;
+    color: #33b1ff;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -96,7 +96,7 @@ window#waybar {
 
 #memory {
     background: #161616;
-    color: #ffffff;
+    color: #33b1ff;
     font-weight: bold;
     border-radius: 0px 10px 10px 0px;
 }
@@ -105,7 +105,7 @@ window#waybar {
 
 #pulseaudio {
     background: #161616;
-    color: #ffffff;
+    color: #33b1ff;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -127,5 +127,5 @@ tooltip {
 }
 
 tooltip label {
-    color: #ffffff;
+    color: #33b1ff;
 }

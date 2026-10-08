@@ -2,7 +2,7 @@
 # Switch to the jan theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/jan.webp"
+wallpp "/home/anthony/Pictures/wallpaper/gh0stzk/jan/wall-02.webp"
 
 cp ~/.config/kitty/jan ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc

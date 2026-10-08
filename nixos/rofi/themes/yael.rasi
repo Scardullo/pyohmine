@@ -4,7 +4,7 @@ configuration {
     display-run: "";
     display-window: "";
     show-icons: true;
-    icon-theme: "Gruvbox-Plus-Dark";
+    icon-theme: "candy-icons";
     font: "Agave Nerd Font Mono 11";
     drun-display-format: "{icon} {name}";
 }
@@ -14,11 +14,11 @@ configuration {
     bg-alt: rgba(57, 57, 57, 0.75);
     fg:     #ffffff;
 
-    selected:#42be65;
-    active: #42be65;
+    selected:#33b1ff;
+    active: #33b1ff;
     urgent: #ee5396;
 
-    border-col: #42be65;
+    border-col: #33b1ff;
 
     background-color: transparent;
     text-color: @fg;
