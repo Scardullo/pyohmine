@@ -1,0 +1,72 @@
+# Z0mbi3 -- (Decay (decayce)) colorscheme, from gh0stzk's dotfiles
+# https://github.com/gh0stzk/dotfiles
+# font_family JetBrainsMono Nerd Font
+font_size 14.0
+
+confirm_os_window_close 0
+
+# The basic colors
+foreground              #a5b6cf
+background              #0d0f18
+selection_foreground    #0d0f18
+selection_background    #93cee9
+
+# Cursor colors
+cursor                  #a5b6cf
+cursor_text_color       #0d0f18
+
+# URL underline color when hovering with mouse
+url_color               #86aaec
+
+# Kitty window border colors
+active_border_color     #c296eb
+inactive_border_color   #3d414f
+bell_border_color       #ecd3a0
+
+# Tab bar colors
+active_tab_foreground   #0d0f18
+active_tab_background   #c296eb
+inactive_tab_foreground #a5b6cf
+inactive_tab_background #3d414f
+tab_bar_background      #0d0f18
+
+# The 16 terminal colors
+
+# black
+color0 #3d414f
+color8 #3d414f
+
+# red
+color1 #dd6777
+color9 #dd6777
+
+# green
+color2  #90ceaa
+color10 #90ceaa
+
+# yellow
+color3  #ecd3a0
+color11 #ecd3a0
+
+# blue
+color4  #86aaec
+color12 #86aaec
+
+# magenta
+color5  #c296eb
+color13 #c296eb
+
+# cyan
+color6  #93cee9
+color14 #93cee9
+
+# white
+color7  #cbced3
+color15 #cbced3
+
+# BEGIN_KITTY_FONTS
+font_family      family="Agave Nerd Font Mono"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+# END_KITTY_FONTS

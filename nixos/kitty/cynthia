@@ -1,0 +1,72 @@
+# Cynthia -- (Kanagawa Dragon) colorscheme, from gh0stzk's dotfiles
+# https://github.com/gh0stzk/dotfiles
+# font_family JetBrainsMono Nerd Font
+font_size 14.0
+
+confirm_os_window_close 0
+
+# The basic colors
+foreground              #c5c9c5
+background              #181616
+selection_foreground    #181616
+selection_background    #8ea4a2
+
+# Cursor colors
+cursor                  #c5c9c5
+cursor_text_color       #181616
+
+# URL underline color when hovering with mouse
+url_color               #8ba4b0
+
+# Kitty window border colors
+active_border_color     #a292a3
+inactive_border_color   #0d0c0c
+bell_border_color       #c4b28a
+
+# Tab bar colors
+active_tab_foreground   #181616
+active_tab_background   #a292a3
+inactive_tab_foreground #c5c9c5
+inactive_tab_background #0d0c0c
+tab_bar_background      #181616
+
+# The 16 terminal colors
+
+# black
+color0 #0d0c0c
+color8 #a6a69c
+
+# red
+color1 #c4746e
+color9 #E46876
+
+# green
+color2  #8a9a7b
+color10 #87a987
+
+# yellow
+color3  #c4b28a
+color11 #E6C384
+
+# blue
+color4  #8ba4b0
+color12 #7FB4CA
+
+# magenta
+color5  #a292a3
+color13 #938AA9
+
+# cyan
+color6  #8ea4a2
+color14 #7AA89F
+
+# white
+color7  #C8C093
+color15 #c5c9c5
+
+# BEGIN_KITTY_FONTS
+font_family      family="Agave Nerd Font Mono"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+# END_KITTY_FONTS

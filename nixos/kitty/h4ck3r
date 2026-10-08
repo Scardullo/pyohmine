@@ -1,0 +1,72 @@
+# H4ck3r -- (Hack The Box) colorscheme, from gh0stzk's dotfiles
+# https://github.com/gh0stzk/dotfiles
+# font_family JetBrainsMono Nerd Font
+font_size 14.0
+
+confirm_os_window_close 0
+
+# The basic colors
+foreground              #1947e0
+background              #0c1018
+selection_foreground    #0c1018
+selection_background    #539e06
+
+# Cursor colors
+cursor                  #1947e0
+cursor_text_color       #0c1018
+
+# URL underline color when hovering with mouse
+url_color               #578a29
+
+# Kitty window border colors
+active_border_color     #9cf542
+inactive_border_color   #4A9801
+bell_border_color       #76EA00
+
+# Tab bar colors
+active_tab_foreground   #0c1018
+active_tab_background   #9cf542
+inactive_tab_foreground #1947e0
+inactive_tab_background #4A9801
+tab_bar_background      #0c1018
+
+# The 16 terminal colors
+
+# black
+color0 #4A9801
+color8 #03198a
+
+# red
+color1 #6DDE00
+color9 #0800ff
+
+# green
+color2  #00fa5c
+color10 #4145b0
+
+# yellow
+color3  #76EA00
+color11 #025dd4
+
+# blue
+color4  #578a29
+color12 #7eb3f7
+
+# magenta
+color5  #9cf542
+color13 #220991
+
+# cyan
+color6  #539e06
+color14 #3a11f0
+
+# white
+color7  #00ff59
+color15 #3b5eed
+
+# BEGIN_KITTY_FONTS
+font_family      family="Agave Nerd Font Mono"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+# END_KITTY_FONTS

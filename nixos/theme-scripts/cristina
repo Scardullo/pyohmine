@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Switch to the cristina theme: wallpaper, kitty, hyprland, waybar.
+set -e
+
+wallpp "/home/anthony/Pictures/wallpaper/cristina.webp"
+
+cp ~/.config/kitty/cristina ~/.config/kitty/kitty.conf
+cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
+cp ~/.config/hypr/cristina.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
+cp ~/.config/waybar/themes/cristina_style.css ~/.config/waybar/style.css
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown

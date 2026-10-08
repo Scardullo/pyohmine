@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Switch to the jan theme: wallpaper, kitty, hyprland, waybar.
+set -e
+
+wallpp "/home/anthony/Pictures/wallpaper/jan.webp"
+
+cp ~/.config/kitty/jan ~/.config/kitty/kitty.conf
+cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
+cp ~/.config/hypr/jan.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
+cp ~/.config/waybar/themes/jan_style.css ~/.config/waybar/style.css
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown

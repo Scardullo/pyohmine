@@ -1,0 +1,81 @@
+configuration {
+    modi: "drun";
+    display-drun: "";
+    display-run: "";
+    display-window: "";
+    show-icons: true;
+    icon-theme: "Gruvbox-Plus-Dark";
+    font: "Agave Nerd Font Mono 11";
+    drun-display-format: "{icon} {name}";
+}
+
+* {
+    bg:     rgba(7, 2, 25, 0.85);
+    bg-alt: rgba(98, 100, 131, 0.75);
+    fg:     #27fbfe;
+
+    selected:#fb007a;
+    active: #a6e22e;
+    urgent: #fb007a;
+
+    border-col: #fb007a;
+
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    width: 600px;
+    border: 2px;
+    border-color: @border-col;
+    border-radius: 14px;
+    padding: 12px;
+    background-color: @bg;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border: 1.5px;
+    border-color: @border-col;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0 0 12px 0;
+}
+
+prompt {
+    enabled: false;
+}
+
+entry {
+    placeholder: "Search...";
+}
+
+listview {
+    lines: 8;
+    spacing: 6px;
+}
+
+element {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+element selected.normal {
+    background-color: @selected;
+    text-color: #070219;
+}
+
+element selected.active {
+    background-color: @active;
+    text-color: #070219;
+}
+
+element selected.urgent {
+    background-color: @urgent;
+    text-color: #070219;
+}
+
+element-icon {
+    size: 48px;
+    margin: 0 12px 0 0;
+}

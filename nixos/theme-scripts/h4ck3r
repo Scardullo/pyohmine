@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Switch to the h4ck3r theme: wallpaper, kitty, hyprland, waybar.
+set -e
+
+wallpp "/home/anthony/Pictures/wallpaper/h4ck3r.webp"
+
+cp ~/.config/kitty/h4ck3r ~/.config/kitty/kitty.conf
+cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
+cp ~/.config/hypr/h4ck3r.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
+cp ~/.config/waybar/themes/h4ck3r_style.css ~/.config/waybar/style.css
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Switch to the karla theme: wallpaper, kitty, hyprland, waybar.
+set -e
+
+wallpp "/home/anthony/Pictures/wallpaper/karla.webp"
+
+cp ~/.config/kitty/karla ~/.config/kitty/kitty.conf
+cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
+cp ~/.config/hypr/karla.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
+cp ~/.config/waybar/themes/karla_style.css ~/.config/waybar/style.css
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown
