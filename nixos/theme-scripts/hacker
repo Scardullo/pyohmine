@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Switch to the hacker theme: wallpaper, kitty, hyprland, waybar.
+set -e
+
+wallpp "/home/anthony/Pictures/wallpaper/h4ck3r.webp"
+
+cp ~/.config/kitty/hacker ~/.config/kitty/kitty.conf
+cp /home/anthony/pyohmine/nixos/fastfetch/config_7.jsonc ~/.config/fastfetch/config.jsonc
+cp /home/anthony/pyohmine/nixos/zshrc/simple ~/.zshrc
+cp ~/.config/hypr/hacker.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
+cp ~/.config/waybar/themes/hacker_style.css ~/.config/waybar/style.css
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown

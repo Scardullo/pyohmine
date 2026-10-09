@@ -6,6 +6,8 @@ wallpp "/home/anthony/Pictures/wallpaper/orange-desert.jpg"
 
 cp ~/.config/kitty/elemental ~/.config/kitty/kitty.conf
 
+cp /home/anthony/pyohmine/nixos/zshrc/p10k ~/.zshrc
+
 cp ~/.config/hypr/elemental.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 

@@ -6,6 +6,7 @@ wallpp "/home/anthony/Pictures/wallpaper/h4ck3r.webp"
 
 cp ~/.config/kitty/brenda ~/.config/kitty/kitty.conf
 cp /home/anthony/pyohmine/nixos/fastfetch/config_7.jsonc ~/.config/fastfetch/config.jsonc
+cp /home/anthony/pyohmine/nixos/zshrc/p10k ~/.zshrc
 cp ~/.config/hypr/brenda.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 

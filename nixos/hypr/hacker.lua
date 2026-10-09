@@ -81,7 +81,7 @@ hl.config({
         border_size = 0,
 
         col = {
-            -- Kanagawa Dragon accent (gh0stzk Cynthia rice)
+            -- Kanagawa Dragon accent (gh0stzk Hacker rice)
             active_border   = "rgba(938aa9ff)",
             inactive_border = "rgba(282727ff)",
         },
@@ -96,8 +96,8 @@ hl.config({
         rounding       = 0,
         rounding_power = 2,
 
-        active_opacity   = 0.8,
-        inactive_opacity = 0.8,
+        active_opacity   = 0.85,
+        inactive_opacity = 0.85,
 
         shadow = {
             enabled      = true,
@@ -267,7 +267,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/cynthia.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/hacker.rasi"))
 
 -- Move current window to previous/next workspace (note: your original conf uses the
 -- "workspace" dispatcher here, not "movetoworkspace" -- that's a focus change, not a
@@ -300,7 +300,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/cynthia.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/hacker.sh"))
 
 
 --------------------------------

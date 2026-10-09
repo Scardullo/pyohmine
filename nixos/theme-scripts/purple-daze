@@ -6,6 +6,8 @@ wallpp "/home/anthony/Pictures/wallpaper/wayland-girl.jpg"
 
 cp ~/.config/kitty/purple-daze ~/.config/kitty/kitty.conf
 
+cp /home/anthony/pyohmine/nixos/zshrc/p10k ~/.zshrc
+
 cp ~/.config/hypr/purple-daze.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 

@@ -6,6 +6,7 @@ wallpp "/home/anthony/Pictures/wallpaper/gh0stzk/marisol/wall-04.webp"
 
 cp ~/.config/kitty/marisol ~/.config/kitty/kitty.conf
 cp /home/anthony/pyohmine/nixos/fastfetch/config_7.jsonc ~/.config/fastfetch/config.jsonc
+cp /home/anthony/pyohmine/nixos/zshrc/p10k ~/.zshrc
 cp ~/.config/hypr/marisol.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 

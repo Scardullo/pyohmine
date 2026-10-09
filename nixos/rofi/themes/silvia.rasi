@@ -1,81 +1,48 @@
 configuration {
-    modi: "drun";
+    modi: "drun,run";
     display-drun: "";
     display-run: "";
     display-window: "";
     show-icons: true;
     icon-theme: "Gruvbox-Plus-Dark";
-    font: "Agave Nerd Font Mono 11";
-    drun-display-format: "{icon} {name}";
+    font: "JetBrainsMono Nerd Font 12";
 }
 
+@theme "gruvbox-dark"
+
+/* --- overrides --- */
+
 * {
-    bg:     rgba(40, 40, 40, 0.85);
-    bg-alt: rgba(80, 73, 69, 0.75);
-    fg:     #fbf1c7;
-
-    selected:#fbf1c7;
-    active: #98971a;
-    urgent: #cc241d;
-
-    border-col: #fbf1c7;
-
     background-color: transparent;
-    text-color: @fg;
 }
 
 window {
-    width: 600px;
-    border: 2px;
-    border-color: @border-col;
-    border-radius: 14px;
+    width: 450px;              /* ~25% smaller than default 600 */
+    background-color: rgba(40, 40, 40, 0.85);  /* gruvbox bg with transparency */
+    border-radius: 12px;
     padding: 12px;
-    background-color: @bg;
 }
 
 inputbar {
-    background-color: @bg-alt;
-    border: 1.5px;
-    border-color: @border-col;
-    border-radius: 10px;
-    padding: 10px;
-    margin: 0 0 12px 0;
+    background-color: rgba(60, 56, 54, 0.75);
+    border-radius: 8px;
+    padding: 8px;
 }
 
 prompt {
     enabled: false;
 }
 
-entry {
-    placeholder: "Search...";
-}
-
 listview {
-    lines: 8;
     spacing: 6px;
+    lines: 8;
 }
 
 element {
-    padding: 10px;
-    border-radius: 10px;
-}
-
-element selected.normal {
-    background-color: @selected;
-    text-color: #282828;
-}
-
-element selected.active {
-    background-color: @active;
-    text-color: #282828;
-}
-
-element selected.urgent {
-    background-color: @urgent;
-    text-color: #282828;
+    border-radius: 8px;
+    padding: 8px;
 }
 
 element-icon {
     size: 48px;
-    margin: 0 12px 0 0;
 }

@@ -2,10 +2,11 @@
 # Switch to the silvia theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/silvia.webp"
+wallpp "/home/anthony/Pictures/wallpaper/gruvy_street.png"
 
 cp ~/.config/kitty/silvia ~/.config/kitty/kitty.conf
 cp /home/anthony/pyohmine/nixos/fastfetch/config_7.jsonc ~/.config/fastfetch/config.jsonc
+cp /home/anthony/pyohmine/nixos/zshrc/simple ~/.zshrc
 cp ~/.config/hypr/silvia.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 
