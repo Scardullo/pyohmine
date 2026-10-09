@@ -2,11 +2,12 @@
 # Switch to the cynthia theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/sky-blue.webp"
+wallpp "/home/anthony/Pictures/wallpaper/h4ck3r.webp"
 
 cp ~/.config/kitty/cynthia ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
 cp ~/.config/hypr/cynthia.lua ~/.config/hypr/hyprland.lua
+cp ~/Documents/bash_zsh_rc/myhypr/simple ~/.zshrc
 hyprctl reload >/dev/null 2>&1 || true
 
 cp ~/.config/waybar/themes/cynthia_style.css ~/.config/waybar/style.css
