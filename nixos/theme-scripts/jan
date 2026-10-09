@@ -2,10 +2,10 @@
 # Switch to the jan theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/Pictures/wallpaper/gh0stzk/jan/wall-02.webp"
+wallpp "/home/anthony/Pictures/wallpaper/gh0stzk/jan/wall-06.webp"
 
 cp ~/.config/kitty/jan ~/.config/kitty/kitty.conf
-cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
+cp /home/anthony/pyohmine/nixos/fastfetch/config_7.jsonc ~/.config/fastfetch/config.jsonc
 cp ~/.config/hypr/jan.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 

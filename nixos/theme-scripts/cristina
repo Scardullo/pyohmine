@@ -5,7 +5,7 @@ set -e
 wallpp "/home/anthony/Pictures/wallpaper/cristina.webp"
 
 cp ~/.config/kitty/cristina ~/.config/kitty/kitty.conf
-cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc
+cp /home/anthony/pyohmine/nixos/fastfetch/config_7.jsonc ~/.config/fastfetch/config.jsonc
 cp ~/.config/hypr/cristina.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 

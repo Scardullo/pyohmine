@@ -6,8 +6,8 @@
 }
 
 window#waybar {
-    background: #181825;
-    color: #CDD6F4;
+    background: #070219;
+    color: #27fbfe;
 
     border: none;
     border-radius: 0px;
@@ -19,8 +19,8 @@ window#waybar {
 /* Arch Logo */
 
 #custom-logo {
-    background: #89B4FA;
-    color: #181825;
+    background: #19bffe;
+    color: #070219;
 
     margin: 0px;
 
@@ -41,7 +41,7 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #BAC2DE;
+    color: #d5ddee;
     margin: 0 2px;
     padding: 0 10px;
     border-radius: 8px;
@@ -49,20 +49,20 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #89B4FA;
-    color: #181825;
+    background: #19bffe;
+    color: #070219;
 }
 
 #workspaces button:hover {
-    background: #45475A;
-    color: #CDD6F4;
+    background: #626483;
+    color: #27fbfe;
 }
 
 /* Cava */
 
 #custom-cava {
     background: transparent;
-    color: #CDD6F4;
+    color: #27fbfe;
     margin: 0px;
     padding: 0 10px;
     font-weight: bold;
@@ -77,7 +77,7 @@ window#waybar {
 #network,
 #pulseaudio {
     background: transparent;
-    color: #CDD6F4;
+    color: #27fbfe;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
@@ -86,8 +86,8 @@ window#waybar {
 /* CPU */
 
 #cpu {
-    background: #181825;
-    color: #CDD6F4;
+    background: #070219;
+    color: #27fbfe;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -95,8 +95,8 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #181825;
-    color: #CDD6F4;
+    background: #070219;
+    color: #27fbfe;
     font-weight: bold;
     border-radius: 0px 10px 10px 0px;
 }
@@ -104,8 +104,8 @@ window#waybar {
 /* VOLUME */
 
 #pulseaudio {
-    background: #181825;
-    color: #CDD6F4;
+    background: #070219;
+    color: #27fbfe;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -121,11 +121,11 @@ window#waybar {
 /* Tooltip */
 
 tooltip {
-    background: #181825;
-    border: 2px solid #45475A;
+    background: #070219;
+    border: 2px solid #626483;
     border-radius: 10px;
 }
 
 tooltip label {
-    color: #CDD6F4;
+    color: #27fbfe;
 }

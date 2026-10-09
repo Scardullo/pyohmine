@@ -78,12 +78,12 @@ hl.config({
         gaps_in  = 10,
         gaps_out = 20,
 
-        border_size = 0,
+        border_size = 2,
 
         col = {
             -- Dracula accent (gh0stzk Marisol rice)
-            active_border   = "rgba(bd93f9ff)",
-            inactive_border = "rgba(44475aff)",
+            active_border   = "rgba(d6acffff)",
+            inactive_border = "rgba(d6acffff)",
         },
 
         resize_on_border = false,
@@ -96,8 +96,8 @@ hl.config({
         rounding       = 0,
         rounding_power = 2,
 
-        active_opacity   = 0.95,
-        inactive_opacity = 0.95,
+        active_opacity   = 0.85,
+        inactive_opacity = 0.85,
 
         shadow = {
             enabled      = true,
