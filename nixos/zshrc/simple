@@ -1,0 +1,37 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Created by newuser for 5.9.1
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Theme-switcher scripts and wallpp/wallp1/wallp2 live here
+export PATH="$HOME/.local/bin:$PATH"
+
+
+alias dfree='df -hTx tmpfs'
+alias datec='date | wl-copy'
+
+# eza aliases (disabled)
+
+#alias ls='eza -a --group-directories-first --icons --color=auto'
+#alias ll='eza -la --group-directories-first --icons --color=auto'
+#alias la='eza -la --group-directories-first --icons --color=auto'
+
+# regular ls aliases
+
+alias ls='ls -AG --color=auto --group-directories-first'
+alias ll='ls -lAG --no-group --color=auto --group-directories-first'
+alias la='ls -lAG --no-group --color=auto --group-directories-first'
+
+alias nerds='kitty +list-fonts --configured'
+
+# Pokemon colorscripts fastfetch greeting on new interactive shells
+if [[ -o interactive ]] && command -v pokefetch >/dev/null 2>&1 && command -v pokemon-colorscripts >/dev/null 2>&1; then
+  pokefetch
+fi

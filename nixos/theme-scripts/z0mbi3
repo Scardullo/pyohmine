@@ -2,7 +2,7 @@
 # Switch to the z0mbi3 theme: wallpaper, kitty, hyprland, waybar.
 set -e
 
-wallpp "/home/anthony/pyohmine/Documents/Pictures/wallpaper/cristina-wall-07.webp"
+wallpp "/home/anthony/Pictures/wallpaper/karla.webp"
 
 cp ~/.config/kitty/z0mbi3 ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/small-nix ~/.config/fastfetch/config.jsonc

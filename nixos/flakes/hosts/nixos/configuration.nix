@@ -363,6 +363,7 @@ in
   nerd-fonts.fira-code
   nerd-fonts.agave
   nerd-fonts.meslo-lg
+  nerd-fonts.terminess-ttf
 
   noto-fonts
   noto-fonts-cjk-sans
