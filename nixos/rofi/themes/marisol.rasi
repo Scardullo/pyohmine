@@ -1,81 +1,131 @@
-configuration {
-    modi: "drun";
-    display-drun: "";
-    display-run: "";
-    display-window: "";
-    show-icons: true;
-    icon-theme: "Gruvbox-Plus-Dark";
-    font: "Agave Nerd Font Mono 11";
-    drun-display-format: "{icon} {name}";
-}
-
 * {
-    bg:     rgba(40, 42, 54, 0.85);
-    bg-alt: rgba(68, 71, 90, 0.75);
-    fg:     #f8f8f2;
-
-    selected:#bd93f9;
-    active: #50fa7b;
-    urgent: #ff5555;
-
-    border-col: #bd93f9;
-
-    background-color: transparent;
-    text-color: @fg;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 12px;
+    min-height: 0;
+    border: none;
 }
 
-window {
-    width: 600px;
-    border: 2px;
-    border-color: @border-col;
-    border-radius: 14px;
-    padding: 12px;
-    background-color: @bg;
+window#waybar {
+    background: #282a36;
+    color: #f8f8f2;
+
+    border: none;
+    border-radius: 0px;
+    margin: 20px 0px 0px 0px;
+
+    padding: 0px;
 }
 
-inputbar {
-    background-color: @bg-alt;
-    border: 1.5px;
-    border-color: @border-col;
+/* Arch Logo */
+
+#custom-logo {
+    background: #d4b5ff;
+    color: #282a36;
+
+    margin: 0px;
+
+    padding-left: 20px;
+    padding-right: 24px;
+
+    border-radius: 0px;
+
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Workspaces */
+
+#workspaces {
+    margin: 3px 0;
+}
+
+#workspaces button {
+    background: transparent;
+    color: #f8f8f2;
+    margin: 0 2px;
+    padding: 0 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button.active {
+    background: #d4b5ff;
+    color: #282a36;
+}
+
+#workspaces button:hover {
+    background: #44475a;
+    color: #f8f8f2;
+}
+
+/* Cava */
+
+#custom-cava {
+    background: transparent;
+    color: #f8f8f2;
+    margin: 0px;
+    padding: 0 10px;
+    font-weight: bold;
+}
+
+/* Modules */
+
+#clock,
+#idle_inhibitor,
+#cpu,
+#memory,
+#network,
+#pulseaudio {
+    background: transparent;
+    color: #f8f8f2;
+    margin: 0px;
+    padding: 0 10px;
     border-radius: 10px;
-    padding: 10px;
-    margin: 0 0 12px 0;
 }
 
-prompt {
-    enabled: false;
+/* CPU */
+
+#cpu {
+    background: #282a36;
+    color: #f8f8f2;
+    font-weight: bold;
+    border-radius: 0px;
 }
 
-entry {
-    placeholder: "Search...";
+/* MEMORY */
+
+#memory {
+    background: #282a36;
+    color: #f8f8f2;
+    font-weight: bold;
+    border-radius: 0px 10px 10px 0px;
 }
 
-listview {
-    lines: 8;
-    spacing: 6px;
+/* VOLUME */
+
+#pulseaudio {
+    background: #282a36;
+    color: #f8f8f2;
+    font-weight: bold;
+    border-radius: 0px;
 }
 
-element {
-    padding: 10px;
+#clock {
+    font-weight: bold;
+}
+
+#custom-weather {
+    font-weight: bold;
+}
+
+/* Tooltip */
+
+tooltip {
+    background: #282a36;
+    border: 2px solid #44475a;
     border-radius: 10px;
 }
 
-element selected.normal {
-    background-color: @selected;
-    text-color: #282a36;
-}
-
-element selected.active {
-    background-color: @active;
-    text-color: #282a36;
-}
-
-element selected.urgent {
-    background-color: @urgent;
-    text-color: #282a36;
-}
-
-element-icon {
-    size: 48px;
-    margin: 0 12px 0 0;
+tooltip label {
+    color: #f8f8f2;
 }
