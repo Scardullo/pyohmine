@@ -46,6 +46,7 @@
             "activated": "󰅶",
             "deactivated": "󰛊"
         },
+        "start-activated": true,
         "tooltip-format-activated": "Idle inhibitor active (screen won't sleep)",
         "tooltip-format-deactivated": "Idle inhibitor inactive"
     },

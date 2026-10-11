@@ -6,19 +6,17 @@
 }
 
 window#waybar {
-    background: #1a1b26;
-    color: #c0caf5;
-
+    background: #2d353b;
+    color: #d3c6aa;
+    border: none;
     border-radius: 0px;
-
     margin: 20px 0px 0px 0px;
 
     padding: 0px;
 }
-
 #custom-logo {
-    background: #7aa2f7;
-    color: #1a1b26;
+    background: #83a598;
+    color: #2d353b;
     margin: 0px;
 
     padding-left: 20px;
@@ -37,7 +35,7 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #6272a4;
+    color: #9da9a0;
     margin: 0 2px;
     padding: 0 10px;
     border-radius: 8px;
@@ -45,20 +43,20 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #c0caf5;
-    color: #1a1b26;
+    background: #d3c6aa;
+    color: #2d353b;
 }
 
 #workspaces button:hover {
-    background: #44475a;
-    color: #c0caf5;
+    background: #3d474e;
+    color: #d3c6aa;
 }
 
 /* Cava */
 
 #custom-cava {
     background: transparent;
-    color: #c0caf5;
+    color: #d3c6aa;
     margin: 0px;
     padding: 0 10px;
     font-weight: bold;
@@ -73,15 +71,15 @@ window#waybar {
 #network,
 #pulseaudio {
     background: transparent;
-    color: #c0caf5;
+    color: #d3c6aa;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
 }
 
 #cpu {
-    background: #1a1b26;
-    color: #c0caf5;
+    background: #2d353b;
+    color: #d3c6aa;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -89,8 +87,8 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #1a1b26;
-    color: #c0caf5;
+    background: #2d353b;
+    color: #d3c6aa;
     font-weight: bold;
     border-radius: 0px 10px 10px 0px;
 }
@@ -98,8 +96,8 @@ window#waybar {
 /* VOLUME */
 
 #pulseaudio {
-    background: #1a1b26;
-    color: #c0caf5;
+    background: #2d353b;
+    color: #d3c6aa;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -115,11 +113,11 @@ window#waybar {
 /* Tooltip */
 
 tooltip {
-    background: #1a1b26;
-    border: 2px solid #44475a;
+    background: #2d353b;
+    border: 2px solid #3d474e;
     border-radius: 10px;
 }
 
 tooltip label {
-    color: #c0caf5;
+    color: #d3c6aa;
 }
