@@ -1,5 +1,5 @@
 -- ============================================
--- catppuccin.lua - Modern Neovim Setup (Catppuccin theme)
+-- tokyonight.lua - Modern Neovim Setup (Tokyo Night theme)
 -- Copy this over init.lua to switch color themes.
 -- ============================================
 
@@ -32,7 +32,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 
   -- Color scheme
-  { "catppuccin/nvim", name = "catppuccin" },
+  { "folke/tokyonight.nvim" },
 
   -- Treesitter
   {
@@ -99,7 +99,7 @@ require("lazy").setup({
 
   -- Hex colors
   {
-    "norcalli/nvim-colorizer.lua",
+    "catgoose/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup({ "*" }, { RGB = true, RRGGBB = true, names = true, css = true })
     end
@@ -129,12 +129,11 @@ require("lazy").setup({
 -- ============================================
 -- Colorscheme
 -- ============================================
-require("catppuccin").setup({
-  -- "mocha" = darkest variant (others: "latte" light, "frappe", "macchiato")
-  flavour = "mocha",
+require("tokyonight").setup({
+  style = "night",  -- darkest variant
 })
 
-vim.cmd.colorscheme("catppuccin")
+vim.cmd.colorscheme("tokyonight")
 
 -- ============================================
 -- LSP Setup

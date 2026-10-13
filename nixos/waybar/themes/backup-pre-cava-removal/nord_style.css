@@ -1,0 +1,126 @@
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 12px;
+    min-height: 0;
+    border: none;
+}
+
+window#waybar {
+    background: #2e3440;
+    color: #81a1c1;
+    border: none;
+    border-radius: 0px;
+    margin: 20px 0px 0px 0px;
+
+    padding: 0px;
+}
+
+#custom-logo {
+    background: #81a1c1;
+    color: #2e3440;
+    margin: 0px;
+
+    padding-left: 20px;
+    padding-right: 24px;
+
+    border-radius: 0px;
+
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Workspaces */
+
+#workspaces {
+    margin: 3px 0;
+}
+
+#workspaces button {
+    background: transparent;
+    color: #81a1c1;
+    margin: 0 2px;
+    padding: 0 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button.active {
+    background: #81a1c1;
+    color: #2e3440;
+}
+
+#workspaces button:hover {
+    background: #4c566a;
+    color: #eceff4;
+}
+
+/* Cava */
+
+#custom-cava {
+    background: transparent;
+    color: #81a1c1;
+    margin: 0px;
+    padding: 0 10px;
+    font-weight: bold;
+}
+
+/* Modules */
+
+#clock,
+#idle_inhibitor,
+#cpu,
+#memory,
+#network,
+#pulseaudio {
+    background: transparent;
+    color: #81a1c1;
+    margin: 0px;
+    padding: 0 10px;
+    border-radius: 10px;
+}
+
+#cpu {
+    background: #2e3440;
+    color: #81a1c1;
+    font-weight: bold;
+    border-radius: 0px;
+}
+
+/* MEMORY */
+
+#memory {
+    background: #2e3440;
+    color: #81a1c1;
+    font-weight: bold;
+
+    border-radius: 0px 10px 10px 0px;
+}
+
+/* VOLUME */
+
+#pulseaudio {
+    background:#2e3440;
+    color: #81a1c1;
+    font-weight: bold;
+    border-radius: 0px;
+}
+
+#clock {
+    font-weight: bold;
+}
+
+#custom-weather {
+    font-weight: bold;
+}
+
+/* Tooltip */
+
+tooltip {
+    background: #2e3440;
+    border: 2px solid #4c566a;
+    border-radius: 10px;
+}
+
+tooltip label {
+    color: #81a1c1;
+}

@@ -53,8 +53,9 @@ selection_background #28344a
 # The color for highlighting URLs on mouse-over
 url_color #9ece6a
 
+
 # BEGIN_KITTY_FONTS
-font_family      family="Agave Nerd Font Mono"
+font_family      family="FantasqueSansM Nerd Font Mono"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto

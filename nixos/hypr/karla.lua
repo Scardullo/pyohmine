@@ -78,12 +78,12 @@ hl.config({
         gaps_in  = 10,
         gaps_out = 20,
 
-        border_size = 0,
+        border_size = 2,
 
         col = {
             -- Zombie-Night accent (gh0stzk Karla rice)
-            active_border   = "rgba(8656e3ff)",
-            inactive_border = "rgba(353c52ff)",
+            active_border   = "rgba(888db3ff)",
+            inactive_border = "rgba(888db3ff)",
         },
 
         resize_on_border = false,

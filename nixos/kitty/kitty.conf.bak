@@ -1,4 +1,4 @@
-# Cynthia -- (Kanagawa Dragon) colorscheme, from gh0stzk's dotfiles
+# Silvia -- (Gruvbox) colorscheme, from gh0stzk's dotfiles
 # https://github.com/gh0stzk/dotfiles
 # font_family JetBrainsMono Nerd Font
 font_size 14.0
@@ -6,66 +6,66 @@ font_size 14.0
 confirm_os_window_close 0
 
 # The basic colors
-foreground              #c5c9c5
-background              #181616
-selection_foreground    #181616
-selection_background    #8ea4a2
+foreground              #fbf1c7
+background              #282828
+selection_foreground    #282828
+selection_background    #689d6a
 
 # Cursor colors
-cursor                  #c5c9c5
-cursor_text_color       #181616
+cursor                  #fbf1c7
+cursor_text_color       #282828
 
 # URL underline color when hovering with mouse
-url_color               #8ba4b0
+url_color               #458588
 
 # Kitty window border colors
-active_border_color     #a292a3
-inactive_border_color   #0d0c0c
-bell_border_color       #c4b28a
+active_border_color     #b16286
+inactive_border_color   #a89984
+bell_border_color       #d79921
 
 # Tab bar colors
-active_tab_foreground   #181616
-active_tab_background   #a292a3
-inactive_tab_foreground #c5c9c5
-inactive_tab_background #0d0c0c
-tab_bar_background      #181616
+active_tab_foreground   #282828
+active_tab_background   #b16286
+inactive_tab_foreground #fbf1c7
+inactive_tab_background #a89984
+tab_bar_background      #282828
 
 # The 16 terminal colors
 
 # black
-color0 #0d0c0c
-color8 #a6a69c
+color0 #a89984
+color8 #a89984
 
 # red
-color1 #c4746e
-color9 #E46876
+color1 #cc241d
+color9 #fb4934
 
 # green
-color2  #8a9a7b
-color10 #87a987
+color2  #98971a
+color10 #b8bb26
 
 # yellow
-color3  #c4b28a
-color11 #E6C384
+color3  #d79921
+color11 #fabd2f
 
 # blue
-color4  #8ba4b0
-color12 #7FB4CA
+color4  #458588
+color12 #83a598
 
 # magenta
-color5  #a292a3
-color13 #938AA9
+color5  #b16286
+color13 #d3869b
 
 # cyan
-color6  #8ea4a2
-color14 #7AA89F
+color6  #689d6a
+color14 #8ec07c
 
 # white
-color7  #C8C093
-color15 #c5c9c5
+color7  #ebdbb2
+color15 #ebdbb2
 
 # BEGIN_KITTY_FONTS
-font_family      family="Agave Nerd Font Mono"
+font_family      family="FantasqueSansM Nerd Font Mono"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto

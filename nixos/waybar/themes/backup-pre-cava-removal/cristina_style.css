@@ -1,0 +1,131 @@
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 12px;
+    min-height: 0;
+    border: none;
+}
+
+window#waybar {
+    background: #232136;
+    color: #e0def4;
+
+    border: none;
+    border-radius: 0px;
+    margin: 20px 0px 0px 0px;
+
+    padding: 0px;
+}
+
+/* Arch Logo */
+
+#custom-logo {
+    background: #c3a5e6;
+    color: #232136;
+
+    margin: 0px;
+
+    padding-left: 20px;
+    padding-right: 24px;
+
+    border-radius: 0px;
+
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Workspaces */
+
+#workspaces {
+    margin: 3px 0;
+}
+
+#workspaces button {
+    background: transparent;
+    color: #faebd7;
+    margin: 0 2px;
+    padding: 0 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button.active {
+    background: #c3a5e6;
+    color: #232136;
+}
+
+#workspaces button:hover {
+    background: #393552;
+    color: #e0def4;
+}
+
+/* Cava */
+
+#custom-cava {
+    background: transparent;
+    color: #e0def4;
+    margin: 0px;
+    padding: 0 10px;
+    font-weight: bold;
+}
+
+/* Modules */
+
+#clock,
+#idle_inhibitor,
+#cpu,
+#memory,
+#network,
+#pulseaudio {
+    background: transparent;
+    color: #e0def4;
+    margin: 0px;
+    padding: 0 10px;
+    border-radius: 10px;
+}
+
+/* CPU */
+
+#cpu {
+    background: #232136;
+    color: #e0def4;
+    font-weight: bold;
+    border-radius: 0px;
+}
+
+/* MEMORY */
+
+#memory {
+    background: #232136;
+    color: #e0def4;
+    font-weight: bold;
+    border-radius: 0px 10px 10px 0px;
+}
+
+/* VOLUME */
+
+#pulseaudio {
+    background: #232136;
+    color: #e0def4;
+    font-weight: bold;
+    border-radius: 0px;
+}
+
+#clock {
+    font-weight: bold;
+}
+
+#custom-weather {
+    font-weight: bold;
+}
+
+/* Tooltip */
+
+tooltip {
+    background: #232136;
+    border: 2px solid #393552;
+    border-radius: 10px;
+}
+
+tooltip label {
+    color: #e0def4;
+}

@@ -1,7 +1,7 @@
 # Z0mbi3 -- (Decay (decayce)) colorscheme, from gh0stzk's dotfiles
 # https://github.com/gh0stzk/dotfiles
 # font_family JetBrainsMono Nerd Font
-font_size 14.0
+font_size 12.0
 
 confirm_os_window_close 0
 
@@ -65,7 +65,7 @@ color7  #cbced3
 color15 #cbced3
 
 # BEGIN_KITTY_FONTS
-font_family      family="Agave Nerd Font Mono"
+font_family      family="0xProto Nerd Font Mono"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto

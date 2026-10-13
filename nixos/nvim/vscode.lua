@@ -99,7 +99,7 @@ require("lazy").setup({
 
   -- Hex colors
   {
-    "norcalli/nvim-colorizer.lua",
+    "catgoose/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup({ "*" }, { RGB = true, RRGGBB = true, names = true, css = true })
     end

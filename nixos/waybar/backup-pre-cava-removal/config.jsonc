@@ -1,0 +1,92 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 25,
+    "spacing": 6,
+
+    "modules-left": [
+        "custom/logo",
+        "hyprland/workspaces",
+        "custom/cava"
+    ],
+
+    "modules-center": [
+        "idle_inhibitor",
+        "clock"
+    ],
+
+    "modules-right": [
+        "custom/weather",
+        "pulseaudio",
+        "network",
+        "cpu",
+        "memory"
+    ],
+
+    "custom/logo": {
+        "format": "",
+        "tooltip": false
+    },
+
+    "custom/cava": {
+        "exec": "~/.config/waybar/scripts/cava.sh 2>/dev/null",
+        "return-type": "text",
+        "tooltip": false
+    },
+
+//    "custom/media": {
+//        "exec": "/home/anthony/.config/waybar/scripts/mediainfo.sh",
+//        "return-type": "text",
+//        "interval": 2
+//    },
+
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰅶",
+            "deactivated": "󰛊"
+        },
+        "start-activated": true,
+        "tooltip-format-activated": "Idle inhibitor active (screen won't sleep)",
+        "tooltip-format-deactivated": "Idle inhibitor inactive"
+    },
+
+    "clock": {
+        "format": "{:%I:%M %p}"
+    },
+
+    "custom/weather": {
+        "exec": "~/.config/waybar/scripts/weather.sh",
+        "interval": 1800,
+        "format": " {}",
+        "tooltip": false
+    },
+
+    "cpu": {
+        "format": "󰍛 {usage}%"
+    },
+
+    "memory": {
+        "format": " {percentage}%"
+    },
+
+    "network": {
+        "format-wifi": " {signalStrength}%",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰖪",
+        "tooltip-format": "{ifname}",
+        "tooltip": false
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰖁 Muted",
+        "format-icons": {
+            "default": [
+                "",
+                "",
+                ""
+            ]
+        }
+    }
+}
