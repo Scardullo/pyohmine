@@ -364,6 +364,12 @@ in
   nerd-fonts.agave
   nerd-fonts.meslo-lg
   nerd-fonts.terminess-ttf
+  nerd-fonts._3270
+  nerd-fonts.bigblue-terminal
+  nerd-fonts.gohufont
+  nerd-fonts.hurmit
+  nerd-fonts.mononoki
+  nerd-fonts.proggy-clean-tt
 
   noto-fonts
   noto-fonts-cjk-sans
