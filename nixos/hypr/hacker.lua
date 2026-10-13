@@ -82,8 +82,8 @@ hl.config({
 
         col = {
             -- Kanagawa Dragon accent (gh0stzk Hacker rice)
-            active_border   = "rgba(938aa9ff)",
-            inactive_border = "rgba(282727ff)",
+            active_border   = "rgba(c5c9c5ff)",
+            inactive_border = "rgba(c5c9c5ff)",
         },
 
         resize_on_border = false,
@@ -96,8 +96,8 @@ hl.config({
         rounding       = 0,
         rounding_power = 2,
 
-        active_opacity   = 0.85,
-        inactive_opacity = 0.85,
+        active_opacity   = 0.95,
+        inactive_opacity = 0.95,
 
         shadow = {
             enabled      = true,
@@ -268,6 +268,8 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
 hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/hacker.rasi"))
+hl.bind("ALT + SPACE",      hl.dsp.exec_cmd("~/.local/bin/theme-switcher"))
+hl.bind("SUPER + ALT + SPACE", hl.dsp.exec_cmd("~/.local/bin/wallpaper-switcher"))
 
 -- Move current window to previous/next workspace (note: your original conf uses the
 -- "workspace" dispatcher here, not "movetoworkspace" -- that's a focus change, not a

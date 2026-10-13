@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+# Theme picker popup (bound to ALT+SPACE): rofi grid of theme name + wallpaper thumbnail.
+# Selecting an entry runs the matching ~/.local/bin/<theme> script.
+
+BIN="$HOME/.local/bin"
+CACHE_DIR="$HOME/.cache/theme-switcher/thumbs"
+STATE_FILE="$HOME/.local/state/wallpaper/DP-1"
+CURRENT_THEME_FILE="$HOME/.local/state/current-theme"
+ROFI_THEME="$HOME/.config/rofi/theme-switcher.rasi"
+ROFI_TPL="$HOME/.config/rofi/theme-switcher.rasi.tpl"
+KITTY_DIR="$HOME/.config/kitty"
+LOG="/tmp/theme-switcher.log"
+
+mkdir -p "$CACHE_DIR"
+
+# Display Name:script name in ~/.local/bin (wallpaper is read live from each script's "wallpp" line)
+THEMES=(
+  "Nord:nord"
+  "Brenda:brenda"
+  "Catppuccin:catppuccin"
+  "Cristina:cristina"
+  "Daniela:daniela"
+  "Dracula:dracula"
+  "Elemental:elemental"
+  "Emilia:emilia"
+  "Everforest:everforest"
+  "Gruvbox:gruvbox"
+  "H4ck3r:h4ck3r"
+  "Hacker:hacker"
+  "Isabel:isabel"
+  "Jan:jan"
+  "Karla:karla"
+  "Melissa:melissa"
+  "Pamela:pamela"
+  "Purple Daze:purple-daze"
+  "Silvia:silvia"
+  "Tokyo Night:tokyo-night"
+  "Varinka:varinka"
+  "Yael:yael"
+  "Z0mbi3:z0mbi3"
+)
+
+wallpaper_for() {
+  local script="$1" line
+  line=$(grep -m1 -oE 'wallp(p|1|2)[[:space:]]+"[^"]+"' "$BIN/$script" 2>/dev/null)
+  line="${line#*\"}"
+  printf '%s' "${line%\"}"
+}
+
+CURRENT_WALL=""
+[ -f "$STATE_FILE" ] && CURRENT_WALL=$(cat "$STATE_FILE")
+
+# current-theme is written by each theme script (via basename "$0") so it's unambiguous
+# even when two themes share the same wallpaper (e.g. Brenda/Silvia, Hacker/H4ck3r).
+CURRENT_SCRIPT=""
+[ -f "$CURRENT_THEME_FILE" ] && CURRENT_SCRIPT=$(cat "$CURRENT_THEME_FILE")
+
+WALLS=()
+for entry in "${THEMES[@]}"; do
+  script="${entry#*:}"
+  wall=$(wallpaper_for "$script")
+  WALLS+=("$wall")
+  if [ -z "$CURRENT_SCRIPT" ] && [ -n "$wall" ] && [ "$wall" = "$CURRENT_WALL" ]; then
+    CURRENT_SCRIPT="$script"
+  fi
+done
+
+hex_to_rgba() {
+  local hex="${1#\#}" alpha="$2" r g b
+  r=$((16#${hex:0:2})); g=$((16#${hex:2:2})); b=$((16#${hex:4:2}))
+  printf 'rgba(%d, %d, %d, %s)' "$r" "$g" "$b" "$alpha"
+}
+
+gen_rofi_theme() {
+  local kitty_conf="$KITTY_DIR/$CURRENT_SCRIPT"
+  local bg_hex="#14141c" fg_hex="#e8e8f0" accent_hex="#8aadf4"
+  if [ -n "$CURRENT_SCRIPT" ] && [ -f "$kitty_conf" ]; then
+    local v
+    v=$(grep -m1 -E '^background[[:space:]]' "$kitty_conf" | awk '{print $2}'); [ -n "$v" ] && bg_hex="$v"
+    v=$(grep -m1 -E '^foreground[[:space:]]' "$kitty_conf" | awk '{print $2}'); [ -n "$v" ] && fg_hex="$v"
+    v=$(grep -m1 -E '^color12[[:space:]]' "$kitty_conf" | awk '{print $2}')
+    [ -z "$v" ] && v=$(grep -m1 -E '^color4[[:space:]]' "$kitty_conf" | awk '{print $2}')
+    [ -n "$v" ] && accent_hex="$v"
+  fi
+
+  local bg_rgba bg_alt_rgba
+  bg_rgba=$(hex_to_rgba "$bg_hex" 0.95)
+  bg_alt_rgba=$(hex_to_rgba "$accent_hex" 0.16)
+
+  sed \
+    -e "s|__BG__|$bg_rgba|" \
+    -e "s|__BG_ALT__|$bg_alt_rgba|" \
+    -e "s|__FG__|$fg_hex|" \
+    -e "s|__ACCENT__|$accent_hex|g" \
+    "$ROFI_TPL" > "$ROFI_THEME"
+}
+
+thumb_for() {
+  local wall="$1" key thumb
+  [ -z "$wall" ] && return
+  key=$(printf '%s' "$wall" | md5sum | cut -d' ' -f1)
+  thumb="$CACHE_DIR/$key.png"
+  if [ ! -f "$thumb" ] || [ "$wall" -nt "$thumb" ]; then
+    magick "$wall" -resize 340x191^ -gravity center -extent 340x191 "$thumb" 2>>"$LOG" || cp "$wall" "$thumb"
+  fi
+  printf '%s' "$thumb"
+}
+
+build_menu() {
+  local i name script wall thumb label
+  for i in "${!THEMES[@]}"; do
+    name="${THEMES[$i]%%:*}"
+    script="${THEMES[$i]#*:}"
+    wall="${WALLS[$i]}"
+    thumb=$(thumb_for "$wall")
+    label="$name"
+    [ -n "$CURRENT_SCRIPT" ] && [ "$script" = "$CURRENT_SCRIPT" ] && label="$name *"
+    if [ -n "$thumb" ]; then
+      printf '%s\0icon\x1f%s\n' "$label" "$thumb"
+    else
+      printf '%s\n' "$label"
+    fi
+  done
+}
+
+gen_rofi_theme
+
+CHOICE_INDEX=$(build_menu | rofi -dmenu -i -p "" -theme "$ROFI_THEME" -show-icons -format i) || exit 0
+
+[ -z "${CHOICE_INDEX:-}" ] && exit 0
+
+script="${THEMES[$CHOICE_INDEX]#*:}"
+
+if [ -x "$BIN/$script" ]; then
+  setsid "$BIN/$script" >>"$LOG" 2>&1 &
+  disown
+fi

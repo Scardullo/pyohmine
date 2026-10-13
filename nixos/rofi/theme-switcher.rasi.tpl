@@ -1,0 +1,81 @@
+configuration {
+    modi: "dmenu";
+    show-icons: true;
+    font: "JetBrainsMono Nerd Font 13";
+}
+
+* {
+    bg:         __BG__;
+    bg-alt:     __BG_ALT__;
+    fg:         __FG__;
+    selected:   __ACCENT__;
+    border-col: __ACCENT__;
+
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    width: 1100px;
+    border: 2px;
+    border-color: @border-col;
+    border-radius: 18px;
+    padding: 20px;
+    background-color: @bg;
+}
+
+mainbox {
+    children: [ inputbar, listview ];
+    spacing: 16px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border-radius: 10px;
+    padding: 10px 14px;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    text-color: @selected;
+}
+
+entry {
+    placeholder: "Search theme:";
+    placeholder-color: rgba(230, 230, 240, 0.45);
+}
+
+listview {
+    columns: 6;
+    lines: 4;
+    spacing: 14px;
+    fixed-height: true;
+    fixed-columns: true;
+    scrollbar: false;
+}
+
+element {
+    orientation: vertical;
+    padding: 10px;
+    border-radius: 14px;
+    border: 2px;
+    border-color: transparent;
+}
+
+element-icon {
+    size: 150px;
+    border-radius: 10px;
+    horizontal-align: 0.5;
+}
+
+element-text {
+    horizontal-align: 0.5;
+    vertical-align: 0.5;
+    margin: 8px 0 0 0;
+}
+
+element selected.normal {
+    background-color: @bg-alt;
+    border-color: @selected;
+    text-color: @selected;
+}
