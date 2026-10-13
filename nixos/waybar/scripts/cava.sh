@@ -2,29 +2,35 @@
 
 set -o pipefail
 
-# waybar doesn't reliably kill the previous instance of this script when it
-# reloads (e.g. on monitor hotplug), which leaks a `cava` process every time.
-# Reap instances left behind by a waybar generation that's no longer running,
-# but leave sibling instances alone (one runs per monitor bar, all under the
-# same live waybar).
-current_waybar_pid=$(pgrep -f '^waybar$' 2>/dev/null | head -1)
-for pid in $(pgrep -f '^bash .*/waybar/scripts/cava\.sh' 2>/dev/null); do
-    [ "$pid" = "$$" ] && continue
-    wrapper_ppid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' ')
-    grandparent=$(ps -o ppid= -p "$wrapper_ppid" 2>/dev/null | tr -d ' ')
-    if [ -n "$grandparent" ] && [ "$grandparent" != "$current_waybar_pid" ]; then
-        pkill -9 -P "$pid" 2>/dev/null
-        kill -9 "$pid" 2>/dev/null
-    fi
-done
+# Runs once per monitor bar, spawned by waybar via `sh -c`. waybar doesn't always
+# kill this when it reloads/crashes, which used to leak a `cava` process (and its
+# open PulseAudio capture stream) indefinitely. Fix: track our own waybar
+# ancestor's PID directly and self-terminate the moment it's gone, rather than
+# trying to spot stale siblings after the fact.
+
+WAYBAR_PID=$(ps -o ppid= -p "$PPID" 2>/dev/null | tr -d ' ')
+
+exec 3< <(cava)
+CAVA_PID=$!
 
 cleanup() {
-    pkill -9 -P $$ 2>/dev/null
+    kill -9 "$CAVA_PID" "$WATCHDOG_PID" 2>/dev/null
     exit 0
 }
 trap cleanup INT TERM PIPE EXIT
 
-cava | while read -r line; do
+WATCHDOG_PID=""
+if [ -n "$WAYBAR_PID" ]; then
+    (
+        while kill -0 "$WAYBAR_PID" 2>/dev/null; do
+            sleep 2
+        done
+        kill -TERM "$$" 2>/dev/null
+    ) &
+    WATCHDOG_PID=$!
+fi
+
+while read -r line <&3; do
     out=""
 
     for v in ${line//;/ }; do
