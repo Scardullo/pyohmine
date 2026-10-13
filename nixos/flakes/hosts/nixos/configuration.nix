@@ -370,6 +370,8 @@ in
   nerd-fonts.hurmit
   nerd-fonts.mononoki
   nerd-fonts.proggy-clean-tt
+  nerd-fonts.fantasque-sans-mono
+  nerd-fonts._0xproto
 
   noto-fonts
   noto-fonts-cjk-sans
@@ -413,7 +415,7 @@ in
     # -------------------------
     # FILE MANAGER
     # -------------------------
-    xfce.thunar
+    thunar
 
     # -------------------------
     # THEMING / GTK / QT
