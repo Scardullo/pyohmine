@@ -58,16 +58,6 @@ window#waybar {
     color: #fbf1c7;
 }
 
-/* Cava */
-
-#custom-cava {
-    background: transparent;
-    color: #ebdbb2;
-    margin: 0px;
-    padding: 0 10px;
-    font-weight: bold;
-}
-
 /* Modules */
 
 #clock,

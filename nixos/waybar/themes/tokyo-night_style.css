@@ -8,9 +8,8 @@
 window#waybar {
     background: #1a1b26;
     color: #c0caf5;
-
+    border: none;
     border-radius: 0px;
-
     margin: 20px 0px 0px 0px;
 
     padding: 0px;
@@ -45,23 +44,13 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #c0caf5;
+    background: #7aa2f7;
     color: #1a1b26;
 }
 
 #workspaces button:hover {
     background: #44475a;
-    color: #c0caf5;
-}
-
-/* Cava */
-
-#custom-cava {
-    background: transparent;
-    color: #c0caf5;
-    margin: 0px;
-    padding: 0 10px;
-    font-weight: bold;
+    color: #7aa2f7;
 }
 
 /* Modules */
@@ -73,7 +62,7 @@ window#waybar {
 #network,
 #pulseaudio {
     background: transparent;
-    color: #c0caf5;
+    color: #7aa2f7;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
@@ -81,7 +70,7 @@ window#waybar {
 
 #cpu {
     background: #1a1b26;
-    color: #c0caf5;
+    color: #7aa2f7;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -90,7 +79,7 @@ window#waybar {
 
 #memory {
     background: #1a1b26;
-    color: #c0caf5;
+    color: #7aa2f7;
     font-weight: bold;
     border-radius: 0px 10px 10px 0px;
 }
@@ -99,17 +88,21 @@ window#waybar {
 
 #pulseaudio {
     background: #1a1b26;
-    color: #c0caf5;
+    color: #7aa2f7;
     font-weight: bold;
     border-radius: 0px;
 }
 
 #clock {
     font-weight: bold;
+    background: #1a1b26;
+    color: #7aa2f7;
 }
 
 #custom-weather {
     font-weight: bold;
+    background: #1a1b26;
+    color: #7aa2f7;
 }
 
 /* Tooltip */
@@ -121,5 +114,5 @@ tooltip {
 }
 
 tooltip label {
-    color: #c0caf5;
+    color: #7aa2f7;
 }
