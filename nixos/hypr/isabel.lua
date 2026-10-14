@@ -78,12 +78,12 @@ hl.config({
         gaps_in  = 10,
         gaps_out = 20,
 
-        border_size = 0,
+        border_size = 2,
 
         col = {
             -- Onedark accent (gh0stzk Isabel rice)
-            active_border   = "rgba(7560d3ff)",
-            inactive_border = "rgba(2c313aff)",
+            active_border   = "rgba(a2b2e8ff)",
+            inactive_border = "rgba(70799cff)",
         },
 
         resize_on_border = false,
@@ -96,8 +96,8 @@ hl.config({
         rounding       = 0,
         rounding_power = 2,
 
-        active_opacity   = 0.95,
-        inactive_opacity = 0.95,
+        active_opacity   = 0.85,
+        inactive_opacity = 0.85,
 
         shadow = {
             enabled      = true,

@@ -7,7 +7,7 @@
 
 window#waybar {
     background: #0d0f18;
-    color: #a5b6cf;
+    color: #93cee9;
 
     border: none;
     border-radius: 0px;
@@ -41,7 +41,7 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #cbced3;
+    color: #93cee9;
     margin: 0 2px;
     padding: 0 10px;
     border-radius: 8px;
@@ -55,7 +55,7 @@ window#waybar {
 
 #workspaces button:hover {
     background: #3d414f;
-    color: #a5b6cf;
+    color: #93cee9;
 }
 
 /* Modules */
@@ -67,7 +67,7 @@ window#waybar {
 #network,
 #pulseaudio {
     background: transparent;
-    color: #a5b6cf;
+    color: #93cee9;
     margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
@@ -77,7 +77,7 @@ window#waybar {
 
 #cpu {
     background: #0d0f18;
-    color: #a5b6cf;
+    color: #93cee9;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -86,7 +86,7 @@ window#waybar {
 
 #memory {
     background: #0d0f18;
-    color: #a5b6cf;
+    color: #93cee9;
     font-weight: bold;
     border-radius: 0px 10px 10px 0px;
 }
@@ -95,7 +95,7 @@ window#waybar {
 
 #pulseaudio {
     background: #0d0f18;
-    color: #a5b6cf;
+    color: #93cee9;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -117,5 +117,5 @@ tooltip {
 }
 
 tooltip label {
-    color: #a5b6cf;
+    color: #93cee9;
 }

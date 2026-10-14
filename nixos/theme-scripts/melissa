@@ -4,7 +4,7 @@ set -e
 mkdir -p "$HOME/.local/state"
 echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
 
-wallpp "/home/anthony/Pictures/wallpaper/melissa.webp"
+wallpp "/home/anthony/Pictures/wallpaper/nordy.webp"
 
 cp ~/.config/kitty/melissa ~/.config/kitty/kitty.conf
 cp /home/anthony/pyohmine/nixos/fastfetch/config_7.jsonc ~/.config/fastfetch/config.jsonc
