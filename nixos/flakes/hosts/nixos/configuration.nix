@@ -108,6 +108,11 @@ in
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # -------------------------
+  # SWAP (zram)
+  # -------------------------
+  zramSwap.enable = true;
+
+  # -------------------------
   # NETWORK
   # -------------------------
   networking.hostName = "nixos";
