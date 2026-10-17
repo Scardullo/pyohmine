@@ -14,6 +14,3 @@ done
 
 # Waybar
 waybar &
-
-# Audio Visualizer
-cava &

@@ -1,0 +1,72 @@
+# Marisol -- (Dracula) colorscheme, from gh0stzk's dotfiles
+# https://github.com/gh0stzk/dotfiles
+# font_family JetBrainsMono Nerd Font
+font_size 14.0
+
+confirm_os_window_close 0
+
+# The basic colors
+foreground              #f8f8f2
+background              #282a36
+selection_foreground    #282a36
+selection_background    #8be9fd
+
+# Cursor colors
+cursor                  #f8f8f2
+cursor_text_color       #282a36
+
+# URL underline color when hovering with mouse
+url_color               #bd93f9
+
+# Kitty window border colors
+active_border_color     #ff79c6
+inactive_border_color   #21222c
+bell_border_color       #f1fa8c
+
+# Tab bar colors
+active_tab_foreground   #282a36
+active_tab_background   #ff79c6
+inactive_tab_foreground #f8f8f2
+inactive_tab_background #21222c
+tab_bar_background      #282a36
+
+# The 16 terminal colors
+
+# black
+color0 #21222c
+color8 #6272a4
+
+# red
+color1 #ff5555
+color9 #ff6e6e
+
+# green
+color2  #50fa7b
+color10 #69ff94
+
+# yellow
+color3  #f1fa8c
+color11 #ffffa5
+
+# blue
+color4  #bd93f9
+color12 #d6acff
+
+# magenta
+color5  #ff79c6
+color13 #ff92df
+
+# cyan
+color6  #8be9fd
+color14 #a4ffff
+
+# white
+color7  #f8f8f2
+color15 #ffffff
+
+# BEGIN_KITTY_FONTS
+font_family      family="Agave Nerd Font Mono"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+# END_KITTY_FONTS

@@ -1,0 +1,57 @@
+configuration {
+    modi: "dmenu";
+    show-icons: true;
+    font: "JetBrainsMono Nerd Font 13";
+}
+
+* {
+    bg:         rgba(45, 53, 59, 0.95);
+    bg-alt:     rgba(127, 187, 179, 0.16);
+    fg:         #d3c6aa;
+    selected:   #7fbbb3;
+    border-col: #7fbbb3;
+
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    width: 900px;
+    border: 2px;
+    border-color: @border-col;
+    border-radius: 18px;
+    padding: 20px;
+    background-color: @bg;
+}
+
+mainbox {
+    children: [ listview ];
+}
+
+listview {
+    columns: 4;
+    lines: 5;
+    spacing: 12px;
+    fixed-height: true;
+    fixed-columns: true;
+    scrollbar: false;
+}
+
+element {
+    children: [ element-icon ];
+    padding: 6px;
+    border-radius: 12px;
+    border: 2px;
+    border-color: transparent;
+}
+
+element-icon {
+    size: 200px;
+    border-radius: 8px;
+    horizontal-align: 0.5;
+}
+
+element selected.normal {
+    background-color: @bg-alt;
+    border-color: @selected;
+}

@@ -26,6 +26,3 @@ waybar &
 # your back. hypridle-toggle.sh now drops a marker file on manual disable; honor it here.
 rm -f ~/.cache/hypridle-disabled
 ( for i in 1 2 3 4 5; do [ -f ~/.cache/hypridle-disabled ] || { pgrep -x hypridle >/dev/null || setsid -f hypridle >> ~/.cache/hypridle.log 2>&1; }; sleep 5; done ) &
-
-# Audio Visualizer
-cava &

@@ -1,7 +1,17 @@
-wallpp /home/anthony/Pictures/wallpaper/Cartoon.png
+#!/usr/bin/env bash
+# Switch to the gruvbox theme: wallpaper, kitty, hyprland, waybar.
+set -e
+mkdir -p "$HOME/.local/state"
+echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
+
+wallpp "/home/anthony/Pictures/wallpaper/village-square.jpg"
+
 cp ~/.config/kitty/gruvbox ~/.config/kitty/kitty.conf
-cp ~/.config/hypr/gruvbox.lua ~/.config/hypr/hyprland.lua
+cp ~/Documents/fastfetch-configs/arch3 ~/.config/fastfetch/config.jsonc
 cp ~/Documents/bash_zsh_rc/myhypr/p10k ~/.zshrc
-cp ~/Documents/fastfetch-configs/cloudy ~/.config/fastfetch/config.jsonc
+cp ~/.config/hypr/gruvbox.lua ~/.config/hypr/hyprland.lua
+hyprctl reload >/dev/null 2>&1 || true
+
 cp ~/.config/waybar/themes/gruvbox_style.css ~/.config/waybar/style.css
-pkill waybar && waybar &
+pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+disown

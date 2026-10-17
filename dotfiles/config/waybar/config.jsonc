@@ -7,7 +7,6 @@
     "modules-left": [
         "custom/logo",
         "hyprland/workspaces",
-        "custom/cava",
 	"custom/media"
     ],
 
@@ -21,19 +20,11 @@
         "pulseaudio",
         "network",
         "cpu",
-        "memory",
-        "tray"
+        "memory"
     ],
 
     "custom/logo": {
-        "format": "",
-        "tooltip": false
-    },
-
-    "custom/cava": {
-        "exec": "/home/anthony/.config/waybar/scripts/cava.sh",
-        "return-type": "text",
-        "restart-interval": 1,
+        "format": "",
         "tooltip": false
     },
 
@@ -55,8 +46,8 @@
     },
 
     "custom/weather": {
-        "exec": "curl -s 'wttr.in/?format=%t' | sed 's/+//'",
-        "interval": 1800,
+        "exec": "/home/anthony/.config/waybar/scripts/weather.sh",
+        "interval": 600,
         "format": " {}",
         "tooltip": false
     },

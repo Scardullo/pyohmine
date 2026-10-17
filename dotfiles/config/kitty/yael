@@ -1,0 +1,72 @@
+# Yael -- (OxoCarbon) colorscheme, from gh0stzk's dotfiles
+# https://github.com/gh0stzk/dotfiles
+# font_family JetBrainsMono Nerd Font
+font_size 14.0
+
+confirm_os_window_close 0
+
+# The basic colors
+foreground              #ffffff
+background              #161616
+selection_foreground    #161616
+selection_background    #3ddbd9
+
+# Cursor colors
+cursor                  #ffffff
+cursor_text_color       #161616
+
+# URL underline color when hovering with mouse
+url_color               #33b1ff
+
+# Kitty window border colors
+active_border_color     #ff7eb6
+inactive_border_color   #262626
+bell_border_color       #ffe97b
+
+# Tab bar colors
+active_tab_foreground   #161616
+active_tab_background   #ff7eb6
+inactive_tab_foreground #ffffff
+inactive_tab_background #262626
+tab_bar_background      #161616
+
+# The 16 terminal colors
+
+# black
+color0 #262626
+color8 #393939
+
+# red
+color1 #ee5396
+color9 #ee5396
+
+# green
+color2  #42be65
+color10 #42be65
+
+# yellow
+color3  #ffe97b
+color11 #ffe97b
+
+# blue
+color4  #33b1ff
+color12 #33b1ff
+
+# magenta
+color5  #ff7eb6
+color13 #ff7eb6
+
+# cyan
+color6  #3ddbd9
+color14 #3ddbd9
+
+# white
+color7  #dde1e6
+color15 #ffffff
+
+# BEGIN_KITTY_FONTS
+font_family      family="Agave Nerd Font Mono"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+# END_KITTY_FONTS

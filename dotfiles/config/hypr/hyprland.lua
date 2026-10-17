@@ -11,11 +11,20 @@
 ---- MONITORS ----
 ------------------
 
+-- Samsung LS32AG55x (main): workspaces 1, 3-10
 hl.monitor({
-    output   = "",
-    mode     = "preferred",
-    position = "auto",
-    scale    = "auto",
+    output   = "DP-1",
+    mode     = "2560x1440@164.84",
+    position = "0x0",
+    scale    = "1",
+})
+
+-- Dell SE2422HX (right of the Samsung): workspace 2 only
+hl.monitor({
+    output   = "HDMI-A-1",
+    mode     = "1920x1080@60",
+    position = "2560x0",
+    scale    = "1",
 })
 
 
@@ -75,8 +84,8 @@ hl.config({
 
         col = {
             -- Catppuccin navy-blue gradient (top -> bottom)
-            active_border   = "rgba(89b4faff)",
-            inactive_border = "rgba(6893d9ff)",
+            active_border   = "rgba(d5c4a1ff)",
+            inactive_border = "rgba(a89984ff)",
         },
 
         resize_on_border = false,
@@ -89,8 +98,8 @@ hl.config({
         rounding       = 0,
         rounding_power = 2,
 
-        active_opacity   = 1.0,
-        inactive_opacity = 1.0,
+        active_opacity   = 0.9,
+        inactive_opacity = 0.9,
 
         shadow = {
             enabled      = true,
@@ -101,8 +110,8 @@ hl.config({
 
         blur = {
             enabled  = true,
-            size     = 3,    -- medium radius
-            passes   = 1,    -- moderate number of blur passes
+            size     = 5,    -- medium radius
+            passes   = 3,    -- moderate number of blur passes
             vibrancy = 0.05, -- slightly noticeable background enhancement
         },
     },
@@ -236,8 +245,8 @@ hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
 
 -- Scroll through existing workspaces with mainMod + scroll
-hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "m+1" }))
+hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "m-1" }))
 
 -- Move/resize windows with mainMod + LMB/RMB and dragging
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
@@ -260,13 +269,15 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/catppuccin.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/everforest.rasi"))
+hl.bind("ALT + SPACE",      hl.dsp.exec_cmd("~/.local/bin/theme-switcher"))
+hl.bind("SUPER + ALT + SPACE", hl.dsp.exec_cmd("~/.local/bin/wallpaper-switcher"))
 
 -- Move current window to previous/next workspace (note: your original conf uses the
 -- "workspace" dispatcher here, not "movetoworkspace" -- that's a focus change, not a
 -- window move. Translated as-is/faithfully, not "fixed".)
-hl.bind(mainMod .. " + SHIFT + left",  hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + SHIFT + right", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + SHIFT + left",  hl.dsp.focus({ workspace = "m-1" }))
+hl.bind(mainMod .. " + SHIFT + right", hl.dsp.focus({ workspace = "m+1" }))
 
 -- Launch Firefox with SUPER + B
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("firefox"))
@@ -293,15 +304,15 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/catppuccin.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/everforest.sh"))
 
 
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
 
--- RIGHT MONITOR (Dell) ONLY workspace 2
-hl.workspace_rule({ workspace = "2", monitor = "HDMI-A-2" })
+-- RIGHT MONITOR (Dell, HDMI-A-1) ONLY workspace 2
+hl.workspace_rule({ workspace = "2", monitor = "HDMI-A-1" })
 
 -- LEFT MONITOR (Samsung) main workspaces
 hl.workspace_rule({ workspace = "1",  monitor = "DP-1" })
