@@ -8,7 +8,7 @@ wallpp "/home/anthony/Pictures/wallpaper/gh0stzk/varinka/wall-01.webp"
 
 cp ~/.config/kitty/varinka ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/arch3 ~/.config/fastfetch/config.jsonc
-cp ~/Documents/bash_zsh_rc/myhypr/p10k ~/.zshrc
+cp ~/pyohmine/dotfiles/zshrc/p10k ~/.zshrc
 cp ~/.config/hypr/varinka.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 
