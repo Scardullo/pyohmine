@@ -8,14 +8,14 @@
 window#waybar {
     background: #282828;
     color: #ebdbb2;
-    border-bottom: 2px solid #504945;
 }
 
 /* Arch Logo */
 
 #custom-logo {
-    background: transparent;
-    color: #83a598;
+    background: #282828;
+    color: #ebdbb2;
+
     margin: 3px 3px 3px 6px;
     padding: 0 10px;
     border-radius: 10px;
@@ -68,6 +68,8 @@ window#waybar {
 #tray {
     margin-right: 6px;
 }
+
+/* CPU */
 
 #cpu {
     background: #282828;
