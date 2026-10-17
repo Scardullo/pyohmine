@@ -1,7 +1,7 @@
 # Z0mbi3 -- (Decay (decayce)) colorscheme, from gh0stzk's dotfiles
 # https://github.com/gh0stzk/dotfiles
 # font_family JetBrainsMono Nerd Font
-font_size 12.0
+font_size 11.0
 
 confirm_os_window_close 0
 

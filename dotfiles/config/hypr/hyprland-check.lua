@@ -36,11 +36,20 @@
 
 -- See https://wiki.hypr.land/Configuring/Monitors/
 
+-- Samsung LS32AG55x (main): workspaces 1, 3-10
 hl.monitor({
-    output   = "",
-    mode     = "preferred",
-    position = "auto",
-    scale    = "auto",
+    output   = "DP-1",
+    mode     = "2560x1440@164.84",
+    position = "0x0",
+    scale    = "1",
+})
+
+-- Dell SE2422HX (right of the Samsung): workspace 2 only
+hl.monitor({
+    output   = "HDMI-A-1",
+    mode     = "1920x1080@60",
+    position = "2560x0",
+    scale    = "1",
 })
 
 --##################
@@ -470,11 +479,11 @@ hl.bind(mainMod .. " + " .. "slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/pur
 
 --#############################
 
--- RIGHT MONITOR (Dell) ONLY workspace 2
+-- RIGHT MONITOR (Dell, HDMI-A-1) ONLY workspace 2
 
 hl.workspace_rule({
     workspace = 2,
-    monitor = "HDMI-A-2",
+    monitor = "HDMI-A-1",
 })
 
 -- LEFT MONITOR (Samsung) main workspaces

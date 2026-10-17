@@ -1,7 +1,7 @@
 # Brenda -- (Everforest) colorscheme, from gh0stzk's dotfiles
 # https://github.com/gh0stzk/dotfiles
 # font_family JetBrainsMono Nerd Font
-font_size 14.0
+font_size 13.0
 
 confirm_os_window_close 0
 
