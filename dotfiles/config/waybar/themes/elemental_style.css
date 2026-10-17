@@ -3,32 +3,24 @@
     font-size: 12px;
     min-height: 0;
     border: none;
+    border-radius: 0px;
 }
 
 window#waybar {
     background: rgba(33, 17, 5, 0.90);
     color: #ebdbb2;
-
-    border-bottom: 2px solid #44475a;
-
-    border-radius: 16px 0px 0px 16px;
-    padding-left: 4px;
-    margin: 6px 0px 6px 6px;
 }
+
+/* Arch Logo */
 
 #custom-logo {
-    background: #107b9c;
-    color: #fff1e8;
-    margin: 0px;
-
-    padding-left: 20px;
-    padding-right: 24px;
-
-    border-radius: 16px 0px 0px 16px;
-
-    font-size: 18px;
-    font-weight: bold;
+    background: transparent;
+    color: #ebdbb2;
+    margin: 3px 3px 3px 6px;
+    padding: 0 10px;
+    font-size: 15px;
 }
+
 /* Workspaces */
 
 #workspaces {
@@ -37,21 +29,16 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #107b9c;
+    color: #ebdbb2;
     margin: 0 2px;
     padding: 0 10px;
-    border-radius: 8px;
     transition: all 0.2s ease;
 }
 
-#workspaces button.active {
-    background: #107b9c;
-    color: #1a1b26;
-}
-
+#workspaces button.active,
 #workspaces button:hover {
-    background: #44475a;
-    color: #107b9c;
+    background: #ebdbb2;
+    color: rgb(33, 17, 5);
 }
 
 /* Modules */
@@ -65,9 +52,8 @@ window#waybar {
 #tray {
     background: transparent;
     color: #ebdbb2;
-    margin: 0px;
+    margin: 3px 3px;
     padding: 0 10px;
-    border-radius: 10px;
 }
 
 /* Right spacing */
@@ -76,41 +62,11 @@ window#waybar {
     margin-right: 6px;
 }
 
-#cpu {
-    background: #facb7f;
-    color: #000000;
-    font-weight: bold;
-    border-radius: 0px;
-}
-
-/* MEMORY */
-
-#memory {
-    background: #107b9c;
-    color: #000000;
-    font-weight: bold;
-    border-radius: 0px 10px 10px 0px;
-}
-
-/* VOLUME */
-
-#pulseaudio {
-    background: #e37b3b;
-    color: #000000;
-    font-weight: bold;
-    border-radius: 0px;
-}
-
-#clock {
-    font-weight: bold;
-}
-
-/* Hypridle toggle */
-
-#custom-hypridle {
-    font-weight: bold;
-}
-
+#cpu,
+#memory,
+#pulseaudio,
+#clock,
+#custom-hypridle,
 #custom-weather {
     font-weight: bold;
 }
@@ -118,11 +74,10 @@ window#waybar {
 /* Tooltip */
 
 tooltip {
-    background: #1a1b26;
-    border: 2px solid #44475a;
-    border-radius: 10px;
+    background: rgb(33, 17, 5);
+    border: 2px solid #ebdbb2;
 }
 
 tooltip label {
-    color: #107b9c;
+    color: #ebdbb2;
 }
