@@ -72,8 +72,17 @@ hex_to_rgba() {
   printf 'rgba(%d, %d, %d, %s)' "$r" "$g" "$b" "$alpha"
 }
 
+# Themes whose popup palette should come from a different kitty config than their own name.
+# tokyo-night's kitty/tokyo-night file doesn't match its waybar; kitty/dracula holds the
+# matching Tokyo Night colors (#1a1b26 / #c0caf5 / #7aa2f7).
+declare -A KITTY_PALETTE_OVERRIDE=(
+  [tokyo-night]="dracula"
+)
+
 gen_rofi_theme() {
-  local kitty_conf="$KITTY_DIR/$CURRENT_SCRIPT"
+  local kitty_name="$CURRENT_SCRIPT"
+  [ -n "$kitty_name" ] && kitty_name="${KITTY_PALETTE_OVERRIDE[$kitty_name]:-$kitty_name}"
+  local kitty_conf="$KITTY_DIR/$kitty_name"
   local bg_hex="#14141c" fg_hex="#e8e8f0" accent_hex="#8aadf4"
   if [ -n "$CURRENT_SCRIPT" ] && [ -f "$kitty_conf" ]; then
     local v
