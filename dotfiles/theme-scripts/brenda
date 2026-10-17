@@ -13,5 +13,5 @@ cp ~/.config/hypr/brenda.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 
 cp ~/.config/waybar/themes/everforest_style.css ~/.config/waybar/style.css
-pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+pkill waybar || true; sleep 0.3; waybar >/dev/null 2>&1 &
 disown

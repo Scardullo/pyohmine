@@ -4,7 +4,7 @@ set -e
 mkdir -p "$HOME/.local/state"
 echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
 
-wallpp "/home/anthony/Pictures/wallpaper/gh0stzk/isabel/wall-06.webp"
+wallpp "/home/anthony/Pictures/wallpaper/z0mbi3.webp"
 
 cp ~/.config/kitty/z0mbi3 ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/arch3 ~/.config/fastfetch/config.jsonc
@@ -13,5 +13,5 @@ cp ~/.config/hypr/z0mbi3.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 
 cp ~/.config/waybar/themes/z0mbi3_style.css ~/.config/waybar/style.css
-pkill waybar; sleep 0.3; waybar >/dev/null 2>&1 &
+pkill waybar || true; sleep 0.3; waybar >/dev/null 2>&1 &
 disown
