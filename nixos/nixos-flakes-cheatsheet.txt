@@ -1,0 +1,159 @@
+=======================================================================
+                   NIXOS FLAKES CHEAT SHEET
+=======================================================================
+
+Your flake: /etc/nixos
+  (really the git repo /home/anthony/pyohmine/nixos/flakes)
+
+Your flake has two configs:
+  #vm_nixos   this VM
+  #nixos      your other machine
+
+This VM's hostname is "nixos-vm", which matches NEITHER name,
+so on this VM you MUST type "#vm_nixos" every time:
+    sudo nixos-rebuild switch --flake /etc/nixos#vm_nixos
+
+On the other machine, use "#nixos" instead.
+
+
+-----------------------------------------------------------------------
+ REBUILDING THE SYSTEM
+-----------------------------------------------------------------------
+
+sudo nixos-rebuild switch --flake /etc/nixos#vm_nixos
+    Build the config, activate it now, and make it the default at
+    boot. The one you'll use most.
+
+sudo nixos-rebuild boot --flake /etc/nixos#vm_nixos
+    Build it and make it the default at next boot, but don't change
+    the running system. Good for kernel or driver changes.
+
+sudo nixos-rebuild test --flake /etc/nixos#vm_nixos
+    Build it and activate it now, but don't add it to the boot menu.
+    A reboot takes you back to the old version.
+
+nixos-rebuild build --flake /etc/nixos#vm_nixos
+    Only build it (no activation) to check that it compiles.
+    The output goes to ./result
+
+nixos-rebuild dry-build --flake /etc/nixos#vm_nixos
+    Show what would be built or downloaded, without doing it.
+
+nixos-rebuild build-vm --flake /etc/nixos#vm_nixos
+    Build a VM of your config so you can test it safely.
+    Run it with:  ./result/bin/run-nixos-vm
+
+
+-----------------------------------------------------------------------
+ UPDATING
+-----------------------------------------------------------------------
+
+nix flake update --flake /etc/nixos
+    Update all inputs (nixpkgs etc.) to their latest versions and
+    rewrite flake.lock. Does NOT change your system by itself.
+
+nix flake update nixpkgs --flake /etc/nixos
+    Update just one input.
+
+FULL SYSTEM UPDATE = these two commands:
+    nix flake update --flake /etc/nixos
+    sudo nixos-rebuild switch --flake /etc/nixos#vm_nixos
+
+  !! With flakes, "nixos-rebuild switch --upgrade" does NOT update
+  !! anything. Versions are pinned in flake.lock, so you have to run
+  !! "nix flake update" to get new versions of packages (including
+  !! claude-code).
+
+  Your repo is in your home folder, so "nix flake update" does
+  NOT need sudo. (Only nixos-rebuild switch/boot/test do.)
+
+
+-----------------------------------------------------------------------
+ ROLLING BACK AND GENERATIONS
+-----------------------------------------------------------------------
+
+sudo nixos-rebuild switch --rollback
+    Go back to the previous generation.
+
+nixos-rebuild list-generations
+    List all your system generations.
+
+GRUB menu at boot
+    Pick an older entry to boot an old generation if the new one
+    is broken.
+
+
+-----------------------------------------------------------------------
+ CLEANING UP DISK SPACE
+-----------------------------------------------------------------------
+
+sudo nix-collect-garbage -d
+    Delete ALL old generations and unused packages.
+    After this you can't roll back!
+
+sudo nix-collect-garbage --delete-older-than 7d
+    Delete only generations older than 7 days. The safer option.
+
+nix store optimise
+    Deduplicate identical files in the store to save space.
+
+  After garbage collecting, run a "switch" or "boot" so the GRUB
+  menu drops the deleted entries.
+
+
+-----------------------------------------------------------------------
+ FLAKE INFO AND CHECKS
+-----------------------------------------------------------------------
+
+nix flake check /etc/nixos
+    Check that the flake evaluates and has no errors.
+
+nix flake show /etc/nixos
+    Show what the flake provides.
+
+nix flake metadata /etc/nixos
+    Show the inputs and the exact versions they're locked to.
+
+
+-----------------------------------------------------------------------
+ FINDING AND TRYING PACKAGES
+-----------------------------------------------------------------------
+
+nix search nixpkgs firefox
+    Search for packages. (Or use https://search.nixos.org)
+
+nix shell nixpkgs#htop
+    Open a shell where the package is temporarily available.
+    Nothing gets installed.
+
+nix run nixpkgs#cowsay -- hello
+    Run a package once without installing it.
+
+
+-----------------------------------------------------------------------
+ THE BIG FLAKES GOTCHA: GIT
+-----------------------------------------------------------------------
+
+Your flake is a git repo, so it ONLY sees files that git tracks.
+If you create a new .nix file (or add a wallpaper etc.) and the
+rebuild says it doesn't exist, run:
+
+    cd /home/anthony/pyohmine && git add .
+
+You don't have to commit the files, just "git add" them.
+
+
+-----------------------------------------------------------------------
+ OPTIONAL TIP: nh
+-----------------------------------------------------------------------
+
+Add this to your config for shorter commands with nicer output:
+
+    programs.nh.enable = true;
+
+Then, for example:
+    nh os switch /etc/nixos -H vm_nixos
+                     replaces the long nixos-rebuild command
+    nh clean all     replaces nix-collect-garbage
+
+=======================================================================
