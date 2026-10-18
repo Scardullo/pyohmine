@@ -1,10 +1,56 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
 { config, lib, pkgs, ... }:
 
 let
+  # -------------------------
+  # SDDM THEME (sddm-astronaut, custom background + glass UI)
+  # -------------------------
+  sddmAstronautTheme =
+    let
+      baseTheme = pkgs.sddm-astronaut.override {
+        embeddedTheme = "astronaut";
+        themeConfig = {
+          # Background
+          Background = "Backgrounds/space.png";
+          CropBackground = "true";
+
+          # Clock
+          HourFormat = "h:mm AP";
+          DateFormat = "dddd, MMMM d";
+          TimeTextColor = "#ffffff";
+          DateTextColor = "#e6e6e6";
+
+          # Fully transparent login form (no blur, no tint box) - only text/icons are opaque
+          PartialBlur = "false";
+          FullBlur = "false";
+          HaveFormBackground = "false";
+          FormPosition = "center";
+          RoundCorners = "24";
+          DimBackground = "0";
+
+          LoginFieldBackgroundColor = "#00ffffff";
+          PasswordFieldBackgroundColor = "#00ffffff";
+          LoginFieldTextColor = "#ffffff";
+          PasswordFieldTextColor = "#ffffff";
+          PlaceholderTextColor = "#cccccc";
+
+          LoginButtonTextColor = "#ffffff";
+          LoginButtonBackgroundColor = "#00ffffff";
+
+          # Behavior
+          ForceLastUser = "true";
+          PasswordFocus = "true";
+          HideCompletePassword = "true";
+          HideVirtualKeyboard = "true";
+        };
+      };
+    in
+    pkgs.runCommand "sddm-astronaut-theme-custom" { } ''
+      mkdir -p $out/share/sddm/themes
+      cp -r ${baseTheme}/share/sddm/themes/sddm-astronaut-theme $out/share/sddm/themes/sddm-astronaut-theme
+      chmod -R u+w $out/share/sddm/themes/sddm-astronaut-theme
+      cp ${./wallpapers/space.png} $out/share/sddm/themes/sddm-astronaut-theme/Backgrounds/space.png
+    '';
+
   # -------------------------
   # POKEMON-COLORSCRIPTS (not in nixpkgs, packaged from upstream)
   # -------------------------
@@ -49,29 +95,23 @@ let
 in
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    ./hardware-configuration.nix
+  ];
 
   # -------------------------
   # BOOT
   # -------------------------
-  # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  networking.hostName = "nixos-vm"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
+  # -------------------------
+  # NETWORK
+  # -------------------------
+  networking.hostName = "nixos-vm";
   networking.networkmanager.enable = true;
 
   environment.localBinInPath = true;
@@ -82,10 +122,10 @@ in
     NIXOS_OZONE_WL = "1";
   };
 
-  # Set your time zone.
+  # -------------------------
+  # TIME / LOCALE
+  # -------------------------
   time.timeZone = "America/Chicago";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {
@@ -104,6 +144,7 @@ in
   # NIX FEATURES
   # -------------------------
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nixpkgs.config.allowUnfree = true;
 
   # -------------------------
   # NIX-LD (run generic dynamically-linked Linux binaries)
@@ -113,25 +154,108 @@ in
     sqlite
   ];
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the Pantheon Desktop Environment.
-  services.xserver.displayManager.lightdm.enable = true;
-  services.desktopManager.pantheon.enable = true;
+  # -------------------------
+  # USER
+  # -------------------------
+  users.users.anthony = {
+    isNormalUser = true;
+    description = "anthony";
+    extraGroups = [ "wheel" "networkmanager" "wireshark" ];
+    shell = pkgs.zsh;
+    initialPassword = "nixos";
+  };
 
   services.accounts-daemon.enable = true;
+  services.tor = {
+    enable = true;
+    client = {
+      enable = true;
+      socksListenAddress = {
+        addr = "0.0.0.0";
+        port = 9050;
+      };
+    };
+  };
 
-  # Configure keymap in X11
+  programs.wireshark.enable = true;
+
+  environment.etc."AccountsService/users/anthony".text = ''
+    [User]
+    Icon=/etc/user-icons/anthony.png
+  '';
+
+  environment.etc."proxychains.conf".source = pkgs.writeText "proxychains.conf" ''
+    dynamic_chain
+    proxy_dns
+    tcp_read_time_out 15000
+    tcp_connect_time_out 8000
+
+    [ProxyList]
+    socks5 127.0.0.1 9050
+  '';
+
+  # -------------------------
+  # ZSH / POWERLEVEL10K
+  # -------------------------
+  programs.zsh = {
+    enable = true;
+
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+
+    ohMyZsh = {
+      enable = true;
+
+      plugins = [
+        "git"
+      ];
+
+      theme = "";
+    };
+
+    promptInit = ''
+      source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+    '';
+  };
+
+  # -------------------------
+  # X11 / KEYMAP
+  # -------------------------
+  services.xserver.enable = true;
   services.xserver.xkb = {
     layout = "us";
     variant = "";
   };
 
-  # Enable CUPS to print documents.
+  # -------------------------
+  # KDE PLASMA
+  # -------------------------
+  services.desktopManager.plasma6.enable = true;
+
+  # -------------------------
+  # DISPLAY MANAGER (SDDM)
+  # -------------------------
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    theme = "sddm-astronaut-theme";
+    extraPackages = with pkgs.kdePackages; [
+      qtmultimedia
+      qtsvg
+      qtvirtualkeyboard
+    ];
+  };
+
+  xdg.portal.enable = true;
+
+  # -------------------------
+  # PRINTING
+  # -------------------------
   services.printing.enable = true;
 
-  # Enable sound with pipewire.
+  # -------------------------
+  # AUDIO
+  # -------------------------
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -139,15 +263,10 @@ in
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    # jack.enable = true;
   };
 
   # thumbnail support
   services.tumbler.enable = true;
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.libinput.enable = true;
 
   # -------------------------
   # NFS AUTOMOUNT (SYSTEMD)
@@ -214,41 +333,23 @@ in
     ];
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users."anthony" = {
-    isNormalUser = true;
-    description = "anthony";
-    extraGroups = [ "networkmanager" "wheel" "wireshark" ];
-    shell = pkgs.zsh;
-    packages = with pkgs; [
-    #  thunderbird
-    ];
-  };
-
-  programs.wireshark.enable = true;
+  # -------------------------
+  # SSH
+  # -------------------------
+  services.openssh.enable = true;
 
   # -------------------------
-  # ZSH / POWERLEVEL10K
+  # LOCATE (plocate)
   # -------------------------
-  programs.zsh = {
+  services.locate = {
     enable = true;
+    package = pkgs.plocate;
 
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-
-    ohMyZsh = {
-      enable = true;
-
-      plugins = [
-        "git"
-      ];
-
-      theme = "";
-    };
-
-    promptInit = ''
-      source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-    '';
+    prunePaths = [
+      "/tmp"
+      "/var/tmp"
+      "/nix/store"
+    ];
   };
 
   # -------------------------
@@ -266,56 +367,62 @@ in
     }
   ];
 
+  # -------------------------
+  # FONTS
+  # -------------------------
   fonts.packages = with pkgs; [
-  nerd-fonts.jetbrains-mono
-  nerd-fonts.fira-code
-  nerd-fonts.agave
-  nerd-fonts.meslo-lg
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+    nerd-fonts.agave
+    nerd-fonts.meslo-lg
+    nerd-fonts.terminess-ttf
+    nerd-fonts._3270
+    nerd-fonts.bigblue-terminal
+    nerd-fonts.gohufont
+    nerd-fonts.hurmit
+    nerd-fonts.mononoki
+    nerd-fonts.proggy-clean-tt
+    nerd-fonts.fantasque-sans-mono
+    nerd-fonts._0xproto
 
-  noto-fonts
-  noto-fonts-cjk-sans
-  noto-fonts-color-emoji
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-color-emoji
   ];
 
-
   # -------------------------
-  # SSH
+  # PACKAGES
   # -------------------------
-  services.openssh.enable = true;
-
-
-  # -------------------------
-  # LOCATE (plocate)
-  # -------------------------
-  services.locate = {
-    enable = true;
-    package = pkgs.plocate;
-
-    prunePaths = [
-      "/tmp"
-      "/var/tmp"
-      "/nix/store"
-    ];
-  };
-
-
   environment.systemPackages = with pkgs; [
-   claude-code
-   git
-
-   kitty
-   alacritty
 
     # -------------------------
-    # THEMING / ICONS / CURSORS
+    # SDDM THEME
     # -------------------------
+    sddmAstronautTheme
     pokemon-colorscripts
+
+    # -------------------------
+    # TERMINALS / CLI EXTRAS
+    # -------------------------
+    kitty
+    alacritty
+    cava
+
+    # -------------------------
+    # FILE MANAGER
+    # -------------------------
+    thunar
+
+    # -------------------------
+    # THEMING / GTK / QT
+    # -------------------------
     gnome-themes-extra
     adwaita-qt
     glib
     dconf
     bibata-cursors
     nwg-look
+
     qt6.qtwayland
     qt5.qtwayland
     libsForQt5.qt5ct
@@ -323,9 +430,9 @@ in
     gruvbox-plus-icons
 
     # -------------------------
-    # FILE MANAGER
+    # CLIPBOARD / WAYLAND TOOLS
     # -------------------------
-    xfce.thunar
+    wl-clipboard
 
     # -------------------------
     # DEVELOPMENT / CLI TOOLS
@@ -338,6 +445,7 @@ in
     neovim
     gcc
     python3
+    claude-code
 
     ripgrep
     fd
@@ -366,7 +474,6 @@ in
     cmatrix
     tty-clock
     mc
-    cava
 
     # -------------------------
     # AUDIO / MEDIA
@@ -390,6 +497,9 @@ in
     nettools
     nmap
     speedtest-cli
+
+    proxychains-ng
+    tor
     wireshark
 
     # -------------------------
@@ -403,60 +513,13 @@ in
     librsvg
   ];
 
-  # Install firefox.
+  # -------------------------
+  # FIREFOX
+  # -------------------------
   programs.firefox.enable = true;
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile.
-  # You can use https://search.nixos.org/ to find more packages (and options).
-  # environment.systemPackages = with pkgs; [
-  #   vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #   wget
-  # ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  # system.copySystemConfiguration = true;
-
-  # This option defines the first version of NixOS you have installed on this particular machine,
-  # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
-  #
-  # Most users should NEVER change this value after the initial install, for any reason,
-  # even if you've upgraded your system to a new NixOS release.
-  #
-  # This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
-  # so changing it will NOT upgrade your system - see https://nixos.org/manual/nixos/stable/#sec-upgrading for how
-  # to actually do that.
-  #
-  # This value being lower than the current NixOS release does NOT mean your system is
-  # out of date, out of support, or vulnerable.
-  #
-  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-  # and migrated your data accordingly.
-  #
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "26.05"; # Did you read the comment?
-
+  # -------------------------
+  # STATE VERSION
+  # -------------------------
+  system.stateVersion = "26.05";
 }

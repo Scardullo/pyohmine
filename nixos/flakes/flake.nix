@@ -1,5 +1,5 @@
 {
-  description = "Combined NixOS configurations for 'nixos' (Hyprland PC) and 'vm_nixos' (Proxmox VM)";
+  description = "Combined NixOS configurations for 'nixos' (Hyprland PC) and 'vm_nixos' (KDE Plasma VM)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
