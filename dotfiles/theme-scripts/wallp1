@@ -1,13 +1,18 @@
 #!/bin/bash
 # Usage: wallp1 /path/to/image
-# Sets wallpaper for DP-1 only
+# Sets wallpaper for DP-1 only and remembers it for the next login
 
 if [ -z "$1" ]; then
     echo "Usage: $0 /path/to/wallpaper"
     exit 1
 fi
 
-WALLPAPER="$1"
+WALLPAPER=$(realpath "$1") || exit 1
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper"
+
+# remember for autostart (restored after reboot)
+mkdir -p "$STATE_DIR"
+echo "$WALLPAPER" > "$STATE_DIR/DP-1"
 
 # kill only the previous DP-1 wallpaper
 pkill -f "swaybg -o DP-1"
