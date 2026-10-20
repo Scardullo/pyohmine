@@ -25,13 +25,13 @@ THEMES=(
   "Emilia:emilia"
   "Everforest:everforest"
   "Gruvbox:gruvbox"
-  "H4ck3r:h4ck3r"
   "Hacker:hacker"
   "Isabel:isabel"
   "Jan:jan"
   "Karla:karla"
   "Marisol:marisol"
   "Melissa:melissa"
+  "Nebula:nebula"
   "Pamela:pamela"
   "Purple Daze:purple-daze"
   "Silvia:silvia"
@@ -52,7 +52,7 @@ CURRENT_WALL=""
 [ -f "$STATE_FILE" ] && CURRENT_WALL=$(cat "$STATE_FILE")
 
 # current-theme is written by each theme script (via basename "$0") so it's unambiguous
-# even when two themes share the same wallpaper (e.g. Brenda/Silvia, Hacker/H4ck3r).
+# even when two themes share the same wallpaper (e.g. Brenda/Silvia).
 CURRENT_SCRIPT=""
 [ -f "$CURRENT_THEME_FILE" ] && CURRENT_SCRIPT=$(cat "$CURRENT_THEME_FILE")
 

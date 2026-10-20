@@ -1,0 +1,61 @@
+# gruvbox dark by morhetz, https://github.com/morhetz/gruvbox
+# This work is licensed under the terms of the MIT license.
+# For a copy, see https://opensource.org/licenses/MIT.
+# font_family JetBrainsMono Nerd Font
+confirm_os_window_close 0
+allow_remote_control yes
+
+font_size 13.0
+
+foreground #a9b1d6
+background #1a1b26
+
+# Black
+color0 #414868
+color8 #414868
+
+# Red
+color1 #f7768e
+color9 #f7768e
+
+# Green
+color2  #73a1da
+color10 #73a1da
+
+# Yellow
+color3  #e09e68
+color11 #e09e68
+
+# Blue
+color4  #757cff
+color12 #757cff
+
+# Magenta
+color5  #9aa0f7
+color13 #9aa0f7
+
+# Cyan
+color6  #977dff
+color14 #977dff
+
+# White
+color7  #c0caf5
+color15 #c0caf5
+
+# Cursor
+cursor #c0caf5
+cursor_text_color #1a1b26
+
+# Selection highlight
+selection_foreground none
+selection_background #28344a
+
+# The color for highlighting URLs on mouse-over
+url_color #9ece6a
+
+# BEGIN_KITTY_FONTS
+font_family      family="FantasqueSansM Nerd Font Mono"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+# END_KITTY_FONTS

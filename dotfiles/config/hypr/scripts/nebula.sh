@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 cat <<EOF | rofi -dmenu -i -p "Hyprland Keybinds" \
--theme ~/.config/rofi/themes/h4ck3r.rasi
+-theme ~/.config/rofi/themes/nebula.rasi
 
 SUPER + ENTER   Terminal
 SUPER + D       Rofi Launcher
