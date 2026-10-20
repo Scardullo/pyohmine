@@ -17,7 +17,7 @@ configuration {
 }
 
 window {
-    width: 450px;              /* ~25% smaller than default 600 */
+    width: 800px;              /* ~25% smaller than default 600 */
     background-color: rgba(40, 40, 40, 0.85);  /* gruvbox bg with transparency */
     border-radius: 12px;
     padding: 12px;
@@ -44,5 +44,5 @@ element {
 }
 
 element-icon {
-    size: 48px;
+    size: 27px;
 }

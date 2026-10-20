@@ -1,7 +1,7 @@
 # Cynthia -- (Kanagawa Dragon) colorscheme, from gh0stzk's dotfiles
 # https://github.com/gh0stzk/dotfiles
 # font_family JetBrainsMono Nerd Font
-font_size 15.0
+font_size 13.0
 
 confirm_os_window_close 0
 
@@ -65,8 +65,8 @@ color7  #C8C093
 color15 #c5c9c5
 
 # BEGIN_KITTY_FONTS
-font_family      family="Terminess Nerd Font Mono" style="Bold"
-bold_font        family="Terminess Nerd Font Mono" style="Bold"
-italic_font      family="Terminess Nerd Font Mono" style="Italic"
-bold_italic_font family="Terminess Nerd Font Mono" style="Bold Italic"
+font_family      family="FantasqueSansM Nerd Font Mono"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
 # END_KITTY_FONTS

@@ -1,7 +1,7 @@
 # Z0mbi3 -- (Decay (decayce)) colorscheme, from gh0stzk's dotfiles
 # https://github.com/gh0stzk/dotfiles
 # font_family JetBrainsMono Nerd Font
-font_size 14.0
+font_size 13.0
 
 confirm_os_window_close 0
 
@@ -33,40 +33,40 @@ tab_bar_background      #0d0f18
 # The 16 terminal colors
 
 # black
-color0 #3d414f
-color8 #3d414f
+color0 #21222c
+color8 #6272a4
 
 # red
-color1 #dd6777
-color9 #dd6777
+color1 #ff5555
+color9 #ff6e6e
 
 # green
-color2  #90ceaa
-color10 #90ceaa
+color2  #50fa7b
+color10 #69ff94
 
 # yellow
-color3  #ecd3a0
-color11 #ecd3a0
+color3  #f1fa8c
+color11 #ffffa5
 
 # blue
-color4  #86aaec
-color12 #86aaec
+color4  #bd93f9
+color12 #d6acff
 
 # magenta
-color5  #c296eb
-color13 #c296eb
+color5  #ff79c6
+color13 #ff92df
 
 # cyan
-color6  #93cee9
-color14 #93cee9
+color6  #8be9fd
+color14 #a4ffff
 
 # white
-color7  #cbced3
-color15 #cbced3
+color7  #f8f8f2
+color15 #ffffff
 
 # BEGIN_KITTY_FONTS
-font_family      family="Terminess Nerd Font Mono" style="Bold"
-bold_font        family="Terminess Nerd Font Mono" style="Bold"
-italic_font      family="Terminess Nerd Font Mono" style="Italic"
-bold_italic_font family="Terminess Nerd Font Mono" style="Bold Italic"
+font_family      family="FantasqueSansM Nerd Font Mono"
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
 # END_KITTY_FONTS

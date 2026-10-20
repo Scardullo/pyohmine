@@ -2,58 +2,59 @@
 # This work is licensed under the terms of the MIT license.
 # For a copy, see https://opensource.org/licenses/MIT.
 # font_family JetBrainsMono Nerd Font
-font_size 15.0
-
 confirm_os_window_close 0
+allow_remote_control yes
 
-background  #171717
-foreground  #ffffff
+font_size 13.0
 
-cursor                #8656e3
+foreground #a9b1d6
+background #1a1b26
 
-selection_foreground  #afb1db
-selection_background  #8656e3
+# Black
+color0 #414868
+color8 #414868
 
-color0  #ffffff
-color8  #97a9cf
+# Red
+color1 #f7768e
+color9 #f7768e
 
-# red
-color1                #e7034a
-# light red
-color9                #e71c5b
+# Green
+color2  #73daca
+color10 #73daca
 
-# green
-color2                #61b33e
-# light green
-color10               #6fb352
+# Yellow
+color3  #e0af68
+color11 #e0af68
 
-# yellow
-color3                #ffb964
-# light yellow
-color11               #ffb964
+# Blue
+color4  #7aa2f7
+color12 #7aa2f7
 
-# blue
-color4                #5884d4
-# light blue
-color12               #5f90ea
+# Magenta
+color5  #bb9af7
+color13 #bb9af7
 
-# magenta
-color5                #7a44e3
-# light magenta
-color13               #8656e3
+# Cyan
+color6  #7dcfff
+color14 #7dcfff
 
-# cyan
-color6                #1bb0fa
-# lighy cyan
-color14               #1bb0fa
+# White
+color7  #c0caf5
+color15 #c0caf5
 
-# light gray
-color7                #afb1db
-# dark gray
-color15               #afb1db
+# Cursor
+cursor #c0caf5
+cursor_text_color #1a1b26
+
+# Selection highlight
+selection_foreground none
+selection_background #28344a
+
+# The color for highlighting URLs on mouse-over
+url_color #9ece6a
 
 # BEGIN_KITTY_FONTS
-font_family      family="Agave Nerd Font Mono"
+font_family      family="FantasqueSansM Nerd Font Mono"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto

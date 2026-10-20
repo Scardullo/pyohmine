@@ -5,7 +5,7 @@
 confirm_os_window_close 0
 allow_remote_control yes
 
-font_size 14.0
+font_size 13.0
 
 foreground #a9b1d6
 background #1a1b26
@@ -53,9 +53,8 @@ selection_background #28344a
 # The color for highlighting URLs on mouse-over
 url_color #9ece6a
 
-
 # BEGIN_KITTY_FONTS
-font_family      family="Agave Nerd Font Mono"
+font_family      family="FantasqueSansM Nerd Font Mono"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto

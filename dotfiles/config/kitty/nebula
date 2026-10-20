@@ -19,24 +19,24 @@ color1 #f7768e
 color9 #f7768e
 
 # Green
-color2  #73a1da
-color10 #73a1da
+color2  #ab96ff
+color10 #ab96ff
 
 # Yellow
 color3  #e09e68
 color11 #e09e68
 
 # Blue
-color4  #757cff
-color12 #757cff
+color4  #7a91f7
+color12 #7a91f7
 
 # Magenta
 color5  #9aa0f7
 color13 #9aa0f7
 
 # Cyan
-color6  #977dff
-color14 #977dff
+color6  #3ddbd9
+color14 #3ddbd9
 
 # White
 color7  #c0caf5

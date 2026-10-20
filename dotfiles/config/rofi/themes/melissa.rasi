@@ -4,28 +4,28 @@ configuration {
     display-run: "";
     display-window: "";
     show-icons: true;
-    icon-theme: "Adwaita";
+    icon-theme: "Gruvbox-Plus-Dark";
     font: "Agave Nerd Font Mono 11";
     drun-display-format: "{icon} {name}";
 }
 
 * {
     bg:     rgba(46, 52, 64, 0.85);
-    bg-alt: rgba(76, 86, 106, 0.75);
+    bg-alt: rgba(59, 66, 82, 0.75);
     fg:     #d8dee9;
 
-    selected:#81a1c1;
+    selected:#88c0d0;
     active: #a3be8c;
     urgent: #bf616a;
 
-    border-col: #81a1c1;
+    border-col: #88c0d0;
 
     background-color: transparent;
     text-color: @fg;
 }
 
 window {
-    width: 600px;
+    width: 800px;
     border: 2px;
     border-color: @border-col;
     border-radius: 14px;
@@ -76,6 +76,6 @@ element selected.urgent {
 }
 
 element-icon {
-    size: 48px;
+    size: 28px;
     margin: 0 12px 0 0;
 }
