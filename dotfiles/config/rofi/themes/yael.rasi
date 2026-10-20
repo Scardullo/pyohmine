@@ -25,7 +25,7 @@ configuration {
 }
 
 window {
-    width: 600px;
+    width: 800px;
     border: 2px;
     border-color: @border-col;
     border-radius: 14px;
@@ -76,6 +76,6 @@ element selected.urgent {
 }
 
 element-icon {
-    size: 48px;
+    size: 30px;
     margin: 0 12px 0 0;
 }

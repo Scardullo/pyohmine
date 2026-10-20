@@ -4,7 +4,7 @@ set -e
 mkdir -p "$HOME/.local/state"
 echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
 
-wallpp "/home/anthony/Pictures/wallpaper/wayland-girl.jpg"
+wallpp "/home/anthony/Pictures/wallpaper/mountain.jpg"
 
 cp ~/.config/kitty/purple-daze ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/arch3 ~/.config/fastfetch/config.jsonc

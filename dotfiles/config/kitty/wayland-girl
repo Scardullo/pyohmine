@@ -4,41 +4,43 @@
 # font_family JetBrainsMono Nerd Font
 font_size 13.0
 
+confirm_os_window_close 0
+
 background   	     #1D1F28
 foreground  	     #FDFDFD
 
-cursor                #7478dd
+cursor                #19bffe
 
 selection_foreground  #1D1F28
-selection_background  #7478dd
+selection_background  #19bffe
 
 color0  #ffffff
 color8  #97a9cf
 
 # red
-color1                #F37F97
+color1                #ae8feb
 # light red
-color9                #FF4971
+color9                #ae8feb
 
 # green
-color2                #5ADECD
+color2                #27fbfe
 # light green
-color10               #18E3C8
+color10               #27fbfe
 
 # yellow
 color3                #F2A272
 # light yellow
-color11               #FF8037
+color11               #F2A272
 
 # blue
-color4                #8897F4
+color4                #5884d4
 # light blue
-color12               #556FFF
+color12               #5884d4
 
 # magenta
-color5                #7478dd
+color5                #8897F4
 # light magenta
-color13               #7478dd
+color13               #8897F4
 
 # cyan
 color6                #79E6F3

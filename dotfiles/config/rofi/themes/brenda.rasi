@@ -85,6 +85,6 @@ element selected.urgent {
 }
 
 element-icon {
-    size: 24px;
+    size: 27px;
     margin: 0 12px 0 0;
 }

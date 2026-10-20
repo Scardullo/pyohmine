@@ -84,8 +84,8 @@ hl.config({
 
         col = {
             -- Nebula accent
-            active_border   = "rgba(bdc0ffff)",
-            inactive_border = "rgba(a3a8ffff)",
+            active_border   = "rgba(7aa2f7ff)",
+            inactive_border = "rgba(7aa2f7ff)",
         },
 
         resize_on_border = false,
@@ -110,7 +110,7 @@ hl.config({
 
         blur = {
             enabled  = true,
-            size     = 5,    -- medium radius
+            size     = 6,    -- medium radius
             passes   = 3,    -- moderate number of blur passes
             vibrancy = 0.05, -- slightly noticeable background enhancement
         },

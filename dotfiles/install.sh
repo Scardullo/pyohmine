@@ -15,9 +15,9 @@ PKG_QM="$REPO/Documents/pacman_Qm"
 BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 
 # Not explicitly installed on the source PC (pulled in as deps), but called directly by the
-# configs/scripts: playerctl (waybar/hypr media keys), wpctl (volume keys), curl (weather),
-# python (pokefetch), rsync (this script).
-EXTRA_PKGS=(playerctl wireplumber curl python rsync)
+# configs/scripts: playerctl (waybar/hypr media keys), wpctl (volume keys), brightnessctl
+# (brightness keys), curl (weather), python (pokefetch), rsync (this script).
+EXTRA_PKGS=(playerctl wireplumber brightnessctl curl python rsync)
 
 # Theme scripts that live in /usr/local/bin so Hyprland can find them without ~/.local/bin on PATH.
 SYSTEM_BIN=(wallpp wallp1 wallp2 catppuccin_star dracula_star everforest_star gruvbox_star
@@ -119,13 +119,14 @@ install_dotfiles() {
 
   # Stage the text files so hardcoded /home/anthony paths can be rewritten for another user.
   local stage; stage="$(mktemp -d)"
-  cp -a "$DOTS/config" "$DOTS/theme-scripts" "$DOTS/zshrc" "$stage/"
+  cp -a "$DOTS/config" "$DOTS/zshrc" "$stage/"
+  # claude is the Claude Code binary (gitignored, ~300MB); install it separately
+  rsync -a --exclude=claude "$DOTS/theme-scripts" "$stage/"
   # The theme scripts copy fastfetch/starship/zshrc variants out of ~/Documents.
   mkdir -p "$stage/Documents"
   for d in fastfetch-configs color-themes bash_zsh_rc; do
     [[ -d $REPO/Documents/$d ]] && cp -a "$REPO/Documents/$d" "$stage/Documents/"
   done
-  rm -f "$stage/theme-scripts/claude"   # Claude Code binary (gitignored); install it separately
   if [[ $HOME != /home/anthony ]]; then
     grep -rlIZ /home/anthony "$stage" | xargs -0 -r sed -i "s#/home/anthony#$HOME#g"
   fi
@@ -143,6 +144,19 @@ install_dotfiles() {
   rsync -a -c -b --backup-dir="$BACKUP/local-bin" "${user_excludes[@]}" \
     "$stage/theme-scripts/" "$HOME/.local/bin/"
   sudo install -Dm755 -t /usr/local/bin "${sys[@]}"
+
+  # Older setups put the per-theme scripts in /usr/local/bin too. Those stale copies shadow
+  # the current ones in ~/.local/bin wherever /usr/local/bin comes first in PATH, so remove them.
+  local name
+  for f in "$stage"/theme-scripts/*; do
+    name="${f##*/}"
+    [[ " ${SYSTEM_BIN[*]} " == *" $name "* ]] && continue
+    if [[ -f /usr/local/bin/$name ]]; then
+      mkdir -p "$BACKUP/usr-local-bin" && cp -a "/usr/local/bin/$name" "$BACKUP/usr-local-bin/"
+      sudo rm -f "/usr/local/bin/$name"
+      warn "removed stale /usr/local/bin/$name (now lives in ~/.local/bin)"
+    fi
+  done
 
   msg "Installing wallpapers to ~/Pictures/wallpaper"
   place "$DOTS/wallpaper/" "$HOME/Pictures/wallpaper/" wallpaper
@@ -180,3 +194,4 @@ install_dotfiles() {
 (( do_dotfiles )) && install_dotfiles
 
 msg "Done. Reboot, log in through sddm, and pick a theme with ALT+SPACE."
+echo "     SUPER+ALT+SPACE switches wallpaper, SUPER+/ lists all keybinds."
