@@ -1,5 +1,5 @@
 {
-  description = "Combined NixOS configurations for 'nixos' (Hyprland PC) and 'vm_nixos' (KDE Plasma VM)";
+  description = "Combined NixOS configurations for 'nixos' (Hyprland PC) and 'nixos-vm' (KDE Plasma VM)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -18,10 +18,10 @@
           ];
         };
 
-        vm_nixos = nixpkgs.lib.nixosSystem {
+        "nixos-vm" = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            ./hosts/vm_nixos/configuration.nix
+            ./hosts/nixos-vm/configuration.nix
           ];
         };
       };
