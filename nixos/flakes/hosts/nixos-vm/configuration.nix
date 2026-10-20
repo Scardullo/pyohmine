@@ -107,6 +107,7 @@ in
   boot.loader.grub.useOSProber = true;
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelParams = [ "video=Virtual-1:1920x1080@60" ];
 
   # -------------------------
   # NETWORK
