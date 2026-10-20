@@ -11,7 +11,7 @@ ipcalc		locate		ncdu		resolvectl status
 time		traceroute      watch		networkctl list
 file		stat		ping		whatis
 blkid		env(printenv)	pstree		mc
-hostnamectl	duf		ip link show
+hostnamectl	duf		ip link show    systemd-analyze
 # pr --columns=N
 # cat /etc/os-release
 # ip -s link show [intf]
