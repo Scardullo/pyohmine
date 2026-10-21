@@ -5,11 +5,11 @@ configuration {
 }
 
 * {
-    bg:         rgba(29, 31, 40, 0.95);
-    bg-alt:     rgba(85, 111, 255, 0.16);
-    fg:         #FDFDFD;
-    selected:   #556FFF;
-    border-col: #556FFF;
+    bg:         rgba(46, 52, 64, 0.95);
+    bg-alt:     rgba(129, 161, 193, 0.16);
+    fg:         #d8dee9;
+    selected:   #81a1c1;
+    border-col: #81a1c1;
 
     background-color: transparent;
     text-color: @fg;
