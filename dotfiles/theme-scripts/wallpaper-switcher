@@ -10,6 +10,7 @@ CURRENT_THEME_FILE="$HOME/.local/state/current-theme"
 ROFI_THEME="$HOME/.config/rofi/wallpaper-switcher.rasi"
 ROFI_TPL="$HOME/.config/rofi/wallpaper-switcher.rasi.tpl"
 KITTY_DIR="$HOME/.config/kitty"
+HYPR_CONF="$HOME/.config/hypr/hyprland.lua"
 LOG="/tmp/wallpaper-switcher.log"
 
 mkdir -p "$CACHE_DIR"
@@ -57,7 +58,14 @@ gen_rofi_theme() {
   bg_rgba=$(hex_to_rgba "$bg_hex" 0.95)
   bg_alt_rgba=$(hex_to_rgba "$accent_hex" 0.16)
 
-  sed \
+  # Match the active hyprland template's corners: rounding = 0 -> square popup,
+  # otherwise use the radii written in the template as __RADIUS_<px>__.
+  local rounding radius_repl='\1px'
+  rounding=$(grep -m1 -oE '^[[:space:]]*rounding[[:space:]]*=[[:space:]]*[0-9]+' "$HYPR_CONF" 2>/dev/null | grep -oE '[0-9]+$')
+  [ "$rounding" = "0" ] && radius_repl='0px'
+
+  sed -E \
+    -e "s|__RADIUS_([0-9]+)__|$radius_repl|g" \
     -e "s|__BG__|$bg_rgba|" \
     -e "s|__BG_ALT__|$bg_alt_rgba|" \
     -e "s|__FG__|$fg_hex|" \

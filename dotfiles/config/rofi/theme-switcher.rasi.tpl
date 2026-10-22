@@ -19,7 +19,7 @@ window {
     width: 1100px;
     border: 2px;
     border-color: @border-col;
-    border-radius: 18px;
+    border-radius: __RADIUS_18__;
     padding: 20px;
     background-color: @bg;
 }
@@ -31,7 +31,7 @@ mainbox {
 
 inputbar {
     background-color: @bg-alt;
-    border-radius: 10px;
+    border-radius: __RADIUS_10__;
     padding: 10px 14px;
     children: [ prompt, entry ];
 }
@@ -57,14 +57,14 @@ listview {
 element {
     orientation: vertical;
     padding: 10px;
-    border-radius: 14px;
+    border-radius: __RADIUS_14__;
     border: 2px;
     border-color: transparent;
 }
 
 element-icon {
     size: 150px;
-    border-radius: 10px;
+    border-radius: __RADIUS_10__;
     horizontal-align: 0.5;
 }
 

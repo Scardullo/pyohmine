@@ -5,11 +5,11 @@ configuration {
 }
 
 * {
-    bg:         rgba(26, 27, 38, 0.95);
-    bg-alt:     rgba(117, 124, 255, 0.16);
-    fg:         #a9b1d6;
-    selected:   #757cff;
-    border-col: #757cff;
+    bg:         rgba(46, 52, 64, 0.95);
+    bg-alt:     rgba(129, 161, 193, 0.16);
+    fg:         #d8dee9;
+    selected:   #81a1c1;
+    border-col: #81a1c1;
 
     background-color: transparent;
     text-color: @fg;
@@ -19,7 +19,7 @@ window {
     width: 900px;
     border: 2px;
     border-color: @border-col;
-    border-radius: 18px;
+    border-radius: 0px;
     padding: 20px;
     background-color: @bg;
 }
@@ -40,14 +40,14 @@ listview {
 element {
     children: [ element-icon ];
     padding: 6px;
-    border-radius: 12px;
+    border-radius: 0px;
     border: 2px;
     border-color: transparent;
 }
 
 element-icon {
     size: 200px;
-    border-radius: 8px;
+    border-radius: 0px;
     horizontal-align: 0.5;
 }
 

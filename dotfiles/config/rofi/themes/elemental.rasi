@@ -30,7 +30,7 @@ window {
     border-color: @border-col;
     border-radius: 14px;
     padding: 12px;
-    background-color: #211105;
+    background-color: rgba(33, 17, 5, 0.90);   /* #211105 @ 0.9, matches hyprland active/inactive_opacity */
 }
 
 inputbar {

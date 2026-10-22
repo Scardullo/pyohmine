@@ -4,7 +4,8 @@ set -e
 mkdir -p "$HOME/.local/state"
 echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
 
-wallpp "/home/anthony/Pictures/wallpaper/village-square.jpg"
+wallp1 "/home/anthony/Pictures/wallpaper/archgruv-wall.png"
+wallp2 "/home/anthony/Pictures/wallpaper/firefox.png"
 
 cp ~/.config/kitty/gruvbox ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/arch3 ~/.config/fastfetch/config.jsonc

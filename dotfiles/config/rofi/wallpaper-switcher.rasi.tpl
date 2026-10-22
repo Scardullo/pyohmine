@@ -19,7 +19,7 @@ window {
     width: 900px;
     border: 2px;
     border-color: @border-col;
-    border-radius: 18px;
+    border-radius: __RADIUS_18__;
     padding: 20px;
     background-color: @bg;
 }
@@ -40,14 +40,14 @@ listview {
 element {
     children: [ element-icon ];
     padding: 6px;
-    border-radius: 12px;
+    border-radius: __RADIUS_12__;
     border: 2px;
     border-color: transparent;
 }
 
 element-icon {
     size: 200px;
-    border-radius: 8px;
+    border-radius: __RADIUS_8__;
     horizontal-align: 0.5;
 }
 

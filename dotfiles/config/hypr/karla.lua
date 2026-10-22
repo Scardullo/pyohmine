@@ -80,7 +80,7 @@ hl.config({
         gaps_in  = 10,
         gaps_out = 20,
 
-        border_size = 2,
+        border_size = 0,
 
         col = {
             -- Zombie-Night accent (gh0stzk Karla rice)
