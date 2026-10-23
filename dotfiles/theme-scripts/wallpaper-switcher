@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Wallpaper-only picker popup (bound to SUPER+ALT+SPACE): rofi single-column list of every
+# Wallpaper-only picker popup (bound to SUPER+SPACE): rofi single-column list of every
 # wallpaper under ~/Pictures/wallpaper, scrolling top to bottom, icon-only (no names, no
 # search bar). Selecting one just sets the wallpaper via `wallpp` -- it does not touch
 # kitty/waybar/hyprland like the theme scripts do.
@@ -40,6 +40,13 @@ declare -A KITTY_PALETTE_OVERRIDE=(
   [tokyo-night]="dracula"
 )
 
+# Themes whose popup accent should just be their foreground color.
+declare -A ACCENT_IS_FG=(
+  [gruvbox]=1
+  [silvia]=1
+  [elemental]=1
+)
+
 gen_rofi_theme() {
   local kitty_name="$CURRENT_SCRIPT"
   [ -n "$kitty_name" ] && kitty_name="${KITTY_PALETTE_OVERRIDE[$kitty_name]:-$kitty_name}"
@@ -53,6 +60,7 @@ gen_rofi_theme() {
     [ -z "$v" ] && v=$(grep -m1 -E '^color4[[:space:]]' "$kitty_conf" | awk '{print $2}')
     [ -n "$v" ] && accent_hex="$v"
   fi
+  [ -n "$CURRENT_SCRIPT" ] && [ -n "${ACCENT_IS_FG[$CURRENT_SCRIPT]}" ] && accent_hex="$fg_hex"
 
   local bg_rgba bg_alt_rgba
   bg_rgba=$(hex_to_rgba "$bg_hex" 0.95)

@@ -4,7 +4,7 @@ set -e
 mkdir -p "$HOME/.local/state"
 echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
 
-wallp1 "/home/anthony/Pictures/wallpaper/archgruv-wall.png"
+wallp1 "/home/anthony/Pictures/wallpaper/gruvpenguin2.png"
 wallp2 "/home/anthony/Pictures/wallpaper/firefox.png"
 
 cp ~/.config/kitty/gruvbox ~/.config/kitty/kitty.conf
