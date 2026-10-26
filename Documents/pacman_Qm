@@ -1,12 +1,12 @@
-autofs 5.1.9-7
-candy-icons-git r1369.83512fb-1
-cbonsai 1.4.2-1
-gruvbox-plus-icon-theme 6.6.0-1
-nerdfetch-git r391.983aff5-1
-pokemon-colorscripts-git r114.5802ff67-1
-sddm-astronaut-theme 92.abb3163-1
-tela-icon-theme 2026.07.07-1
-tty-clock 2.3-2
-visual-studio-code-bin 1.142.0-1
-yay 13.0.1-1
-zsh-theme-powerlevel10k 1:1.20.18-1
+autofs
+candy-icons-git
+cbonsai
+gruvbox-plus-icon-theme
+nerdfetch-git
+pokemon-colorscripts-git
+sddm-astronaut-theme
+tela-icon-theme
+tty-clock
+visual-studio-code-bin
+yay
+zsh-theme-powerlevel10k

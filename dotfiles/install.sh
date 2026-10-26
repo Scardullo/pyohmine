@@ -4,7 +4,8 @@
 #   2. Copies these dotfiles into place (backing up anything it overwrites)
 #   3. Enables sddm / NetworkManager, sets the sddm theme, zram, and zsh as login shell
 #
-# Usage: ./install.sh [--packages-only | --dotfiles-only]
+# Usage: ./install.sh [--packages-only | --dotfiles-only | --save-packages]
+#   --save-packages  save explicit repo (-Qqen) and AUR (-Qqem) packages, then exit
 # Run as your normal user (not root); sudo is used where needed. Safe to re-run.
 set -euo pipefail
 
@@ -31,6 +32,10 @@ do_packages=1 do_dotfiles=1
 case "${1:-}" in
   --packages-only) do_dotfiles=0 ;;
   --dotfiles-only) do_packages=0 ;;
+  --save-packages)
+    pacman -Qqen > "$PKG_QE" && pacman -Qqem > "$PKG_QM"
+    msg "Saved $(wc -l < "$PKG_QE") explicit and $(wc -l < "$PKG_QM") foreign packages to $REPO/Documents"
+    exit 0 ;;
   -h|--help) sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
   "") ;;
   *) die "unknown option: $1 (try --help)" ;;

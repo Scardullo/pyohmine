@@ -6,15 +6,16 @@
 }
 
 window#waybar {
-    background: #2e3440;
-    color: #81a1c1;
+    background: #181616;
+    color: #c5c9c5;
+    border-bottom: 2px solid #282727;
 }
 
 /* Arch Logo */
 
 #custom-logo {
     background: transparent;
-    color: #81a1c1;
+    color: #c5c9c5;
     margin: 3px 3px 3px 6px;
     padding: 0 10px;
     border-radius: 10px;
@@ -29,7 +30,7 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #81a1c1;
+    color: #C8C093;
     margin: 0 2px;
     padding: 0 10px;
     border-radius: 8px;
@@ -37,13 +38,13 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #81a1c1;
-    color: #2e3440;
+    background: #c5c9c5;
+    color: #181616;
 }
 
 #workspaces button:hover {
-    background: #4c566a;
-    color: #eceff4;
+    background: #282727;
+    color: #c5c9c5;
 }
 
 /* Modules */
@@ -56,7 +57,7 @@ window#waybar {
 #pulseaudio,
 #tray {
     background: transparent;
-    color: #81a1c1;
+    color: #c5c9c5;
     margin: 3px 3px;
     padding: 0 10px;
     border-radius: 10px;
@@ -69,8 +70,8 @@ window#waybar {
 }
 
 #cpu {
-    background: #2e3440;
-    color: #81a1c1;
+    background: #181616;
+    color: #c5c9c5;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -78,8 +79,8 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #2e3440;
-    color: #81a1c1;
+    background: #181616;
+    color: #c5c9c5;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -87,8 +88,8 @@ window#waybar {
 /* VOLUME */
 
 #pulseaudio {
-    background: #2e3440;
-    color: #81a1c1;
+    background: #181616;
+    color: #c5c9c5;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -110,11 +111,11 @@ window#waybar {
 /* Tooltip */
 
 tooltip {
-    background: #2e3440;
-    border: 2px solid #4c566a;
+    background: #181616;
+    border: 2px solid #282727;
     border-radius: 10px;
 }
 
 tooltip label {
-    color: #81a1c1;
+    color: #c5c9c5;
 }
