@@ -6,6 +6,7 @@ cat <<EOF | rofi -dmenu -i -p "Hyprland Keybinds" \
 SUPER + ENTER   Terminal
 SUPER + D       Rofi Launcher
 ALT + SPACE     Theme Switcher
+SUPER + Z       Starship Theme Switcher
 SUPER + SPACE   Wallpaper Switcher
 SUPER + E       Thunar
 SUPER + B       Firefox
