@@ -91,6 +91,8 @@ declare -A ACCENT_IS_FG=(
   [gruvbox]=1
   [silvia]=1
   [elemental]=1
+  [everforest]=1
+  [brenda]=1
 )
 
 gen_rofi_theme() {
