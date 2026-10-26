@@ -1,0 +1,9 @@
+mkdir -p "$HOME/.local/state"
+echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
+wallpp /home/anthony/Pictures/wallpaper/nordy.webp
+cp ~/.config/kitty/melissa ~/.config/kitty/kitty.conf
+cp ~/.config/hypr/melissa.lua ~/.config/hypr/hyprland.lua
+cp ~/Documents/color-themes/starship_toml_files/melissa.toml ~/.config/starship.toml
+cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
+cp ~/.config/waybar/themes/melissa_style.css ~/.config/waybar/style.css
+pkill waybar; waybar &

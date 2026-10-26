@@ -20,9 +20,8 @@ BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 # (brightness keys), curl (weather), python (pokefetch), rsync (this script).
 EXTRA_PKGS=(playerctl wireplumber brightnessctl curl python rsync)
 
-# Theme scripts that live in /usr/local/bin so Hyprland can find them without ~/.local/bin on PATH.
-SYSTEM_BIN=(wallpp wallp1 wallp2 catppuccin_star dracula_star everforest_star gruvbox_star
-            nord_star purple-daze_star tokyo-night_star)
+# Scripts that live in /usr/local/bin so Hyprland can find them without ~/.local/bin on PATH.
+SYSTEM_BIN=(wallpp wallp1 wallp2)
 
 msg()  { printf '\n\033[1;34m==>\033[0m \033[1m%s\033[0m\n' "$*"; }
 warn() { printf '\033[1;33m  ->\033[0m %s\n' "$*"; }

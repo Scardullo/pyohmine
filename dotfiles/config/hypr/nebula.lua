@@ -271,6 +271,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
 hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/nebula.rasi"))
 hl.bind("ALT + SPACE",      hl.dsp.exec_cmd("~/.local/bin/theme-switcher"))
+hl.bind("SUPER + ALT + S", hl.dsp.exec_cmd("~/.local/bin/star-theme-switcher"))
 hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("~/.local/bin/wallpaper-switcher"))
 
 -- Move current window to previous/next workspace (note: your original conf uses the

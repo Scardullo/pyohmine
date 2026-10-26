@@ -1,0 +1,9 @@
+mkdir -p "$HOME/.local/state"
+echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
+wallpp /home/anthony/Pictures/wallpaper/z0mbi3.webp
+cp ~/.config/kitty/z0mbi3 ~/.config/kitty/kitty.conf
+cp ~/.config/hypr/z0mbi3.lua ~/.config/hypr/hyprland.lua
+cp ~/Documents/color-themes/starship_toml_files/z0mbi3.toml ~/.config/starship.toml
+cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
+cp ~/.config/waybar/themes/z0mbi3_style.css ~/.config/waybar/style.css
+pkill waybar; waybar &

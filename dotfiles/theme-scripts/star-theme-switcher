@@ -1,0 +1,170 @@
+#!/usr/bin/env bash
+# Starship theme picker popup (bound to SUPER+ALT+S): rofi grid of theme name + wallpaper thumbnail.
+# Selecting an entry runs the matching ~/.local/bin/<theme>_star script.
+
+BIN="$HOME/.local/bin"
+CACHE_DIR="$HOME/.cache/theme-switcher/thumbs"
+STATE_FILE="$HOME/.local/state/wallpaper/DP-1"
+CURRENT_THEME_FILE="$HOME/.local/state/current-theme"
+ROFI_THEME="$HOME/.config/rofi/theme-switcher.rasi"
+ROFI_TPL="$HOME/.config/rofi/theme-switcher.rasi.tpl"
+KITTY_DIR="$HOME/.config/kitty"
+HYPR_CONF="$HOME/.config/hypr/hyprland.lua"
+LOG="/tmp/star-theme-switcher.log"
+
+mkdir -p "$CACHE_DIR"
+
+# Display Name:script name in ~/.local/bin (wallpaper is read live from each script's "wallpp" line)
+THEMES=(
+  "Nord:nord_star"
+  "Brenda:brenda_star"
+  "Catppuccin:catppuccin_star"
+  "Cristina:cristina_star"
+  "Daniela:daniela_star"
+  "Dracula:dracula_star"
+  "Elemental:elemental_star"
+  "Emilia:emilia_star"
+  "Everforest:everforest_star"
+  "Gruvbox:gruvbox_star"
+  "Hacker:hacker_star"
+  "Isabel:isabel_star"
+  "Jan:jan_star"
+  "Karla:karla_star"
+  "Marisol:marisol_star"
+  "Melissa:melissa_star"
+  "Nebula:nebula_star"
+  "Pamela:pamela_star"
+  "Purple Daze:purple-daze_star"
+  "Silvia:silvia_star"
+  "Tokyo Night:tokyo-night_star"
+  "Varinka:varinka_star"
+  "Yael:yael_star"
+  "Z0mbi3:z0mbi3_star"
+)
+
+wallpaper_for() {
+  local script="$1" line
+  line=$(grep -m1 -oE 'wallp(p|1|2)[[:space:]]+"?[^" ]+' "$BIN/$script" 2>/dev/null)
+  line="${line#wallp?}"
+  line="${line#"${line%%[![:space:]]*}"}"
+  printf '%s' "${line#\"}"
+}
+
+CURRENT_WALL=""
+[ -f "$STATE_FILE" ] && CURRENT_WALL=$(cat "$STATE_FILE")
+
+# current-theme is written by every theme script, p10k and starship alike (via basename "$0"),
+# e.g. "karla" or "karla_star". The popup colors follow it, whichever switcher applied the theme;
+# the "*" marker only goes on the entry in this list that is actually running.
+ACTIVE_THEME=""
+[ -f "$CURRENT_THEME_FILE" ] && ACTIVE_THEME=$(cat "$CURRENT_THEME_FILE")
+PALETTE_THEME="${ACTIVE_THEME%_star}"
+CURRENT_SCRIPT=""
+
+WALLS=()
+for entry in "${THEMES[@]}"; do
+  script="${entry#*:}"
+  wall=$(wallpaper_for "$script")
+  WALLS+=("$wall")
+  [ -n "$ACTIVE_THEME" ] && [ "$script" = "$ACTIVE_THEME" ] && CURRENT_SCRIPT="$script"
+  if [ -z "$ACTIVE_THEME" ] && [ -z "$CURRENT_SCRIPT" ] && [ -n "$wall" ] && [ "$wall" = "$CURRENT_WALL" ]; then
+    CURRENT_SCRIPT="$script"
+    PALETTE_THEME="${script%_star}"
+  fi
+done
+
+hex_to_rgba() {
+  local hex="${1#\#}" alpha="$2" r g b
+  r=$((16#${hex:0:2})); g=$((16#${hex:2:2})); b=$((16#${hex:4:2}))
+  printf 'rgba(%d, %d, %d, %s)' "$r" "$g" "$b" "$alpha"
+}
+
+# Themes whose popup palette should come from a different kitty config than their own name.
+# tokyo-night's kitty/tokyo-night file doesn't match its waybar; kitty/dracula holds the
+# matching Tokyo Night colors (#1a1b26 / #c0caf5 / #7aa2f7).
+declare -A KITTY_PALETTE_OVERRIDE=(
+  [tokyo-night]="dracula"
+)
+
+# Themes whose popup accent should just be their foreground color.
+declare -A ACCENT_IS_FG=(
+  [gruvbox]=1
+  [silvia]=1
+  [elemental]=1
+)
+
+gen_rofi_theme() {
+  # kitty.conf is what the active theme script copied in (p10k or starship variant), so it's
+  # always the live palette. Overrides are keyed by base theme name (no _star suffix).
+  local kitty_conf="$KITTY_DIR/kitty.conf"
+  [ -n "${KITTY_PALETTE_OVERRIDE[$PALETTE_THEME]}" ] && kitty_conf="$KITTY_DIR/${KITTY_PALETTE_OVERRIDE[$PALETTE_THEME]}"
+  local bg_hex="#14141c" fg_hex="#e8e8f0" accent_hex="#8aadf4"
+  if [ -n "$PALETTE_THEME" ] && [ -f "$kitty_conf" ]; then
+    local v
+    v=$(grep -m1 -E '^background[[:space:]]' "$kitty_conf" | awk '{print $2}'); [ -n "$v" ] && bg_hex="$v"
+    v=$(grep -m1 -E '^foreground[[:space:]]' "$kitty_conf" | awk '{print $2}'); [ -n "$v" ] && fg_hex="$v"
+    v=$(grep -m1 -E '^color12[[:space:]]' "$kitty_conf" | awk '{print $2}')
+    [ -z "$v" ] && v=$(grep -m1 -E '^color4[[:space:]]' "$kitty_conf" | awk '{print $2}')
+    [ -n "$v" ] && accent_hex="$v"
+  fi
+  [ -n "$PALETTE_THEME" ] && [ -n "${ACCENT_IS_FG[$PALETTE_THEME]}" ] && accent_hex="$fg_hex"
+
+  local bg_rgba bg_alt_rgba
+  bg_rgba=$(hex_to_rgba "$bg_hex" 0.95)
+  bg_alt_rgba=$(hex_to_rgba "$accent_hex" 0.16)
+
+  # Match the active hyprland template's corners: rounding = 0 -> square popup,
+  # otherwise use the radii written in the template as __RADIUS_<px>__.
+  local rounding radius_repl='\1px'
+  rounding=$(grep -m1 -oE '^[[:space:]]*rounding[[:space:]]*=[[:space:]]*[0-9]+' "$HYPR_CONF" 2>/dev/null | grep -oE '[0-9]+$')
+  [ "$rounding" = "0" ] && radius_repl='0px'
+
+  sed -E \
+    -e "s|__RADIUS_([0-9]+)__|$radius_repl|g" \
+    -e "s|__BG__|$bg_rgba|" \
+    -e "s|__BG_ALT__|$bg_alt_rgba|" \
+    -e "s|__FG__|$fg_hex|" \
+    -e "s|__ACCENT__|$accent_hex|g" \
+    "$ROFI_TPL" > "$ROFI_THEME"
+}
+
+thumb_for() {
+  local wall="$1" key thumb
+  [ -z "$wall" ] && return
+  key=$(printf '%s' "$wall" | md5sum | cut -d' ' -f1)
+  thumb="$CACHE_DIR/$key.png"
+  if [ ! -f "$thumb" ] || [ "$wall" -nt "$thumb" ]; then
+    magick "$wall" -resize 340x191^ -gravity center -extent 340x191 "$thumb" 2>>"$LOG" || cp "$wall" "$thumb"
+  fi
+  printf '%s' "$thumb"
+}
+
+build_menu() {
+  local i name script wall thumb label
+  for i in "${!THEMES[@]}"; do
+    name="${THEMES[$i]%%:*}"
+    script="${THEMES[$i]#*:}"
+    wall="${WALLS[$i]}"
+    thumb=$(thumb_for "$wall")
+    label="$name"
+    [ -n "$CURRENT_SCRIPT" ] && [ "$script" = "$CURRENT_SCRIPT" ] && label="$name *"
+    if [ -n "$thumb" ]; then
+      printf '%s\0icon\x1f%s\n' "$label" "$thumb"
+    else
+      printf '%s\n' "$label"
+    fi
+  done
+}
+
+gen_rofi_theme
+
+CHOICE_INDEX=$(build_menu | rofi -dmenu -i -p "" -theme "$ROFI_THEME" -show-icons -format i) || exit 0
+
+[ -z "${CHOICE_INDEX:-}" ] && exit 0
+
+script="${THEMES[$CHOICE_INDEX]#*:}"
+
+if [ -x "$BIN/$script" ]; then
+  setsid "$BIN/$script" >>"$LOG" 2>&1 &
+  disown
+fi
