@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Starship theme picker popup (bound to SUPER+ALT+S): rofi grid of theme name + wallpaper thumbnail.
+# Starship theme picker popup (bound to SUPER+Z): rofi grid of theme name + wallpaper thumbnail.
 # Selecting an entry runs the matching ~/.local/bin/<theme>_star script.
 
 BIN="$HOME/.local/bin"
