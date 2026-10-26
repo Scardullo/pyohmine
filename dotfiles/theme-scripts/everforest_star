@@ -1,9 +1,9 @@
 mkdir -p "$HOME/.local/state"
 echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
-wallpp /home/anthony/Pictures/wallpaper/everforest_steps.webp
+wallpp /home/anthony/Pictures/wallpaper/fog_forest_1.png
 cp ~/.config/kitty/everforest ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/everforest.lua ~/.config/hypr/hyprland.lua
-cp ~/Documents/color-themes/starship_toml_files/everforest.toml ~/.config/starship.toml
+cp ~/Documents/starship/everforest.toml ~/.config/starship.toml
 cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
 cp ~/.config/waybar/themes/everforest_style.css ~/.config/waybar/style.css
 pkill waybar; waybar &

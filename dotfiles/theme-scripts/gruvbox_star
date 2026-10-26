@@ -1,9 +1,9 @@
 mkdir -p "$HOME/.local/state"
 echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
-wallpp /home/anthony/Pictures/wallpaper/Cartoon.png
+wallpp /home/anthony/Pictures/wallpaper/archgruv-wall.png
 cp ~/.config/kitty/gruvbox ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/gruvbox.lua ~/.config/hypr/hyprland.lua
-cp ~/Documents/color-themes/starship_toml_files/gruvbox_arch.toml ~/.config/starship.toml
+cp ~/Documents/starship/gruvbox_arch.toml ~/.config/starship.toml
 cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
 cp ~/.config/waybar/themes/gruvbox_style.css ~/.config/waybar/style.css
 pkill waybar; waybar &

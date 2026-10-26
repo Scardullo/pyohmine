@@ -84,8 +84,8 @@ hl.config({
 
         col = {
             -- Onedark accent (gh0stzk Isabel rice)
-            active_border   = "rgba(a2b2e8ff)",
-            inactive_border = "rgba(70799cff)",
+            active_border   = "rgba(4889beff)",
+            inactive_border = "rgba(4889beff)",
         },
 
         resize_on_border = false,
