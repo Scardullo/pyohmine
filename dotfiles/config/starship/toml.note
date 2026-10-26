@@ -1,0 +1,5 @@
+# custom colorful bashprompt
+*.toml copies to ~/.config/starship.timl
+
+# need starship installed 
+# need zoxide installed
