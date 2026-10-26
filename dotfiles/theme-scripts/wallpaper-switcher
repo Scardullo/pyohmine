@@ -24,8 +24,11 @@ mapfile -t WALLPAPERS < <(
   | awk '{hash=$1; $1=""; path=substr($0,2); if (!(hash in seen)) { seen[hash]=1; print path }}'
 )
 
-CURRENT_SCRIPT=""
-[ -f "$CURRENT_THEME_FILE" ] && CURRENT_SCRIPT=$(cat "$CURRENT_THEME_FILE")
+# current-theme is written by every theme script, p10k and starship alike (e.g. "karla" or
+# "karla_star"); strip _star so the overrides below apply to both variants.
+ACTIVE_THEME=""
+[ -f "$CURRENT_THEME_FILE" ] && ACTIVE_THEME=$(cat "$CURRENT_THEME_FILE")
+PALETTE_THEME="${ACTIVE_THEME%_star}"
 
 hex_to_rgba() {
   local hex="${1#\#}" alpha="$2" r g b
@@ -48,11 +51,12 @@ declare -A ACCENT_IS_FG=(
 )
 
 gen_rofi_theme() {
-  local kitty_name="$CURRENT_SCRIPT"
-  [ -n "$kitty_name" ] && kitty_name="${KITTY_PALETTE_OVERRIDE[$kitty_name]:-$kitty_name}"
-  local kitty_conf="$KITTY_DIR/$kitty_name"
+  # kitty.conf is what the active theme script copied in (p10k or starship variant), so it's
+  # always the live palette.
+  local kitty_conf="$KITTY_DIR/kitty.conf"
+  [ -n "${KITTY_PALETTE_OVERRIDE[$PALETTE_THEME]}" ] && kitty_conf="$KITTY_DIR/${KITTY_PALETTE_OVERRIDE[$PALETTE_THEME]}"
   local bg_hex="#14141c" fg_hex="#e8e8f0" accent_hex="#8aadf4"
-  if [ -n "$CURRENT_SCRIPT" ] && [ -f "$kitty_conf" ]; then
+  if [ -n "$PALETTE_THEME" ] && [ -f "$kitty_conf" ]; then
     local v
     v=$(grep -m1 -E '^background[[:space:]]' "$kitty_conf" | awk '{print $2}'); [ -n "$v" ] && bg_hex="$v"
     v=$(grep -m1 -E '^foreground[[:space:]]' "$kitty_conf" | awk '{print $2}'); [ -n "$v" ] && fg_hex="$v"
@@ -60,7 +64,7 @@ gen_rofi_theme() {
     [ -z "$v" ] && v=$(grep -m1 -E '^color4[[:space:]]' "$kitty_conf" | awk '{print $2}')
     [ -n "$v" ] && accent_hex="$v"
   fi
-  [ -n "$CURRENT_SCRIPT" ] && [ -n "${ACCENT_IS_FG[$CURRENT_SCRIPT]}" ] && accent_hex="$fg_hex"
+  [ -n "$PALETTE_THEME" ] && [ -n "${ACCENT_IS_FG[$PALETTE_THEME]}" ] && accent_hex="$fg_hex"
 
   local bg_rgba bg_alt_rgba
   bg_rgba=$(hex_to_rgba "$bg_hex" 0.95)
