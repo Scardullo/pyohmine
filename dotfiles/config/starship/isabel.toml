@@ -39,12 +39,12 @@ command_timeout = 5000
 # You can also replace your username with a neat symbol like  to save some space
 [username]
 show_always = true
-style_user = "bg:#40739d"
-style_root = "bg:#40739d"
+style_user = "fg:#ffffff bg:#40739d"
+style_root = "fg:#ffffff bg:#40739d"
 format = '[ ]($style)'
 
 [directory]
-style = "fg:#14171c bg:#61afef"
+style = "fg:#ffffff bg:#61afef"
 format = '[ $path ]($style)'
 truncation_length = 3
 truncation_symbol = "…/"
@@ -64,7 +64,7 @@ truncation_symbol = "…/"
 
 [c]
 symbol = " "
-style = "fg:#14171c bg:#e5c07b"
+style = "fg:#ffffff bg:#e5c07b"
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]
@@ -131,6 +131,6 @@ format = '[ $symbol ($version) ]($style)'
 [time]
 disabled = false
 time_format = "%I:%M"
-style = "bg:#40739d"
+style = "fg:#ffffff bg:#40739d"
 format = '[ $time ]($style)'
 

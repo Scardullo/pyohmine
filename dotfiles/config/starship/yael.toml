@@ -44,7 +44,7 @@ style_root = "bg:#2174a8"
 format = '[ ]($style)'
 
 [directory]
-style = "fg:#161616 bg:#33b1ff"
+style = "fg:#ffffff bg:#33b1ff"
 format = '[ $path ]($style)'
 truncation_length = 3
 truncation_symbol = "…/"
@@ -64,7 +64,7 @@ truncation_symbol = "…/"
 
 [c]
 symbol = " "
-style = "fg:#161616 bg:#ffe97b"
+style = "fg:#ffffff bg:#ffe97b"
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]

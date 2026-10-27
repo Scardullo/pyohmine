@@ -10,9 +10,9 @@ format = """
 [](#537b76)\
 $python\
 $username\
-[](bg:#7fbbb3 fg:#537b76)\
+[](bg:#537b76 fg:#537b76)\
 $directory\
-[](fg:#7fbbb3 bg:#e67e80)\
+[](fg:#537b76 bg:#e67e80)\
 $git_branch\
 $git_status\
 [](fg:#e67e80 bg:#dbbc7f)\
@@ -44,7 +44,7 @@ style_root = "bg:#537b76"
 format = '[ ]($style)'
 
 [directory]
-style = "fg:#2d353b bg:#7fbbb3"
+style = "fg:#d3c6aa bg:#537b76"
 format = '[ $path ]($style)'
 truncation_length = 3
 truncation_symbol = "…/"
@@ -64,7 +64,7 @@ truncation_symbol = "…/"
 
 [c]
 symbol = " "
-style = "fg:#2d353b bg:#dbbc7f"
+style = "fg:#ffffff bg:#dbbc7f"
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]
