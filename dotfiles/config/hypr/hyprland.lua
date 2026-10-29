@@ -83,9 +83,9 @@ hl.config({
         border_size = 0,
 
         col = {
-            -- OxoCarbon accent (gh0stzk Yael rice)
-            active_border   = "rgba(42be65ff)",
-            inactive_border = "rgba(393939ff)",
+            -- Catppuccin navy-blue gradient (top -> bottom)
+            active_border   = "rgba(d5c4a1ff)",
+            inactive_border = "rgba(a89984ff)",
         },
 
         resize_on_border = false,
@@ -98,8 +98,8 @@ hl.config({
         rounding       = 0,
         rounding_power = 2,
 
-        active_opacity   = 0.95,
-        inactive_opacity = 0.95,
+        active_opacity   = 0.9,
+        inactive_opacity = 0.9,
 
         shadow = {
             enabled      = true,
@@ -111,7 +111,7 @@ hl.config({
         blur = {
             enabled  = true,
             size     = 5,    -- medium radius
-            passes   = 2,    -- moderate number of blur passes
+            passes   = 3,    -- moderate number of blur passes
             vibrancy = 0.05, -- slightly noticeable background enhancement
         },
     },
@@ -269,7 +269,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/yael.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/everforest.rasi"))
 hl.bind("ALT + SPACE",      hl.dsp.exec_cmd("~/.local/bin/theme-switcher"))
 hl.bind("SUPER + Z",       hl.dsp.exec_cmd("~/.local/bin/star-theme-switcher"))
 hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("~/.local/bin/wallpaper-switcher"))
@@ -305,7 +305,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/yael.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/everforest.sh"))
 
 
 --------------------------------
