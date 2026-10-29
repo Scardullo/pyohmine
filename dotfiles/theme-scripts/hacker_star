@@ -4,6 +4,6 @@ wallpp /home/anthony/Pictures/wallpaper/h4ck3r.webp
 cp ~/.config/kitty/hacker ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/hacker.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/starship/hacker.toml ~/.config/starship.toml
-cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
+cp ~/Documents/zshrc/starship ~/.zshrc
 cp ~/.config/waybar/themes/hacker_style.css ~/.config/waybar/style.css
 pkill waybar; waybar &

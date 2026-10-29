@@ -4,6 +4,6 @@ wallpp /home/anthony/Pictures/wallpaper/daniela.webp
 cp ~/.config/kitty/daniela ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/daniela.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/starship/daniela.toml ~/.config/starship.toml
-cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
+cp ~/Documents/zshrc/starship ~/.zshrc
 cp ~/.config/waybar/themes/daniela_style.css ~/.config/waybar/style.css
 pkill waybar; waybar &

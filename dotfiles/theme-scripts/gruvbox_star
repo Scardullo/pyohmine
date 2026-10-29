@@ -5,6 +5,6 @@ wallp2 /home/anthony/Pictures/wallpaper/firefox.png
 cp ~/.config/kitty/gruvbox ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/gruvbox.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/starship/gruvbox_arch.toml ~/.config/starship.toml
-cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
+cp ~/Documents/zshrc/starship ~/.zshrc
 cp ~/.config/waybar/themes/gruvbox_style.css ~/.config/waybar/style.css
 pkill waybar; waybar &

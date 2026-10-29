@@ -4,6 +4,6 @@ wallpp /home/anthony/Pictures/wallpaper/wall-03.webp
 cp ~/.config/kitty/karla ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/karla.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/starship/karla.toml ~/.config/starship.toml
-cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
+cp ~/Documents/zshrc/starship ~/.zshrc
 cp ~/.config/waybar/themes/karla_style.css ~/.config/waybar/style.css
 pkill waybar; waybar &

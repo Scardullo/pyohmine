@@ -4,6 +4,6 @@ wallpp /home/anthony/Pictures/wallpaper/sunset-lake.webp
 cp ~/.config/kitty/tokyo-night ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/tokyo-night.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/starship/tokyo-night.toml ~/.config/starship.toml
-cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
+cp ~/Documents/zshrc/starship ~/.zshrc
 cp ~/.config/waybar/themes/tokyo-night_style.css ~/.config/waybar/style.css
 pkill waybar; waybar &

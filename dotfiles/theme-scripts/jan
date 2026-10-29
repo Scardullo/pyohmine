@@ -8,7 +8,7 @@ wallpp "/home/anthony/Pictures/wallpaper/gh0stzk/jan/wall-06.webp"
 
 cp ~/.config/kitty/jan ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/arch3 ~/.config/fastfetch/config.jsonc
-cp ~/pyohmine/dotfiles/zshrc/p10k ~/.zshrc
+cp ~/Documents/zshrc/p10k ~/.zshrc
 cp ~/.config/hypr/jan.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 

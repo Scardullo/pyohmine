@@ -132,11 +132,11 @@ require("lazy").setup({
 -- ============================================
 -- Colorscheme
 -- ============================================
-require("catppuccin").setup({
-    style = "night",
+require("tokyonight").setup({
+    style = "moon",
 })
 
-vim.cmd.colorscheme("catppuccin")
+vim.cmd.colorscheme("tokyonight")
 -- ============================================
 -- LSP Setup
 -- ============================================

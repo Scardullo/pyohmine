@@ -4,6 +4,6 @@ wallpp /home/anthony/Pictures/wallpaper/mist_forest_1.png
 cp ~/.config/kitty/brenda ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/brenda.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/starship/brenda.toml ~/.config/starship.toml
-cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
+cp ~/Documents/zshrc/starship ~/.zshrc
 cp ~/.config/waybar/themes/everforest_style.css ~/.config/waybar/style.css
 pkill waybar; waybar &

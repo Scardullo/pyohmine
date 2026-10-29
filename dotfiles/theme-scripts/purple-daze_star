@@ -4,6 +4,6 @@ wallpp /home/anthony/Pictures/wallpaper/wayland-girl.jpg
 cp ~/.config/kitty/purple-daze ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/purple-daze.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/starship/teal-purple.toml ~/.config/starship.toml
-cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
+cp ~/Documents/zshrc/starship ~/.zshrc
 cp ~/.config/waybar/themes/purple-daze_style.css ~/.config/waybar/style.css
 pkill waybar; waybar &

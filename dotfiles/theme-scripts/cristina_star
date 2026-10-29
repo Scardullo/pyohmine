@@ -4,6 +4,6 @@ wallpp /home/anthony/Pictures/wallpaper/cristina.webp
 cp ~/.config/kitty/cristina ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/cristina.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/starship/cristina.toml ~/.config/starship.toml
-cp ~/Documents/bash_zsh_rc/myhypr/starship ~/.zshrc
+cp ~/Documents/zshrc/starship ~/.zshrc
 cp ~/.config/waybar/themes/cristina_style.css ~/.config/waybar/style.css
 pkill waybar; waybar &

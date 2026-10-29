@@ -64,6 +64,8 @@ listview {
 
 element {
     padding: 10px;
+    border: 1.5px;
+    border-color: transparent;
     border-radius: 0px;
 }
 
@@ -72,18 +74,21 @@ element normal.normal {
 }
 
 element selected.normal {
-    background-color: @selected;
-    text-color: #1e1e2e;
+    background-color: transparent;
+    border-color: @selected;
+    text-color: @selected;
 }
 
 element selected.active {
-    background-color: @active;
-    text-color: #1e1e2e;
+    background-color: transparent;
+    border-color: @active;
+    text-color: @active;
 }
 
 element selected.urgent {
-    background-color: @urgent;
-    text-color: #1e1e2e;
+    background-color: transparent;
+    border-color: @urgent;
+    text-color: @urgent;
 }
 
 element-icon {
@@ -93,4 +98,5 @@ element-icon {
 
 element-text {
     vertical-align: 0.5;
+    text-color: inherit;
 }

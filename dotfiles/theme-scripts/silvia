@@ -8,7 +8,7 @@ wallpp "/home/anthony/Pictures/wallpaper/gruvy_street.png"
 
 cp ~/.config/kitty/silvia ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/arch3 ~/.config/fastfetch/config.jsonc
-cp ~/pyohmine/dotfiles/zshrc/p10k ~/.zshrc
+cp ~/Documents/zshrc/p10k ~/.zshrc
 cp ~/.config/hypr/silvia.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
 

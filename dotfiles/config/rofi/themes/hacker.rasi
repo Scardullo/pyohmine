@@ -57,22 +57,31 @@ listview {
 
 element {
     padding: 10px;
+    border: 1.5px;
+    border-color: transparent;
     border-radius: 0px;
 }
 
+element-text {
+    text-color: inherit;
+}
+
 element selected.normal {
-    background-color: @selected;
-    text-color: #181616;
+    background-color: transparent;
+    border-color: @selected;
+    text-color: @selected;
 }
 
 element selected.active {
-    background-color: @active;
-    text-color: #181616;
+    background-color: transparent;
+    border-color: @active;
+    text-color: @active;
 }
 
 element selected.urgent {
-    background-color: @urgent;
-    text-color: #181616;
+    background-color: transparent;
+    border-color: @urgent;
+    text-color: @urgent;
 }
 
 element-icon {

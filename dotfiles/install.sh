@@ -42,8 +42,6 @@ esac
 
 [[ $EUID -ne 0 ]] || die "run as your normal user, not root (makepkg refuses to run as root)"
 [[ -f /etc/arch-release ]] || die "this script is for Arch Linux"
-[[ "$DOTS" == "$HOME/pyohmine/dotfiles" ]] || \
-  warn "repo is not at ~/pyohmine — the p10k theme scripts copy from ~/pyohmine/dotfiles/zshrc/p10k"
 
 install_packages() {
   [[ -f $PKG_QE && -f $PKG_QM ]] || die "package lists not found in $REPO/Documents"
@@ -127,8 +125,9 @@ install_dotfiles() {
   # claude is the Claude Code binary (gitignored, ~300MB); install it separately
   rsync -a --exclude=claude "$DOTS/theme-scripts" "$stage/"
   # The theme scripts copy fastfetch/starship/zshrc variants out of ~/Documents.
+  # starship and zshrc come from $DOTS (placed below); the rest from the repo's Documents.
   mkdir -p "$stage/Documents"
-  for d in fastfetch-configs color-themes bash_zsh_rc; do
+  for d in fastfetch-configs color-themes; do
     [[ -d $REPO/Documents/$d ]] && cp -a "$REPO/Documents/$d" "$stage/Documents/"
   done
   if [[ $HOME != /home/anthony ]]; then
@@ -178,7 +177,8 @@ install_dotfiles() {
 
   msg "Installing theme assets into ~/Documents and ~/Pictures/fastfetch_pics"
   place "$stage/Documents/" "$HOME/Documents/" documents
-  place "$stage/zshrc/" "$HOME/Documents/bash_zsh_rc/myhypr/" documents
+  place "$stage/zshrc/" "$HOME/Documents/zshrc/" documents
+  place "$stage/config/starship/" "$HOME/Documents/starship/" documents
   [[ -d $REPO/Documents/Pictures/fastfetch_pics ]] && \
     place "$REPO/Documents/Pictures/fastfetch_pics/" "$HOME/Pictures/fastfetch_pics/" fastfetch_pics
 
