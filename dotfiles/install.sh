@@ -110,10 +110,10 @@ EOF
   fc-cache -f >/dev/null
 }
 
-# place SRC/ DEST/ NAME — merge SRC into DEST; files it overwrites go to $BACKUP/NAME
+# place SRC/ DEST/ NAME [RSYNC_ARGS] — merge SRC into DEST; files it overwrites go to $BACKUP/NAME
 place() {
   mkdir -p "$2"
-  rsync -a -c -b --backup-dir="$BACKUP/$3" "$1" "$2"
+  rsync -a -c -b --backup-dir="$BACKUP/$3" "${@:4}" "$1" "$2"
 }
 
 install_dotfiles() {
@@ -134,8 +134,10 @@ install_dotfiles() {
     grep -rlIZ /home/anthony "$stage" | xargs -0 -r sed -i "s#/home/anthony#$HOME#g"
   fi
 
-  msg "Installing ~/.config (hypr, waybar, kitty, rofi, nvim, cava, fastfetch, starship)"
-  place "$stage/config/" "$HOME/.config/" config
+  # config/starship only goes to ~/Documents/starship (placed below); the active theme is
+  # ~/.config/starship.toml, which the theme scripts write.
+  msg "Installing ~/.config (hypr, waybar, kitty, rofi, nvim, cava, fastfetch)"
+  place "$stage/config/" "$HOME/.config/" config --exclude=/starship/
 
   msg "Installing theme scripts"
   local -a sys=() user_excludes=()

@@ -437,7 +437,7 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 
 --bind = SUPER, D, exec, rofi -show drun -theme ~/.config/rofi/config.rasi
 
-hl.bind("SUPER" .. " + " .. "D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/purple-daze.rasi"))
+hl.bind("SUPER" .. " + " .. "D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/purple-daze.rasi"))
 
 -- Move current window to previous workspace
 

@@ -1,0 +1,11 @@
+#!/bin/bash
+# Launch rofi sliding in from one side of the screen: rofi-slide <top|bottom|left|right> [rofi args...]
+# Rofi always uses the "rofi" layer namespace, so the direction is set by a named Hyprland layer
+# rule right before launch (only rofi is affected, and resending the name replaces the direction).
+
+direction="$1"
+shift
+
+hyprctl eval "hl.layer_rule({ name = \"rofi-slide\", enabled = true, match = { namespace = \"^rofi\$\" }, animation = \"slide $direction\" })" >/dev/null 2>&1
+
+exec rofi "$@"

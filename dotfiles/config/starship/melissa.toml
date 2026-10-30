@@ -12,10 +12,10 @@ $python\
 $username\
 [](bg:#81a1c1 fg:#556a7f)\
 $directory\
-[](fg:#81a1c1 bg:#bf616a)\
+[](fg:#81a1c1 bg:#88c0d0)\
 $git_branch\
 $git_status\
-[](fg:#bf616a bg:#ebcb8b)\
+[](fg:#88c0d0 bg:#ebcb8b)\
 $c\
 $elixir\
 $elm\
@@ -44,7 +44,7 @@ style_root = "bg:#556a7f"
 format = '[ ]($style)'
 
 [directory]
-style = "fg:#2e3440 bg:#81a1c1"
+style = "fg:#ffffff bg:#81a1c1"
 format = '[ $path ]($style)'
 truncation_length = 3
 truncation_symbol = "…/"
@@ -64,7 +64,7 @@ truncation_symbol = "…/"
 
 [c]
 symbol = " "
-style = "fg:#2e3440 bg:#ebcb8b"
+style = "fg:#000000 bg:#ebcb8b"
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]
@@ -84,10 +84,10 @@ format = '[ $symbol ($version) ]($style)'
 
 [git_branch]
 symbol = ""
-format = '[ $symbol $branch ](fg:#ffffff bg:#bf616a)'
+format = '[ $symbol $branch ](fg:#ffffff bg:#88c0d0)'
 
 [git_status]
-format = '[$all_status$ahead_behind ](fg:#ffffff bg:#bf616a)'
+format = '[$all_status$ahead_behind ](fg:#ffffff bg:#88c0d0)'
 
 [golang]
 symbol = " "

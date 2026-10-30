@@ -160,7 +160,7 @@ build_menu() {
 
 gen_rofi_theme
 
-CHOICE_INDEX=$(build_menu | rofi -dmenu -i -p "" -theme "$ROFI_THEME" -show-icons -format i) || exit 0
+CHOICE_INDEX=$(build_menu | "$BIN/rofi-slide" right -dmenu -i -p "" -theme "$ROFI_THEME" -show-icons -format i) || exit 0
 
 [ -z "${CHOICE_INDEX:-}" ] && exit 0
 
