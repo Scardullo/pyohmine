@@ -1,26 +1,33 @@
 * {
-    font-family: "JetBrainsMono Nerd Font", "Noto Sans Mono", "Noto Sans Symbols2";
+    font-family: "JetBrainsMono Nerd Font";
     font-size: 12px;
     min-height: 0;
     border: none;
 }
 
 window#waybar {
-    background: #2d353b;
-    color: #d3c6aa;
-}
+    background: #1a1b26;
+    color: #c0caf5;
+    border: none;
+    border-radius: 0px;
+    margin: 20px 0px 0px 0px;
 
-/* Arch Logo */
+    padding: 0px;
+}
 
 #custom-logo {
-    background: transparent;
-    color: #d3c6aa;
-    margin: 3px 3px 3px 6px;
-    padding: 0 10px;
-    border-radius: 10px;
-    font-size: 15px;
-}
+    background: #1a1b26;
+    color: #7aa2f7;
+    margin: 0px;
 
+    padding-left: 20px;
+    padding-right: 24px;
+
+    border-radius: 0px;
+
+    font-size: 18px;
+    font-weight: bold;
+}
 /* Workspaces */
 
 #workspaces {
@@ -29,7 +36,7 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #9da9a0;
+    color: #6272a4;
     margin: 0 2px;
     padding: 0 10px;
     border-radius: 8px;
@@ -37,40 +44,35 @@ window#waybar {
 }
 
 #workspaces button.active {
-    background: #d3c6aa;
-    color: #2d353b;
+    background: #7aa2f7;
+    color: #1a1b26;
 }
 
 #workspaces button:hover {
-    background: #3d474e;
-    color: #d3c6aa;
+    background: #44475a;
+    color: #7aa2f7;
 }
 
 /* Modules */
 
 #clock,
+#idle_inhibitor,
 #custom-hypridle,
+#tray,
 #cpu,
 #memory,
 #network,
-#pulseaudio,
-#tray {
+#pulseaudio {
     background: transparent;
-    color: #d3c6aa;
-    margin: 3px 3px;
+    color: #7aa2f7;
+    margin: 0px;
     padding: 0 10px;
     border-radius: 10px;
 }
 
-/* Right spacing */
-
-#tray {
-    margin-right: 6px;
-}
-
 #cpu {
-    background: #2d353b;
-    color: #d3c6aa;
+    background: #1a1b26;
+    color: #7aa2f7;
     font-weight: bold;
     border-radius: 0px;
 }
@@ -78,43 +80,41 @@ window#waybar {
 /* MEMORY */
 
 #memory {
-    background: #2d353b;
-    color: #d3c6aa;
+    background: #1a1b26;
+    color: #7aa2f7;
     font-weight: bold;
-    border-radius: 0px;
+    border-radius: 0px 10px 10px 0px;
 }
 
 /* VOLUME */
 
 #pulseaudio {
-    background: #2d353b;
-    color: #d3c6aa;
+    background: #1a1b26;
+    color: #7aa2f7;
     font-weight: bold;
     border-radius: 0px;
 }
 
 #clock {
     font-weight: bold;
-}
-
-/* Hypridle toggle */
-
-#custom-hypridle {
-    font-weight: bold;
+    background: #1a1b26;
+    color: #7aa2f7;
 }
 
 #custom-weather {
     font-weight: bold;
+    background: #1a1b26;
+    color: #7aa2f7;
 }
 
 /* Tooltip */
 
 tooltip {
-    background: #2d353b;
-    border: 2px solid #3d474e;
+    background: #1a1b26;
+    border: 2px solid #44475a;
     border-radius: 10px;
 }
 
 tooltip label {
-    color: #d3c6aa;
+    color: #7aa2f7;
 }

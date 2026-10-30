@@ -4,7 +4,7 @@ set -e
 mkdir -p "$HOME/.local/state"
 echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
 
-wallpp "/home/anthony/Pictures/wallpaper/gh0stzk/jan/wall-06.webp"
+wallpp "/home/anthony/Pictures/wallpaper/gh0stzk/emilia/wall-11.webp"
 
 cp ~/.config/kitty/jan ~/.config/kitty/kitty.conf
 cp ~/Documents/fastfetch-configs/arch3 ~/.config/fastfetch/config.jsonc
