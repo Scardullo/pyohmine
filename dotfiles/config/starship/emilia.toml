@@ -7,12 +7,12 @@ add_newline = true
 
 # Change the default prompt format
 format = """
-[](#7b65a3)\
+[](#383e78)\
 $python\
 $username\
-[](bg:#bb9af7 fg:#7b65a3)\
+[](bg:#555fb5 fg:#383e78)\
 $directory\
-[](fg:#bb9af7 bg:#f7768e)\
+[](fg:#555fb5 bg:#f7768e)\
 $git_branch\
 $git_status\
 [](fg:#f7768e bg:#e0af68)\
@@ -28,9 +28,9 @@ $nim\
 $rust\
 [](fg:#e0af68 bg:#9ece6a)\
 $docker_context\
-[](fg:#9ece6a bg:#7b65a3)\
+[](fg:#9ece6a bg:#383e78)\
 $time\
-[ ](fg:#7b65a3)\
+[ ](fg:#383e78)\
 """
 command_timeout = 5000
 # Disable the blank line at the start of the prompt
@@ -39,12 +39,12 @@ command_timeout = 5000
 # You can also replace your username with a neat symbol like  to save some space
 [username]
 show_always = true
-style_user = "bg:#7b65a3"
-style_root = "bg:#7b65a3"
+style_user = "bg:#383e78"
+style_root = "bg:#383e78"
 format = '[ ]($style)'
 
 [directory]
-style = "fg:#1a1b26 bg:#bb9af7"
+style = "bg:#555fb5"
 format = '[ $path ]($style)'
 truncation_length = 3
 truncation_symbol = "…/"
@@ -64,7 +64,7 @@ truncation_symbol = "…/"
 
 [c]
 symbol = " "
-style = "fg:#1a1b26 bg:#e0af68"
+style = "fg:#ffffff bg:#e0af68"
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]
@@ -131,6 +131,6 @@ format = '[ $symbol ($version) ]($style)'
 [time]
 disabled = false
 time_format = "%I:%M"
-style = "bg:#7b65a3"
+style = "bg:#383e78"
 format = '[ $time ]($style)'
 
