@@ -16,6 +16,8 @@ mkdir -p "$CACHE_DIR"
 # Display Name:script name in ~/.local/bin (wallpaper is read live from each script's "wallpp" line)
 THEMES=(
   "Nord:nord"
+  "Anime:anime"
+  "Archlinux:archlinux"
   "Brenda:brenda"
   "Catppuccin:catppuccin"
   "Cristina:cristina"
@@ -29,7 +31,6 @@ THEMES=(
   "Hacker:hacker"
   "Isabel:isabel"
   "Jan:jan"
-  "Karla:karla"
   "Marisol:marisol"
   "Melissa:melissa"
   "Pamela:pamela"
@@ -37,7 +38,6 @@ THEMES=(
   "Silvia:silvia"
   "Tokyo Night:tokyo-night"
   "Varinka:varinka"
-  "Yael:yael"
   "Z0mbi3:z0mbi3"
 )
 

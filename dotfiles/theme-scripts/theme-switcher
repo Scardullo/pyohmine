@@ -18,6 +18,8 @@ mkdir -p "$CACHE_DIR"
 # Display Name:script name in ~/.local/bin (wallpaper is read live from each script's "wallpp" line)
 THEMES=(
   "Nord:nord"
+  "Anime:anime"
+  "Archlinux:archlinux"
   "Brenda:brenda"
   "Catppuccin:catppuccin"
   "Cristina:cristina"
@@ -30,7 +32,6 @@ THEMES=(
   "Hacker:hacker"
   "Isabel:isabel"
   "Jan:jan"
-  "Karla:karla"
   "Marisol:marisol"
   "Melissa:melissa"
   "Nebula:nebula"
@@ -39,7 +40,6 @@ THEMES=(
   "Silvia:silvia"
   "Tokyo Night:tokyo-night"
   "Varinka:varinka"
-  "Yael:yael"
   "Z0mbi3:z0mbi3"
 )
 
@@ -54,7 +54,7 @@ CURRENT_WALL=""
 [ -f "$STATE_FILE" ] && CURRENT_WALL=$(cat "$STATE_FILE")
 
 # current-theme is written by every theme script, p10k and starship alike (via basename "$0"),
-# e.g. "karla" or "karla_star". The popup colors follow it, whichever switcher applied the theme;
+# e.g. "archlinux" or "archlinux_star". The popup colors follow it, whichever switcher applied the theme;
 # CURRENT_SCRIPT is the entry in this list that is actually running.
 ACTIVE_THEME=""
 [ -f "$CURRENT_THEME_FILE" ] && ACTIVE_THEME=$(cat "$CURRENT_THEME_FILE")

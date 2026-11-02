@@ -24,8 +24,8 @@ mapfile -t WALLPAPERS < <(
   | awk '{hash=$1; $1=""; path=substr($0,2); if (!(hash in seen)) { seen[hash]=1; print path }}'
 )
 
-# current-theme is written by every theme script, p10k and starship alike (e.g. "karla" or
-# "karla_star"); strip _star so the overrides below apply to both variants.
+# current-theme is written by every theme script, p10k and starship alike (e.g. "archlinux" or
+# "archlinux_star"); strip _star so the overrides below apply to both variants.
 ACTIVE_THEME=""
 [ -f "$CURRENT_THEME_FILE" ] && ACTIVE_THEME=$(cat "$CURRENT_THEME_FILE")
 PALETTE_THEME="${ACTIVE_THEME%_star}"

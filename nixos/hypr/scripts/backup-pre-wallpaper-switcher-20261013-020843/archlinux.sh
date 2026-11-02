@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 
 cat <<EOF | rofi -dmenu -i -p "Hyprland Keybinds" \
--theme ~/.config/rofi/themes/karla.rasi
+-theme ~/.config/rofi/themes/archlinux.rasi
 
 SUPER + ENTER   Terminal
 SUPER + D       Rofi Launcher
 ALT + SPACE     Theme Switcher
-SUPER + O       Starship Theme Switcher
-SUPER + SPACE   Wallpaper Switcher
 SUPER + E       Thunar
 SUPER + B       Firefox
 SUPER + C       VS Code

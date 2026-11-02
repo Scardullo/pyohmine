@@ -11,18 +11,20 @@
 ---- MONITORS ----
 ------------------
 
+-- Samsung LS32AG55x (main): workspaces 1, 3-10
 hl.monitor({
     output   = "DP-1",
-    mode     = "preferred",
+    mode     = "2560x1440@164.84",
     position = "0x0",
-    scale    = "auto",
+    scale    = "1",
 })
 
+-- Dell SE2422HX (right of the Samsung): workspace 2 only
 hl.monitor({
-    output   = "HDMI-A-2",
-    mode     = "preferred",
+    output   = "HDMI-A-1",
+    mode     = "1920x1080@60",
     position = "2560x0",
-    scale    = "auto",
+    scale    = "1",
 })
 
 
@@ -81,7 +83,7 @@ hl.config({
         border_size = 0,
 
         col = {
-            -- OxoCarbon accent (gh0stzk Yael rice)
+            -- OxoCarbon accent (gh0stzk Anime rice)
             active_border   = "rgba(42be65ff)",
             inactive_border = "rgba(393939ff)",
         },
@@ -267,9 +269,10 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/themes/yael.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/anime.rasi"))
 hl.bind("ALT + SPACE",      hl.dsp.exec_cmd("~/.local/bin/theme-switcher"))
-hl.bind("SUPER + ALT + SPACE", hl.dsp.exec_cmd("~/.local/bin/wallpaper-switcher"))
+hl.bind("SUPER + O",       hl.dsp.exec_cmd("~/.local/bin/star-theme-switcher"))
+hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("~/.local/bin/wallpaper-switcher"))
 
 -- Move current window to previous/next workspace (note: your original conf uses the
 -- "workspace" dispatcher here, not "movetoworkspace" -- that's a focus change, not a
@@ -302,15 +305,15 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/yael.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/anime.sh"))
 
 
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
 
--- RIGHT MONITOR (Dell) ONLY workspace 2
-hl.workspace_rule({ workspace = "2", monitor = "HDMI-A-2" })
+-- RIGHT MONITOR (Dell, HDMI-A-1) ONLY workspace 2
+hl.workspace_rule({ workspace = "2", monitor = "HDMI-A-1" })
 
 -- LEFT MONITOR (Samsung) main workspaces
 hl.workspace_rule({ workspace = "1",  monitor = "DP-1" })

@@ -83,9 +83,9 @@ hl.config({
         border_size = 0,
 
         col = {
-            -- OxoCarbon accent (gh0stzk Yael rice)
-            active_border   = "rgba(42be65ff)",
-            inactive_border = "rgba(393939ff)",
+            -- Zombie-Night accent (gh0stzk Archlinux rice)
+            active_border   = "rgba(888db3ff)",
+            inactive_border = "rgba(888db3ff)",
         },
 
         resize_on_border = false,
@@ -98,8 +98,8 @@ hl.config({
         rounding       = 0,
         rounding_power = 2,
 
-        active_opacity   = 0.95,
-        inactive_opacity = 0.95,
+        active_opacity   = 0.8,
+        inactive_opacity = 0.8,
 
         shadow = {
             enabled      = true,
@@ -269,7 +269,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/yael.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/archlinux.rasi"))
 hl.bind("ALT + SPACE",      hl.dsp.exec_cmd("~/.local/bin/theme-switcher"))
 hl.bind("SUPER + O",       hl.dsp.exec_cmd("~/.local/bin/star-theme-switcher"))
 hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("~/.local/bin/wallpaper-switcher"))
@@ -305,7 +305,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/yael.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/archlinux.sh"))
 
 
 --------------------------------
