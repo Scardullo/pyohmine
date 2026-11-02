@@ -11,7 +11,8 @@
         "separator": " -> ",
         "brightColor": false,
         "color": {
-            "keys": "default"
+            "keys": "default",
+            "title": "default"
         }
     },
     "modules": [
