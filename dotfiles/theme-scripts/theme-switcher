@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Theme picker popup (bound to ALT+SPACE): rofi grid of wallpaper thumbnails, with the
+# Theme picker popup (bound to SUPER+O): rofi grid of wallpaper thumbnails, with the
 # highlighted theme's name in a separate label above it (see rofi-name-popup).
 # Selecting an entry runs the matching ~/.local/bin/<theme> script.
 
@@ -191,7 +191,7 @@ gen_rofi_theme
 ROWS="${XDG_RUNTIME_DIR:-/tmp}/rofi-name-popup.rows"
 build_rows > "$ROWS"
 rm -f "${XDG_RUNTIME_DIR:-/tmp}/rofi-name-popup/ready"
-"$BIN/rofi-name-popup" serve "$ROWS" left &
+"$BIN/rofi-name-popup" serve "$ROWS" left $'\uf1fc' &
 POPUP_PID=$!
 "$BIN/rofi-name-popup" wait
 

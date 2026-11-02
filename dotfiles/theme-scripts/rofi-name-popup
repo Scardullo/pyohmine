@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Name label and colored panel for the p10k and starship theme grids, both following the highlight.
 #
-#   rofi-name-popup serve ROWS DIRECTION       run while the grid is open
+#   rofi-name-popup serve ROWS DIRECTION [ICON] run while the grid is open; ICON goes left of the name
 #   rofi-name-popup wait                       block until the panel is up, so rofi opens on top of it
 #   rofi-name-popup hook NAME                  grid's on-selection-changed hook: show NAME
 #   rofi-name-popup top                        print the grid's y-offset, also used to pin it in place
@@ -23,6 +23,7 @@ GRID_RADIUS=18
 LABEL_HEIGHT=80     # outer height of the label
 LABEL_GAP=10        # space between label and grid
 READY="$RUN_DIR/ready"
+DEFAULT_ICON=$'\uee72'  # Nerd Font paint roller (fa-paint_roller), used when serve gets no ICON
 
 # Prints where rofi will center the grid on the focused monitor, measured from below the bar.
 grid_top() {
@@ -34,7 +35,7 @@ print((m["height"] - m["reserved"][1] - m["reserved"][3] - '"$GRID_HEIGHT"') // 
 }
 
 serve() {
-  local rows_file="$1" direction="$2" name bg fg accent
+  local rows_file="$1" direction="$2" icon="${3:-$DEFAULT_ICON}" name bg fg accent
   local -A BG ACCENT
   while IFS=$'\t' read -r name bg fg accent _; do
     BG[$name]="$bg"; ACCENT[$name]="$accent"
@@ -65,7 +66,7 @@ serve() {
 
   send() {
     if [ -n "${BG[$1]+set}" ]; then
-      printf '%s\t%s\t%s\t%s\t%s\n' "$1" "${BG[$1]}" "${ACCENT[$1]}" "$offset" "$radius" >&"${LABEL[1]}"
+      printf '%s %s\t%s\t%s\t%s\t%s\n' "$icon" "$1" "${BG[$1]}" "${ACCENT[$1]}" "$offset" "$radius" >&"${LABEL[1]}"
     else
       printf '\n' >&"${LABEL[1]}"
     fi
@@ -88,7 +89,7 @@ wait_for_panel() {
 }
 
 case "${1:-}" in
-  serve) serve "$2" "$3" ;;
+  serve) serve "$2" "$3" "${4:-}" ;;
   top)   grid_top ;;
   wait)  wait_for_panel ;;
   hook)  [ -p "$FIFO" ] && printf '%s\n' "${2:-}" 1<>"$FIFO" ;;
