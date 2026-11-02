@@ -39,12 +39,12 @@ command_timeout = 5000
 # You can also replace your username with a neat symbol like  to save some space
 [username]
 show_always = true
-style_user = "bg:#82659c"
-style_root = "bg:#82659c"
+style_user = "fg:#ffffff bg:#82659c"
+style_root = "fg:#ffffff bg:#82659c"
 format = '[ ]($style)'
 
 [directory]
-style = "fg:#0d0f18 bg:#c59aed"
+style = "fg:#ffffff bg:#c59aed"
 format = '[ $path ]($style)'
 truncation_length = 3
 truncation_symbol = "…/"
@@ -131,6 +131,6 @@ format = '[ $symbol ($version) ]($style)'
 [time]
 disabled = false
 time_format = "%I:%M"
-style = "bg:#82659c"
+style = "fg:#ffffff bg:#82659c"
 format = '[ $time ]($style)'
 
