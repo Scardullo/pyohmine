@@ -5,11 +5,12 @@ configuration {
 }
 
 * {
-    bg:         __BG__;
+    /* The background and border come from the panel behind this window (see rofi-name-popup). */
+    bg:         transparent;
     bg-alt:     __BG_ALT__;
     fg:         __FG__;
     selected:   __ACCENT__;
-    border-col: __ACCENT__;
+    border-col: transparent;
 
     background-color: transparent;
     text-color: @fg;

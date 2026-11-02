@@ -5,11 +5,12 @@ configuration {
 }
 
 * {
-    bg:         rgba(20, 23, 28, 0.95);
+    /* The background and border come from the panel behind this window (see rofi-name-popup). */
+    bg:         transparent;
     bg-alt:     rgba(97, 175, 239, 0.16);
     fg:         #abb2bf;
     selected:   #61afef;
-    border-col: #61afef;
+    border-col: transparent;
 
     background-color: transparent;
     text-color: @fg;

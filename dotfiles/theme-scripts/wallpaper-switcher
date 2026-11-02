@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Wallpaper-only picker popup (bound to SUPER+SPACE): rofi single-column list of every
 # wallpaper under ~/Pictures/wallpaper, scrolling top to bottom, icon-only (no names, no
-# search bar). Selecting one just sets the wallpaper via `wallpp` -- it does not touch
+# search bar), with a "Wallpapers" label above it (see rofi-name-popup). Selecting one just sets the wallpaper via `wallpp` -- it does not touch
 # kitty/waybar/hyprland like the theme scripts do.
 
+BIN="$HOME/.local/bin"
 WALL_ROOT="$HOME/Pictures/wallpaper"
 CACHE_DIR="$HOME/.cache/wallpaper-switcher/thumbs"
 CURRENT_THEME_FILE="$HOME/.local/state/current-theme"
@@ -57,7 +58,7 @@ gen_rofi_theme() {
   # always the live palette.
   local kitty_conf="$KITTY_DIR/kitty.conf"
   [ -n "${KITTY_PALETTE_OVERRIDE[$PALETTE_THEME]}" ] && kitty_conf="$KITTY_DIR/${KITTY_PALETTE_OVERRIDE[$PALETTE_THEME]}"
-  local bg_hex="#14141c" fg_hex="#e8e8f0" accent_hex="#8aadf4"
+  bg_hex="#14141c"; fg_hex="#e8e8f0"; accent_hex="#8aadf4"   # global: the label reads them too
   if [ -n "$PALETTE_THEME" ] && [ -f "$kitty_conf" ]; then
     local v
     v=$(grep -m1 -E '^background[[:space:]]' "$kitty_conf" | awk '{print $2}'); [ -n "$v" ] && bg_hex="$v"
@@ -107,7 +108,34 @@ build_menu() {
 
 gen_rofi_theme
 
-CHOICE_INDEX=$(build_menu | "$HOME/.local/bin/rofi-slide" bottom -dmenu -i -p "" -theme "$ROFI_THEME" -show-icons -format i) || exit 0
+# "Wallpapers" label above the grid and the colored panel behind it, same as the theme switchers.
+# Grid size: N x (200 icon + 2*6 padding + 2*2 border) + (N-1)*12 spacing + 2*20 padding + 2*2 border,
+# 4 columns wide. Keep in step with wallpaper-switcher.rasi.tpl.
+# Rows: 5, or fewer when the focused monitor is too short for them plus the label (80 + 10 gap + 12
+# margin above the grid), e.g. 4 on a 1080p screen.
+grid_height() { echo $(( $1 * 216 + ($1 - 1) * 12 + 44 )); }
+AVAIL=$(hyprctl monitors -j | python3 -c '
+import json, sys
+m = [m for m in json.load(sys.stdin) if m["focused"]][0]
+print(m["height"] - m["reserved"][1] - m["reserved"][3])
+')
+ROWS_SHOWN=5
+while [ "$ROWS_SHOWN" -gt 1 ] && [ $(( 102 + $(grid_height "$ROWS_SHOWN") )) -gt "${AVAIL:-9999}" ]; do
+  ROWS_SHOWN=$((ROWS_SHOWN - 1))
+done
+export ROFI_NAME_GRID_WIDTH=900 ROFI_NAME_GRID_HEIGHT=$(grid_height "$ROWS_SHOWN")
+ROWS="${XDG_RUNTIME_DIR:-/tmp}/rofi-name-popup.rows"
+printf 'Wallpapers\t%s\t%s\t%s\n' "$bg_hex" "$fg_hex" "$accent_hex" > "$ROWS"
+rm -f "${XDG_RUNTIME_DIR:-/tmp}/rofi-name-popup/ready"
+"$BIN/rofi-name-popup" serve "$ROWS" bottom $'\uf03e' &
+POPUP_PID=$!
+"$BIN/rofi-name-popup" wait
+
+CHOICE_INDEX=$(build_menu | "$BIN/rofi-slide" bottom -dmenu -i -p "" -theme "$ROFI_THEME" -show-icons -format i \
+  -theme-str "window { location: north; anchor: north; y-offset: $("$BIN/rofi-name-popup" top)px; } listview { lines: $ROWS_SHOWN; }")
+rofi_status=$?
+kill "$POPUP_PID" 2>/dev/null
+[ "$rofi_status" -eq 0 ] || exit 0
 
 [ -z "${CHOICE_INDEX:-}" ] && exit 0
 

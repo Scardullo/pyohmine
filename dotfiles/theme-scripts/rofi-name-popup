@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Name label and colored panel for the p10k and starship theme grids, both following the highlight.
+# Name label and colored panel for the p10k/starship theme grids and the wallpaper grid, both following the highlight.
 #
 #   rofi-name-popup serve ROWS DIRECTION [ICON] run while the grid is open; ICON goes left of the name
 #   rofi-name-popup wait                       block until the panel is up, so rofi opens on top of it
@@ -17,8 +17,10 @@ RUN_DIR="${XDG_RUNTIME_DIR:-/tmp}/rofi-name-popup"
 FIFO="$RUN_DIR/fifo"
 HYPR_CONF="$HOME/.config/hypr/hyprland.lua"
 
-GRID_WIDTH=1100     # outer size of the grid; keep in step with theme-switcher.rasi.tpl
-GRID_HEIGHT=841
+# Outer size of the grid; keep in step with theme-switcher.rasi.tpl. Other grids (the wallpaper
+# switcher) export ROFI_NAME_GRID_WIDTH / ROFI_NAME_GRID_HEIGHT for their own size.
+GRID_WIDTH=${ROFI_NAME_GRID_WIDTH:-1100}
+GRID_HEIGHT=${ROFI_NAME_GRID_HEIGHT:-841}
 GRID_RADIUS=18
 LABEL_HEIGHT=80     # outer height of the label
 LABEL_GAP=10        # space between label and grid
@@ -26,11 +28,13 @@ READY="$RUN_DIR/ready"
 DEFAULT_ICON=$'\uee72'  # Nerd Font paint roller (fa-paint_roller), used when serve gets no ICON
 
 # Prints where rofi will center the grid on the focused monitor, measured from below the bar.
+# On a short monitor the grid is pushed down just enough to leave room for the label above it.
 grid_top() {
   hyprctl monitors -j | python3 -c '
 import json, sys
 m = [m for m in json.load(sys.stdin) if m["focused"]][0]
-print((m["height"] - m["reserved"][1] - m["reserved"][3] - '"$GRID_HEIGHT"') // 2)
+centered = (m["height"] - m["reserved"][1] - m["reserved"][3] - '"$GRID_HEIGHT"') // 2
+print(max(centered, '"$((LABEL_HEIGHT + LABEL_GAP + 12))"'))
 '
 }
 
@@ -55,8 +59,9 @@ serve() {
   offset=$(( top - LABEL_HEIGHT - LABEL_GAP ))
   [ "$offset" -lt 12 ] && offset=12
 
-  # The panel slides in with the grid; rofi-slide sets the same direction for the grid.
+  # The panel and label slide in with the grid; rofi-slide sets the same direction for the grid.
   hyprctl eval "hl.layer_rule({ name = \"rofi-name-panel-slide\", enabled = true, match = { namespace = \"^rofi-name-panel\$\" }, animation = \"slide $direction\" })" >/dev/null 2>&1
+  hyprctl eval "hl.layer_rule({ name = \"rofi-name-label-slide\", enabled = true, match = { namespace = \"^rofi-name-label\$\" }, animation = \"slide $direction\" })" >/dev/null 2>&1
 
   coproc LABEL { "$HOME/.local/bin/rofi-name-label" "$top" "$GRID_WIDTH" "$GRID_HEIGHT" "$panel_radius" 2>/dev/null; }
   local label_pid=$LABEL_PID
