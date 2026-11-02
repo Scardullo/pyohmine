@@ -84,10 +84,10 @@ format = '[ $symbol ($version) ]($style)'
 
 [git_branch]
 symbol = ""
-format = '[ $symbol $branch ](fg:#181825 bg:#f38ba8)'
+format = '[ $symbol $branch ](fg:#ffffff bg:#f38ba8)'
 
 [git_status]
-format = '[$all_status$ahead_behind ](fg:#181825 bg:#f38ba8)'
+format = '[$all_status$ahead_behind ](fg:#ffffff bg:#f38ba8)'
 
 [golang]
 symbol = " "
