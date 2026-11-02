@@ -15,7 +15,7 @@ $directory\
 [](fg:#81a1c1 bg:#88c0d0)\
 $git_branch\
 $git_status\
-[](fg:#88c0d0 bg:#ebcb8b)\
+[](fg:#88c0d0 bg:#d8dee9)\
 $c\
 $elixir\
 $elm\
@@ -26,9 +26,8 @@ $julia\
 $nodejs\
 $nim\
 $rust\
-[](fg:#ebcb8b bg:#a3be8c)\
+[](fg:#d8dee9 bg:#556a7f)\
 $docker_context\
-[](fg:#a3be8c bg:#556a7f)\
 $time\
 [ ](fg:#556a7f)\
 """
@@ -64,7 +63,7 @@ truncation_symbol = "…/"
 
 [c]
 symbol = " "
-style = "fg:#000000 bg:#ebcb8b"
+style = "fg:#000000 bg:#d8dee9"
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]

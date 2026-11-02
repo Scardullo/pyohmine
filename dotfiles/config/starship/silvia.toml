@@ -1,21 +1,13 @@
-# Get editor completions based on the config schema
-# https://starship.rs/config-schema.json
-"$schema" = "https://starship.rs/config-schema.json"
-
-# Inserts a blank line between shell prompts
-add_newline = true
-
-# Change the default prompt format
 format = """
-[](#566c64)\
+[](#3B4252)\
 $python\
 $username\
-[](bg:#83a598 fg:#566c64)\
+[](bg:#434C5E fg:#3B4252)\
 $directory\
-[](fg:#83a598 bg:#fb4934)\
+[](fg:#434C5E bg:#b16286)\
 $git_branch\
 $git_status\
-[](fg:#fb4934 bg:#fabd2d)\
+[](fg:#b16286 bg:#d79921)\
 $c\
 $elixir\
 $elm\
@@ -26,11 +18,11 @@ $julia\
 $nodejs\
 $nim\
 $rust\
-[](fg:#fabd2d bg:#b8bb26)\
+[](fg:#d79921 bg:#98971a)\
 $docker_context\
-[](fg:#b8bb26 bg:#566c64)\
+[](fg:#98971a bg:#326670)\
 $time\
-[ ](fg:#566c64)\
+[ ](fg:#326670)\
 """
 command_timeout = 5000
 # Disable the blank line at the start of the prompt
@@ -39,13 +31,13 @@ command_timeout = 5000
 # You can also replace your username with a neat symbol like  to save some space
 [username]
 show_always = true
-style_user = "bg:#566c64"
-style_root = "bg:#566c64"
+style_user = "bg:#3B4252"
+style_root = "bg:#3B4252"
 format = '[ ]($style)'
 
 [directory]
-style = "fg:#282828 bg:#83a598"
-format = '[ $path ]($style)'
+style = "bg:#434C5E"
+format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
 
@@ -64,7 +56,7 @@ truncation_symbol = "…/"
 
 [c]
 symbol = " "
-style = "fg:#282828 bg:#fabd2d"
+style = "bg:#d79921"
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]
@@ -84,10 +76,12 @@ format = '[ $symbol ($version) ]($style)'
 
 [git_branch]
 symbol = ""
-format = '[ $symbol $branch ](fg:#ffffff bg:#fb4934)'
+style = "bg:#b16286"
+format = '[ $symbol $branch ]($style)'
 
 [git_status]
-format = '[$all_status$ahead_behind ](fg:#ffffff bg:#fb4934)'
+style = "bg:#b16286"
+format = '[$all_status$ahead_behind ]($style)'
 
 [golang]
 symbol = " "
@@ -121,7 +115,7 @@ format = '[ $symbol ($version) ]($style)'
 
 [python]
 style = "bg:#3B4252"
-format = '[(\$virtualenv )]($style)'
+format = '[(\($virtualenv\) )]($style)'
 
 [rust]
 symbol = ""
@@ -131,6 +125,5 @@ format = '[ $symbol ($version) ]($style)'
 [time]
 disabled = false
 time_format = "%I:%M"
-style = "bg:#566c64"
+style = "bg:#326670"
 format = '[ $time ]($style)'
-
