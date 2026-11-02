@@ -17,8 +17,9 @@ BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 
 # Not explicitly installed on the source PC (pulled in as deps), but called directly by the
 # configs/scripts: playerctl (waybar/hypr media keys), wpctl (volume keys), brightnessctl
-# (brightness keys), curl (weather), python (pokefetch), rsync (this script).
-EXTRA_PKGS=(playerctl wireplumber brightnessctl curl python rsync)
+# (brightness keys), curl (weather), python (pokefetch, rofi-name-popup), rsync (this script),
+# gtk-layer-shell (built into rofi-name-label below).
+EXTRA_PKGS=(playerctl wireplumber brightnessctl curl python rsync gtk-layer-shell)
 
 # Scripts that live in /usr/local/bin so Hyprland can find them without ~/.local/bin on PATH.
 SYSTEM_BIN=(wallpp wallp1 wallp2)
@@ -162,6 +163,16 @@ install_dotfiles() {
       warn "removed stale /usr/local/bin/$name (now lives in ~/.local/bin)"
     fi
   done
+
+  # The theme switchers' name label and color panel is a small C program, built here.
+  msg "Building rofi-name-label into ~/.local/bin"
+  place "$DOTS/src/" "$HOME/.local/src/" src
+  if command -v gcc >/dev/null && pkg-config --exists gtk-layer-shell-0 gtk+-3.0; then
+    gcc -O2 "$HOME/.local/src/rofi-name-label/rofi-name-label.c" -o "$HOME/.local/bin/rofi-name-label" \
+      $(pkg-config --cflags --libs gtk-layer-shell-0 gtk+-3.0)
+  else
+    warn "gcc or gtk-layer-shell missing: theme switchers will open without the name label"
+  fi
 
   msg "Installing wallpapers to ~/Pictures/wallpaper"
   place "$DOTS/wallpaper/" "$HOME/Pictures/wallpaper/" wallpaper

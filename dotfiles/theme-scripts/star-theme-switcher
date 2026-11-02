@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Starship theme picker popup (bound to SUPER+Z): rofi grid of theme name + wallpaper thumbnail.
+# Starship theme picker popup (bound to SUPER+O): rofi grid of wallpaper thumbnails, with the
+# highlighted theme's name in a separate label above it (see rofi-name-popup).
 # Selecting an entry runs the matching ~/.local/bin/<theme>_star script.
 
 BIN="$HOME/.local/bin"
@@ -55,11 +56,24 @@ CURRENT_WALL=""
 
 # current-theme is written by every theme script, p10k and starship alike (via basename "$0"),
 # e.g. "karla" or "karla_star". The popup colors follow it, whichever switcher applied the theme;
-# the "*" marker only goes on the entry in this list that is actually running.
+# CURRENT_SCRIPT is the entry in this list that is actually running.
 ACTIVE_THEME=""
 [ -f "$CURRENT_THEME_FILE" ] && ACTIVE_THEME=$(cat "$CURRENT_THEME_FILE")
 PALETTE_THEME="${ACTIVE_THEME%_star}"
 CURRENT_SCRIPT=""
+
+# List the theme in use first, whether it was applied from the p10k or the starship switcher: rofi
+# highlights the first entry. Asking rofi to start on another row (-selected-row, -select) leaves
+# the wrong theme highlighted while searching.
+for i in "${!THEMES[@]}"; do
+  script="${THEMES[$i]#*:}"
+  if [ "${script%_star}" = "$PALETTE_THEME" ]; then
+    entry="${THEMES[$i]}"
+    unset 'THEMES[i]'
+    THEMES=("$entry" "${THEMES[@]}")
+    break
+  fi
+done
 
 WALLS=()
 for entry in "${THEMES[@]}"; do
@@ -95,21 +109,26 @@ declare -A ACCENT_IS_FG=(
   [brenda]=1
 )
 
-gen_rofi_theme() {
-  # kitty.conf is what the active theme script copied in (p10k or starship variant), so it's
-  # always the live palette. Overrides are keyed by base theme name (no _star suffix).
-  local kitty_conf="$KITTY_DIR/kitty.conf"
-  [ -n "${KITTY_PALETTE_OVERRIDE[$PALETTE_THEME]}" ] && kitty_conf="$KITTY_DIR/${KITTY_PALETTE_OVERRIDE[$PALETTE_THEME]}"
-  local bg_hex="#14141c" fg_hex="#e8e8f0" accent_hex="#8aadf4"
-  if [ -n "$PALETTE_THEME" ] && [ -f "$kitty_conf" ]; then
-    local v
+# Sets bg_hex, fg_hex and accent_hex from a kitty config, for the theme named in $2.
+read_palette() {
+  local kitty_conf="$1" theme="$2" v
+  bg_hex="#14141c"; fg_hex="#e8e8f0"; accent_hex="#8aadf4"
+  if [ -n "$theme" ] && [ -f "$kitty_conf" ]; then
     v=$(grep -m1 -E '^background[[:space:]]' "$kitty_conf" | awk '{print $2}'); [ -n "$v" ] && bg_hex="$v"
     v=$(grep -m1 -E '^foreground[[:space:]]' "$kitty_conf" | awk '{print $2}'); [ -n "$v" ] && fg_hex="$v"
     v=$(grep -m1 -E '^color12[[:space:]]' "$kitty_conf" | awk '{print $2}')
     [ -z "$v" ] && v=$(grep -m1 -E '^color4[[:space:]]' "$kitty_conf" | awk '{print $2}')
     [ -n "$v" ] && accent_hex="$v"
   fi
-  [ -n "$PALETTE_THEME" ] && [ -n "${ACCENT_IS_FG[$PALETTE_THEME]}" ] && accent_hex="$fg_hex"
+  [ -n "$theme" ] && [ -n "${ACCENT_IS_FG[$theme]}" ] && accent_hex="$fg_hex"
+}
+
+gen_rofi_theme() {
+  # kitty.conf is what the active theme script copied in (p10k or starship variant), so it's
+  # always the live palette. Overrides are keyed by base theme name (no _star suffix).
+  local kitty_conf="$KITTY_DIR/kitty.conf"
+  [ -n "${KITTY_PALETTE_OVERRIDE[$PALETTE_THEME]}" ] && kitty_conf="$KITTY_DIR/${KITTY_PALETTE_OVERRIDE[$PALETTE_THEME]}"
+  read_palette "$kitty_conf" "$PALETTE_THEME"
 
   local bg_rgba bg_alt_rgba
   bg_rgba=$(hex_to_rgba "$bg_hex" 0.95)
@@ -149,7 +168,6 @@ build_menu() {
     wall="${WALLS[$i]}"
     thumb=$(thumb_for "$wall")
     label="$name"
-    [ -n "$CURRENT_SCRIPT" ] && [ "$script" = "$CURRENT_SCRIPT" ] && label="$name *"
     if [ -n "$thumb" ]; then
       printf '%s\0icon\x1f%s\n' "$label" "$thumb"
     else
@@ -158,9 +176,32 @@ build_menu() {
   done
 }
 
+# Name and colors of every entry, read by rofi-name-popup. Each theme gets the colors it applies.
+build_rows() {
+  local entry name script base label
+  for entry in "${THEMES[@]}"; do
+    name="${entry%%:*}"; script="${entry#*:}"; base="${script%_star}"
+    label="$name"
+    read_palette "$KITTY_DIR/${KITTY_PALETTE_OVERRIDE[$base]:-$base}" "$base"
+    printf '%s\t%s\t%s\t%s\n' "$label" "$bg_hex" "$fg_hex" "$accent_hex"
+  done
+}
+
 gen_rofi_theme
 
-CHOICE_INDEX=$(build_menu | "$BIN/rofi-slide" right -dmenu -i -p "" -theme "$ROFI_THEME" -show-icons -format i) || exit 0
+ROWS="${XDG_RUNTIME_DIR:-/tmp}/rofi-name-popup.rows"
+build_rows > "$ROWS"
+rm -f "${XDG_RUNTIME_DIR:-/tmp}/rofi-name-popup/ready"
+"$BIN/rofi-name-popup" serve "$ROWS" right &
+POPUP_PID=$!
+"$BIN/rofi-name-popup" wait
+
+CHOICE_INDEX=$(build_menu | "$BIN/rofi-slide" right -dmenu -i -p "" -theme "$ROFI_THEME" -show-icons -format i \
+  -theme-str "window { location: north; anchor: north; y-offset: $("$BIN/rofi-name-popup" top)px; }" \
+  -on-selection-changed "$BIN/rofi-name-popup hook '{entry}'")
+rofi_status=$?
+kill "$POPUP_PID" 2>/dev/null
+[ "$rofi_status" -eq 0 ] || exit 0
 
 [ -z "${CHOICE_INDEX:-}" ] && exit 0
 

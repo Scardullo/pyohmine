@@ -5,11 +5,13 @@ configuration {
 }
 
 * {
-    bg:         __BG__;
-    bg-alt:     __BG_ALT__;
-    fg:         __FG__;
-    selected:   __ACCENT__;
-    border-col: __ACCENT__;
+    /* The colors come from the panel behind this window (see rofi-name-popup), so everything
+       here is see-through or neutral enough to sit on any theme. */
+    bg:         transparent;
+    bg-alt:     rgba(255, 255, 255, 0.10);
+    fg:         #e8e8f0;
+    selected:   #b8b8c0;
+    border-col: transparent;
 
     background-color: transparent;
     text-color: @fg;
@@ -49,13 +51,14 @@ listview {
     columns: 6;
     lines: 4;
     spacing: 14px;
-    fixed-height: true;
+    /* true leaves the last theme's image behind in empty slots while searching */
+    fixed-height: false;
     fixed-columns: true;
     scrollbar: false;
 }
 
 element {
-    orientation: vertical;
+    children: [ element-icon ];
     padding: 10px;
     border-radius: __RADIUS_14__;
     border: 2px;
@@ -68,14 +71,7 @@ element-icon {
     horizontal-align: 0.5;
 }
 
-element-text {
-    horizontal-align: 0.5;
-    vertical-align: 0.5;
-    margin: 8px 0 0 0;
-}
-
 element selected.normal {
     background-color: @bg-alt;
     border-color: @selected;
-    text-color: @selected;
 }

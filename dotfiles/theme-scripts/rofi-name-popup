@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# Name label and colored panel for the p10k and starship theme grids, both following the highlight.
+#
+#   rofi-name-popup serve ROWS DIRECTION       run while the grid is open
+#   rofi-name-popup wait                       block until the panel is up, so rofi opens on top of it
+#   rofi-name-popup hook NAME                  grid's on-selection-changed hook: show NAME
+#   rofi-name-popup top                        print the grid's y-offset, also used to pin it in place
+#
+# ROWS is a tab-separated file of: name, background, foreground, accent.
+#
+# Rofi can't recolor itself while open, so the grid's background is see-through
+# (theme-switcher.rasi.tpl) and the panel behind it does the changing. Both the panel and the label
+# are rofi-name-label (source in ~/.local/src/rofi-name-label), not rofi: a second rofi would take
+# the keyboard away from the grid.
+
+RUN_DIR="${XDG_RUNTIME_DIR:-/tmp}/rofi-name-popup"
+FIFO="$RUN_DIR/fifo"
+HYPR_CONF="$HOME/.config/hypr/hyprland.lua"
+
+GRID_WIDTH=1100     # outer size of the grid; keep in step with theme-switcher.rasi.tpl
+GRID_HEIGHT=841
+GRID_RADIUS=18
+LABEL_HEIGHT=80     # outer height of the label
+LABEL_GAP=10        # space between label and grid
+READY="$RUN_DIR/ready"
+
+# Prints where rofi will center the grid on the focused monitor, measured from below the bar.
+grid_top() {
+  hyprctl monitors -j | python3 -c '
+import json, sys
+m = [m for m in json.load(sys.stdin) if m["focused"]][0]
+print((m["height"] - m["reserved"][1] - m["reserved"][3] - '"$GRID_HEIGHT"') // 2)
+'
+}
+
+serve() {
+  local rows_file="$1" direction="$2" name bg fg accent
+  local -A BG ACCENT
+  while IFS=$'\t' read -r name bg fg accent _; do
+    BG[$name]="$bg"; ACCENT[$name]="$accent"
+  done < "$rows_file"
+
+  local radius=14 panel_radius=$GRID_RADIUS
+  if grep -qE '^[[:space:]]*rounding[[:space:]]*=[[:space:]]*0\b' "$HYPR_CONF" 2>/dev/null; then
+    radius=0; panel_radius=0
+  fi
+
+  mkdir -p "$RUN_DIR"
+  rm -f "$FIFO" "$READY"; mkfifo "$FIFO"
+  exec 3<>"$FIFO"
+
+  local switcher_pid=$PPID top offset
+  top=$(grid_top)
+  offset=$(( top - LABEL_HEIGHT - LABEL_GAP ))
+  [ "$offset" -lt 12 ] && offset=12
+
+  # The panel slides in with the grid; rofi-slide sets the same direction for the grid.
+  hyprctl eval "hl.layer_rule({ name = \"rofi-name-panel-slide\", enabled = true, match = { namespace = \"^rofi-name-panel\$\" }, animation = \"slide $direction\" })" >/dev/null 2>&1
+
+  coproc LABEL { "$HOME/.local/bin/rofi-name-label" "$top" "$GRID_WIDTH" "$GRID_HEIGHT" "$panel_radius" 2>/dev/null; }
+  local label_pid=$LABEL_PID
+
+  cleanup() { kill "$label_pid" 2>/dev/null; rm -f "$FIFO" "$READY"; exit 0; }
+  trap cleanup TERM INT
+
+  send() {
+    if [ -n "${BG[$1]+set}" ]; then
+      printf '%s\t%s\t%s\t%s\t%s\n' "$1" "${BG[$1]}" "${ACCENT[$1]}" "$offset" "$radius" >&"${LABEL[1]}"
+    else
+      printf '\n' >&"${LABEL[1]}"
+    fi
+  }
+
+  send "$(sed -n '1s/\t.*//p' "$rows_file")"
+  read -r -t 1 -u "${LABEL[0]}" _
+  : > "$READY"
+
+  while kill -0 "$switcher_pid" 2>/dev/null; do
+    read -r -t 1 -u 3 name || continue
+    send "$name"
+  done
+  cleanup
+}
+
+wait_for_panel() {
+  local tries=0
+  until [ -e "$READY" ] || [ $((tries++)) -ge 50 ]; do sleep 0.01; done
+}
+
+case "${1:-}" in
+  serve) serve "$2" "$3" ;;
+  top)   grid_top ;;
+  wait)  wait_for_panel ;;
+  hook)  [ -p "$FIFO" ] && printf '%s\n' "${2:-}" 1<>"$FIFO" ;;
+  *)     sed -n '4,7p' "$0" | sed 's/^# *//' >&2; exit 1 ;;
+esac
