@@ -21,7 +21,7 @@ WHITE = (255, 255, 255)
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
-LABEL_FONT = pygame.font.SysFont("Arial", 26, bold=True)
+LABEL_FONT = pygame.font.SysFont("Arial", 20, bold=True)
 
 CHARACTERS = ["NinjaFrog", "MaskDude", "PinkMan", "VirtualGuy"]
 
@@ -137,6 +137,7 @@ class Player(pygame.sprite.Sprite):
         self.hit = False
         self.hit_count = 0
         self.player_hit = 0
+        self.on_ice = False
         self.sprite = self.sprites["idle_right"][0]
         self.update()
 
@@ -551,7 +552,7 @@ class Trampoline(Object):
 
 
 class FloatingPlatform(Object):
-    """A thin solid platform (Terrain.png's [0][3] plank tiles) that ferries
+    """A thin solid platform (Terrain.png's [0][4] plank tiles) that ferries
     the player back and forth between x_left and x_right, like Saw/Spikehead_x."""
     NATIVE_TILE_WIDTH = 48
     NATIVE_HEIGHT = 5
@@ -592,6 +593,247 @@ class FloatingPlatform(Object):
         self.dx = self.rect.x - start_x
 
 
+class DropPlatform(Object):
+    """A stationary platform (fans humming, "on") over a pit that stays solid
+    until the player lands on it -- the fans cut out ("off") and after a beat
+    it falls away, forcing the player to keep moving instead of camping on it,
+    unlike FloatingPlatform's side-to-side ferrying."""
+    ANIMATION_DELAY = 4
+    SPRITES = load_sprite_sheets("Traps", "Falling Platforms", 32, 10)
+    STAND_DELAY = 25   # frames standing before it drops
+    RECOVER_RATE = 2   # timer decay per frame once the player steps off
+    FALL_SPEED = 14    # faster than the player falls, so the two separate
+                        # cleanly instead of "landed()" re-triggering mid-fall
+
+    def __init__(self, x, y, width=96, height=30):
+        super().__init__(x, y, width, height, "drop_platform")
+
+        self.on_frames = [pygame.transform.scale(f, (width, height)) for f in self.SPRITES["On (32x10)"]]
+        self.off_frame = pygame.transform.scale(self.SPRITES["Off"][0], (width, height))
+        self.image = self.on_frames[0]
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.dx = 0  # stationary -- handle_vertical_collision still reads
+                     # this to carry a standing player, so it must exist
+        self.standing = False  # set by handle_vertical_collision each frame
+        self.timer = 0
+        self.falling = False
+        self.animation_count = 0
+
+    def loop(self):
+        if self.falling:
+            self.rect.y += self.FALL_SPEED
+            return
+
+        if self.standing:
+            self.timer += 1
+        else:
+            self.timer = max(0, self.timer - self.RECOVER_RATE)
+
+        if self.timer >= self.STAND_DELAY:
+            self.falling = True
+            self.image = self.off_frame
+            # empty mask -- collide_mask never matches again once it drops
+            self.mask = pygame.mask.Mask(self.image.get_size())
+        elif self.timer > 0:
+            # fans have cut out the moment the player landed -- it's coming down
+            self.image = self.off_frame
+            self.mask = pygame.mask.from_surface(self.image)
+        else:
+            self.image = self.on_frames[(self.animation_count // self.ANIMATION_DELAY) % len(self.on_frames)]
+            self.mask = pygame.mask.from_surface(self.image)
+            self.animation_count += 1
+
+        self.standing = False
+
+
+class SpringPad(Object):
+    """A high-powered spring pad (Traps/Arrow sprite) that launches the
+    player much higher than a Trampoline -- used to reach the elevator
+    shafts and high platforms in levels 6/7."""
+    ANIMATION_DELAY = 3
+    SPRITES = load_sprite_sheets("Traps", "Arrow", 18, 18)
+
+    def __init__(self, x, y, width=18, height=18, launch_vel=-18):
+        super().__init__(x, y, width, height, "spring_pad")
+        self.idle_frames = self.SPRITES["Idle (18x18)"]
+        self.hit_frames = self.SPRITES["Hit (18x18)"]
+        self.animation_name = "idle"
+        self.image = self.idle_frames[0]
+        self.mask = pygame.mask.from_surface(self.image)
+        self.animation_count = 0
+        self.bouncing = False
+        self.launch_vel = launch_vel
+
+    def bounce(self):
+        self.animation_name = "hit"
+        self.animation_count = 0
+        self.bouncing = True
+
+    def loop(self):
+        frames = self.hit_frames if self.animation_name == "hit" else self.idle_frames
+        sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(frames)
+        self.image = frames[sprite_index]
+        self.animation_count += 1
+
+        self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
+        self.mask = pygame.mask.from_surface(self.image)
+
+        if self.bouncing and self.animation_count // self.ANIMATION_DELAY >= len(frames):
+            self.animation_name = "idle"
+            self.animation_count = 0
+            self.bouncing = False
+
+
+class Fan(Object):
+    """A floor-mounted fan (Traps/Fan sprite) that blows a continuous updraft
+    in the column above it -- float up through it instead of jumping, the
+    way a FloatingPlatform ferries you sideways. Not solid and not a hazard:
+    handled entirely outside the objects/collision list (see play_level)."""
+    ANIMATION_DELAY = 4
+    SPRITES = load_sprite_sheets("Traps", "Fan", 24, 8)
+    # UPDRAFT_HEIGHT is a generous safety ceiling, not the thing that actually
+    # limits how high a ride gets -- REACH_RIGHT (below) does that. It only
+    # exists so a player can't get relifted forever if they somehow loiter.
+    UPDRAFT_HEIGHT = BLOCK_SIZE * 8
+    LIFT = -8
+    # The wall the fan boosts you over is 2 blocks to its right and the
+    # player gets pinned against its base (blocked from moving further right)
+    # while still under 5 blocks tall, so the updraft keeps relifting them in
+    # place until they clear it -- REACH_RIGHT only needs to reach a little
+    # past the wall's far edge, not cover the player's full climb. Making it
+    # wide (it used to be 6 blocks) let the updraft keep re-triggering well
+    # past the wall every time the player drifted/fell back into range, which
+    # is what caused the old "blasted to the top of the screen and hangs
+    # there for half the level" bug.
+    REACH_LEFT = 60
+    REACH_RIGHT = BLOCK_SIZE * 2 + 48
+
+    def __init__(self, x, y, width=24, height=8):
+        super().__init__(x, y, width, height, "fan")
+        self.on_frames = self.SPRITES["On (24x8)"]
+        self.image = self.on_frames[0]
+        self.mask = pygame.mask.from_surface(self.image)
+        self.animation_count = 0
+
+    def loop(self):
+        self.image = self.on_frames[(self.animation_count // self.ANIMATION_DELAY) % len(self.on_frames)]
+        self.animation_count += 1
+        self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
+
+    def in_column(self, player):
+        return (
+            self.rect.top - self.UPDRAFT_HEIGHT <= player.rect.bottom <= self.rect.bottom + 40
+            and self.rect.centerx - self.REACH_LEFT < player.rect.centerx < self.rect.centerx + self.REACH_RIGHT
+        )
+
+
+class SwingingBall(Object):
+    """A spiked wrecking ball on a chain that swings like a pendulum from a
+    fixed pivot point, unlike Saw/Spikehead_x's straight-line patrol."""
+    _ball_native = pygame.image.load(join("assets", "Traps", "Spiked Ball", "Spiked Ball.png")).convert_alpha()
+    _chain_native = pygame.image.load(join("assets", "Traps", "Spiked Ball", "Chain.png")).convert_alpha()
+    BALL = pygame.transform.scale2x(_ball_native)
+    CHAIN = pygame.transform.scale2x(_chain_native)
+
+    def __init__(self, pivot_x, pivot_y, length, max_angle=55, speed=0.045):
+        size = self.BALL.get_width()
+        super().__init__(pivot_x - size // 2, pivot_y + length - size // 2, size, size, "swinging_ball")
+        self.image = self.BALL
+        self.mask = pygame.mask.from_surface(self.image)
+        self.pivot_x = pivot_x
+        self.pivot_y = pivot_y
+        self.length = length
+        self.max_angle = math.radians(max_angle)
+        self.speed = speed
+        self.t = 0
+
+    def loop(self):
+        self.t += 1
+        angle = self.max_angle * math.sin(self.t * self.speed)
+        self.rect.centerx = int(self.pivot_x + self.length * math.sin(angle))
+        self.rect.centery = int(self.pivot_y + self.length * math.cos(angle))
+
+    def draw(self, win, offset_x):
+        cx, cy = self.rect.center
+        link_h = self.CHAIN.get_height()
+        steps = max(1, int(self.length // link_h))
+        for i in range(steps):
+            t = (i + 0.5) / steps
+            lx = self.pivot_x + (cx - self.pivot_x) * t
+            ly = self.pivot_y + (cy - self.pivot_y) * t
+            rect = self.CHAIN.get_rect(center=(lx - offset_x, ly))
+            win.blit(self.CHAIN, rect)
+        win.blit(self.image, (self.rect.x - offset_x, self.rect.y))
+
+
+class VerticalPlatform(Object):
+    """A chain-suspended platform (Traps/Platforms sprite) that rides up and
+    down between y_top and y_bottom instead of side to side. Shares
+    FloatingPlatform's object name so the existing landing/carry collision
+    logic in handle_vertical_collision applies unchanged."""
+    NATIVE_WIDTH = 32
+    NATIVE_HEIGHT = 8
+    _sheet = pygame.image.load(join("assets", "Traps", "Platforms", "Grey On (32x8).png")).convert_alpha()
+    _chain_native = pygame.image.load(join("assets", "Traps", "Platforms", "Chain.png")).convert_alpha()
+    # a plain loop, not a comprehension -- comprehensions get their own scope
+    # and can't see _sheet/NATIVE_WIDTH from the enclosing class body
+    FRAMES = []
+    for _i in range(_sheet.get_width() // NATIVE_WIDTH):
+        FRAMES.append(pygame.transform.scale2x(_sheet.subsurface((_i * NATIVE_WIDTH, 0, NATIVE_WIDTH, NATIVE_HEIGHT))))
+    CHAIN = pygame.transform.scale2x(_chain_native)
+    ANIMATION_DELAY = 5
+
+    def __init__(self, x, y, y_top, y_bottom, speed=2, anchor_y=0):
+        width, height = self.FRAMES[0].get_size()
+        super().__init__(x, y, width, height, "floating_platform")
+        self.image = self.FRAMES[0]
+        self.mask = pygame.mask.from_surface(self.image)
+        self.y_top = y_top
+        self.y_bottom = y_bottom
+        self.y_vel = speed
+        self.direction = "down"
+        self.anchor_y = anchor_y
+        self.dx = 0  # stationary in x -- handle_vertical_collision still
+                     # reads this to (not) carry a standing player sideways
+        self.animation_count = 0
+
+    def loop(self):
+        if self.rect.y >= self.y_bottom and self.direction == "down":
+            self.direction = "up"
+        elif self.rect.y <= self.y_top and self.direction == "up":
+            self.direction = "down"
+        self.rect.y += self.y_vel if self.direction == "down" else -self.y_vel
+
+        self.image = self.FRAMES[(self.animation_count // self.ANIMATION_DELAY) % len(self.FRAMES)]
+        self.animation_count += 1
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def draw(self, win, offset_x):
+        link_h = self.CHAIN.get_height()
+        cx = self.rect.centerx - offset_x - self.CHAIN.get_width() // 2
+        y = self.anchor_y
+        bottom = self.rect.centery
+        while y < bottom:
+            win.blit(self.CHAIN, (cx, y))
+            y += link_h
+        win.blit(self.image, (self.rect.x - offset_x, self.rect.y))
+
+
+class IceBlock(Object):
+    """A slippery floor tile (Sand Mud Ice sheet's icy variant) -- standing on
+    it reduces the player's traction, so movement keeps sliding after a
+    direction key is released instead of stopping immediately (see the
+    on_ice branch in handle_move)."""
+    _sheet = pygame.image.load(join("assets", "Traps", "Sand Mud Ice", "Sand Mud Ice (16x6).png")).convert_alpha()
+    _tile = _sheet.subsurface((128, 0, 48, 48))
+
+    def __init__(self, x, y, size=BLOCK_SIZE):
+        super().__init__(x, y, size, size, "ice")
+        self.image = pygame.transform.scale(self._tile, (size, size))
+        self.mask = pygame.mask.from_surface(self.image)
+
+
 # ---------------------------------------------------------------------------
 # background / drawing / collision
 # ---------------------------------------------------------------------------
@@ -624,7 +866,7 @@ def handle_vertical_collision(player, objects, dy):
     collided_objects = []
     for obj in objects:
         if pygame.sprite.collide_mask(player, obj):
-            if obj.name == "trampoline":
+            if obj.name in ("trampoline", "spring_pad"):
                 if dy > 0:
                     player.rect.bottom = obj.rect.top
                     player.y_vel = obj.launch_vel
@@ -634,11 +876,13 @@ def handle_vertical_collision(player, objects, dy):
                 # else: still overlapping mid-launch (ascending) -- ignore it
                 # instead of falling through to the hit_head branch below,
                 # which would flip y_vel and cut the bounce short.
-            elif obj.name == "floating_platform":
+            elif obj.name in ("floating_platform", "drop_platform"):
                 if dy >= 0:
                     player.rect.bottom = obj.rect.top
                     player.landed()
                     player.rect.x += obj.dx  # ride the platform along with it
+                    if obj.name == "drop_platform":
+                        obj.standing = True
                 else:
                     player.rect.top = obj.rect.bottom
                     player.hit_head()
@@ -659,7 +903,7 @@ def handle_vertical_collision(player, objects, dy):
     # frames mask overlap happened to catch. Use a loose rect check instead
     # so a standing player keeps getting carried every frame.
     for obj in objects:
-        if obj in collided_objects or obj.name != "floating_platform":
+        if obj in collided_objects or obj.name not in ("floating_platform", "drop_platform"):
             continue
         standing = (
             dy >= 0
@@ -671,6 +915,8 @@ def handle_vertical_collision(player, objects, dy):
             player.rect.bottom = obj.rect.top
             player.landed()
             player.rect.x += obj.dx
+            if obj.name == "drop_platform":
+                obj.standing = True
             collided_objects.append(obj)
 
     return collided_objects
@@ -703,26 +949,66 @@ def check_point(player, checkpoints, dx):
     return collided_object
 
 
+ICE_TRACTION = 0.03  # eased accel/decel on ice, instead of an instant snap to
+                      # top speed -- so ice is noticeably slippery even while
+                      # a direction is held, not just at the moment of release
+
+
 def handle_move(player, objects, checkpoints, flag, fruits):
     keys = pygame.key.get_pressed()
 
-    player.x_vel = 0
     collide_left = collide(player, objects, -PLAYER_VEL * 2)
     collide_right = collide(player, objects, PLAYER_VEL * 2)
     chk_left = check_point(player, checkpoints, -PLAYER_VEL * 2)
     chk_right = check_point(player, checkpoints, PLAYER_VEL * 2)
 
-    if keys[pygame.K_LEFT] and not collide_left:
-        player.move_left(PLAYER_VEL)
-    if keys[pygame.K_RIGHT] and not collide_right:
-        player.move_right(PLAYER_VEL)
+    if player.on_ice:
+        # Ease x_vel toward the target instead of snapping to it, so both
+        # speeding up and slowing down take a beat -- holding a direction
+        # doesn't reach full speed instantly, and releasing it keeps sliding.
+        target_vel = 0
+        if keys[pygame.K_LEFT] and not collide_left:
+            target_vel = -PLAYER_VEL
+            if player.direction != "left":
+                player.direction = "left"
+                player.animation_count = 0
+        if keys[pygame.K_RIGHT] and not collide_right:
+            target_vel = PLAYER_VEL
+            if player.direction != "right":
+                player.direction = "right"
+                player.animation_count = 0
+        player.x_vel += (target_vel - player.x_vel) * ICE_TRACTION
+        if target_vel == 0 and abs(player.x_vel) < 0.3:
+            player.x_vel = 0
+    else:
+        player.x_vel = 0
+        if keys[pygame.K_LEFT] and not collide_left:
+            player.move_left(PLAYER_VEL)
+        if keys[pygame.K_RIGHT] and not collide_right:
+            player.move_right(PLAYER_VEL)
 
     vertical_collide = handle_vertical_collision(player, objects, player.y_vel)
     to_check = [collide_left, collide_right, *vertical_collide, chk_left,
                 chk_right]
 
+    # Exact mask overlap flickers frame-to-frame even while standing still
+    # (same drift described above the floating-platform standing check --
+    # gravity keeps nudging the player a px or two off the ice's mask before
+    # the next landed() snap pulls it back). That's invisible for ordinary
+    # ground blocks, but on_ice read the flickering vertical_collide list
+    # directly, so it kept dropping back to False and killing the slide the
+    # instant a direction key was released. A loose distance check (same
+    # tolerance as the platform one) keeps on_ice stable while grounded.
+    player.on_ice = any(obj and obj.name == "ice" for obj in vertical_collide) or any(
+        obj.name == "ice"
+        and -10 <= obj.rect.top - player.rect.bottom <= 10
+        and player.rect.right > obj.rect.left
+        and player.rect.left < obj.rect.right
+        for obj in objects
+    )
+
     for obj in to_check:
-        if obj and obj.name in ("fire", "rockhead", "saw", "spikehead_x", "spikes"):
+        if obj and obj.name in ("fire", "rockhead", "saw", "spikehead_x", "spikes", "swinging_ball"):
             player.make_hit()
         elif obj and obj.name == "flag":
             flag.off()
@@ -906,7 +1192,6 @@ def build_level_2():
     extra_blocks = [
         Block(0, HEIGHT - block_size * 2, block_size),
         Block(block_size * 2, HEIGHT - block_size * 3, block_size),
-        Block(block_size * 4, HEIGHT - block_size * 4, block_size),
         Block(block_size * 6, HEIGHT - block_size * 5, block_size),
         Block(block_size * 7, HEIGHT - block_size * 5, block_size),
         Block(level_end - block_size * 6, HEIGHT - block_size * 2, block_size),
@@ -1115,12 +1400,14 @@ def build_level_4():
     floating_platforms = [
         FloatingPlatform(block_size * 25, HEIGHT - block_size * 3, block_size * 27, block_size * 25, speed=3, skin=0),
         FloatingPlatform(block_size * 28, HEIGHT - block_size * 3 - 30, block_size * 30, block_size * 27, speed=3, skin=1),
+        FloatingPlatform(block_size * 31, HEIGHT - block_size * 3, block_size * 33, block_size * 30, speed=3, skin=2),
     ]
 
     # gauntlet B: higher & faster, 4 platforms across a second, wider pit
     floating_platforms += [
         FloatingPlatform(block_size * 60, HEIGHT - block_size * 4, block_size * 62, block_size * 60, speed=4, skin=0),
         FloatingPlatform(block_size * 63, HEIGHT - block_size * 4 - 40, block_size * 65, block_size * 62, speed=4, skin=1),
+        FloatingPlatform(block_size * 66, HEIGHT - block_size * 4, block_size * 68, block_size * 65, speed=4, skin=2),
         FloatingPlatform(block_size * 69, HEIGHT - block_size * 4 - 40, block_size * 71, block_size * 68, speed=4, skin=0),
     ]
 
@@ -1346,13 +1633,396 @@ def build_level_5():
     }
 
 
+# ---------------------------------------------------------------------------
+# level 6 -- "Wind Spire": built around a completely different toolkit
+# instead of more/faster pits -- a slick ice slide, a swinging wrecking ball,
+# a spring-pad-powered elevator shaft, and a fan updraft, with only a short
+# nod to the old ferry/drop-platform pit at the end. The level stops right
+# after that last pit: only the final fruit and the flag sit past it. A couple
+# of mixed-height terrain clusters (a bypass over the ice, a hill) break up the
+# flat stretches instead of one uniform band height. Blue-gray brick terrain.
+# ---------------------------------------------------------------------------
+
+def build_level_6():
+    block_size = BLOCK_SIZE
+    level_end = block_size * 89
+
+    fruits = [
+        Fruits(block_size * 6, HEIGHT - block_size * 4 - 50, 32, 32, "Apple"),
+        # at the peak of the mixed-height bypass above the ice slide -- the
+        # ice below is still walkable, this is the alternate (non-slippery)
+        # route
+        Fruits(block_size * 15, HEIGHT - block_size * 5 - 50, 32, 32, "Bananas"),
+        # timed past the swinging ball
+        Fruits(block_size * 27, HEIGHT - block_size * 4 - 50, 32, 32, "Cherries"),
+        # atop the elevator shaft's landing platform
+        Fruits(block_size * 46, block_size - 70, 32, 32, "Strawberry"),
+        # in open air just past the fan wall, grabbed mid-flight
+        Fruits(block_size * 60, 300, 32, 32, "Kiwi"),
+        Fruits(block_size * 64, HEIGHT - block_size * 4 - 50, 32, 32, "Melon"),
+        # over the pit gauntlet
+        Fruits(block_size * 74, HEIGHT - block_size * 3 - 60, 32, 32, "Pineapple"),
+        # just past the last pit, on the way to the flag
+        Fruits(block_size * 81, HEIGHT - block_size * 4 - 50, 32, 32, "Orange"),
+    ]
+
+    fires = []
+    # base 30 sits right at the foot of the hill's solid leading wall (block
+    # 31 is 2 blocks tall with no gap to the ground -- see `hill` below), so
+    # clearing it means timing the fire dodge and the wall jump together;
+    # placing it a couple columns further in (under the hill's floating
+    # steps) left it in a pocket most players jump straight over without
+    # ever touching it
+    for base in (block_size * 8, block_size * 30, block_size * 66):
+        for off in (0, 35):
+            f = Fire(base + off, HEIGHT - block_size - 64, 16, 32)
+            f.on()
+            fires.append(f)
+
+    rockheads = [
+        RockHead(block_size * 4, 0, 42, 42, 260),
+        RockHead(block_size * 30, -150, 42, 42, 340),
+        RockHead(block_size * 65, -200, 42, 42, 400),
+    ]
+
+    spikeheads = [
+        Spikehead_x(block_size * 50, HEIGHT - block_size * 2, 54, 52, block_size * 53, block_size * 49, speed=5),
+    ]
+
+    saws = [
+        Saw(block_size * 34, 350, 38, 42, block_size * 38, block_size * 34, speed=6),
+        Saw(block_size * 38, 250, 38, 42, block_size * 45, block_size * 38, speed=6),
+        Saw(block_size * 54, 250, 38, 42, block_size * 57, block_size * 53, speed=6),
+    ]
+
+    # right where the ice ends -- overshoot the slide and you skid into these
+    spikes = [
+        Spikes(block_size * 20, HEIGHT - block_size - 32),
+        Spikes(block_size * 20 + 32, HEIGHT - block_size - 32),
+    ]
+
+    trampolines = [
+        Trampoline(block_size * 13, HEIGHT - block_size - 56),
+    ]
+
+    # the spring pad (Traps/Arrow) launches much higher than a trampoline --
+    # a ballistic arc, not a straight shot up, so the landing platform below
+    # sits well clear of the pad's x position and past the arc's apex, or the
+    # player would just bonk its underside on the way up instead of landing
+    spring_pads = [SpringPad(block_size * 36, HEIGHT - block_size - 36)]
+    trampolines += spring_pads
+
+    # a fan-powered updraft carries the player up and over a solid wall that
+    # blocks the floor path entirely -- there's no ground route around it,
+    # only up and over, clearing its height before drifting right past it
+    fans = [Fan(block_size * 56, HEIGHT - block_size - 16)]
+    wall = [
+        Block(block_size * 58, HEIGHT - block_size - k * block_size, block_size, col=3, row=1)
+        for k in range(1, 6)
+    ]
+
+    # one big pendulum wrecking ball -- swings low enough to threaten the
+    # floor, so crossing means timing the walk past its low point
+    swinging_balls = [
+        SwingingBall(block_size * 23, 250, 400, max_angle=45, speed=0.03),
+        SwingingBall(block_size * 16, 250, 400, max_angle=45, speed=0.03),
+    ]
+
+    # elevator shaft: the spring pad's arc lands on the wide platform below
+    # (see shaft_landing), then a vertical platform -- boarded at a standstill,
+    # no ballistic timing needed -- carries the rest of the way up
+    floating_platforms = [
+        VerticalPlatform(block_size * 44, 352, y_top=100, y_bottom=352, speed=2),
+    ]
+
+    # a compact pit -- one ferry, one drop platform -- as the only callback
+    # to the old gauntlet style, much shorter than before
+    floating_platforms += [
+        FloatingPlatform(block_size * 76, HEIGHT - block_size * 3, block_size * 78, block_size * 76, speed=4, skin=2),
+    ]
+    drop_platforms = [
+        DropPlatform(block_size * 60, HEIGHT - block_size * 3),
+        DropPlatform(block_size * 64, HEIGHT - block_size * 4),
+        DropPlatform(block_size * 74, HEIGHT - block_size * 3),
+    ]
+
+    flag = Flag(level_end - (block_size * 4), HEIGHT - (block_size * 2 + 30), 64, 64)
+    flag.on()
+
+    ice_range = range(12, 20)
+    pit_ranges = [range(71, 80), range(21, 23), range(59, 70)]
+
+    floor = [
+        (IceBlock(i * block_size, HEIGHT - block_size) if i in ice_range
+         else Block(i * block_size, HEIGHT - block_size, block_size, col=3, row=1))
+        for i in range(-WIDTH // block_size, level_end // block_size)
+        if not any(i in pit for pit in pit_ranges)
+    ]
+
+    # a mixed-height bypass floating above the ice slide -- climbs step by
+    # step to a peak well above the usual band height, then back down, so
+    # there's a non-slippery alternate route instead of just the ice itself
+    ice_bypass = [
+        #Block(block_size * 12, HEIGHT - block_size * 3, block_size, col=3, row=1),
+        #Block(block_size * 13, HEIGHT - block_size * 4, block_size, col=3, row=1),
+        Block(block_size * 14, HEIGHT - block_size * 5, block_size, col=3, row=1),
+        Block(block_size * 15, HEIGHT - block_size * 5, block_size, col=3, row=1),
+        #Block(block_size * 16, HEIGHT - block_size * 5, block_size, col=3, row=1),
+        #Block(block_size * 17, HEIGHT - block_size * 4, block_size, col=3, row=1),
+        #Block(block_size * 18, HEIGHT - block_size * 3, block_size, col=3, row=1),
+        #Block(block_size * 19, HEIGHT - block_size * 2, block_size, col=3, row=1),
+    ]
+    # a small hill between the first rockhead and the spring pad -- low/mid/
+    # high/mid/low instead of a flat run, just for the platforming variety
+    hill = [
+        Block(block_size * 31, HEIGHT - block_size * 2, block_size, col=3, row=1),
+        Block(block_size * 32, HEIGHT - block_size * 3, block_size, col=3, row=1),
+        Block(block_size * 33, HEIGHT - block_size * 4, block_size, col=3, row=1),
+        Block(block_size * 34, HEIGHT - block_size * 3, block_size, col=3, row=1),
+    ]
+
+    # a short two-step rise right before the fan (clear of the spikehead's
+    # patrol, which reaches as far as block 53), so the updraft isn't always
+    # entered from flat ground
+    fan_ramp = [
+        Block(block_size * 54, HEIGHT - block_size * 3, block_size, col=3, row=1),
+        Block(block_size * 55, HEIGHT - block_size * 4, block_size, col=3, row=1),
+    ]
+
+    # elevator shaft: a wide landing pad well past the spring pad's arc apex
+    # (so it's caught while descending, not bonked from below), then the
+    # vertical platform continues to a landing at the top
+    shaft_landing = [
+        Block(i * block_size, 352, block_size, col=3, row=1)
+        for i in range(39, 44)
+    ]
+    shaft_top = [
+        Block(i * block_size, 100, block_size, col=3, row=1)
+        for i in range(45, 48)
+    ]
+    extra_blocks = [
+        Block(0, HEIGHT - block_size * 2, block_size, col=3, row=1),
+        Block(block_size * 2, HEIGHT - block_size * 3, block_size, col=3, row=1),
+        Block(level_end - block_size * 6, HEIGHT - block_size * 2, block_size, col=3, row=1),
+        Block(level_end - block_size * 5, HEIGHT - block_size * 2, block_size, col=3, row=1),
+    ]
+
+    blocks = [*floor, *shaft_landing, *shaft_top, *wall, *extra_blocks,
+              *ice_bypass, *hill, *fan_ramp]
+    objects = [*blocks, *fires, *rockheads, *spikeheads, *saws, *spikes, *trampolines,
+               *floating_platforms, *drop_platforms, *swinging_balls]
+
+    return {
+        "name": "Level 6",
+        "background": get_background("Pink.png"),
+        "objects": objects,
+        "fires": fires,
+        "rockheads": rockheads,
+        "spikeheads": spikeheads,
+        "saws": saws,
+        "trampolines": trampolines,
+        "floating_platforms": floating_platforms,
+        "drop_platforms": drop_platforms,
+        "swinging_balls": swinging_balls,
+        "fans": fans,
+        "fruits": fruits,
+        "flag": flag,
+        "start_pos": (100, 100),
+    }
+
+
+# ---------------------------------------------------------------------------
+# level 7 -- "Frozen Depths": the longest level, and an all-ice one. Every
+# floor block is ice, so the whole level plays like the opening slide: two
+# pits with drop platforms over them right away (fruit hangs above the
+# platforms, out of reach from the ground), then the rest of the level keeps
+# escalating those two ideas -- three more pits, each bigger than the last,
+# with the biggest one adding the level's only moving platform -- alongside
+# floating "bands" of ice blocks up off the floor: a shelf, a band with a saw
+# patrolling it, a staircase of bands, and a trampoline-launched summit.
+# Teal terrain.
+# ---------------------------------------------------------------------------
+
+def build_level_7():
+    block_size = BLOCK_SIZE
+    level_end = WIDTH * 13
+
+    def ice_band(first_col, last_col, k):
+        """A floating run of ice blocks, k blocks up from the bottom of the
+        screen (k=1 would be floor level)."""
+        return [IceBlock(col * block_size, HEIGHT - block_size * k)
+                for col in range(first_col, last_col + 1)]
+
+    fruits = [
+        Fruits(block_size * 6, HEIGHT - block_size * 3 - 50, 32, 32, "Apple"),
+        Fruits(block_size * 15, HEIGHT - block_size * 3 - 50, 32, 32, "Bananas"),
+        # timed past the first swinging ball
+        Fruits(block_size * 21, HEIGHT - block_size * 4 - 50, 32, 32, "Cherries"),
+        # on the first floating ice band -- a double jump up from the floor
+        Fruits(block_size * 43 + 16, HEIGHT - block_size * 4 - 100, 32, 32, "Kiwi"),
+        # pit 1: hangs above the second drop platform, too high to grab from
+        # either edge of the pit
+        Fruits(block_size * 56 + 16, 300, 32, 32, "Melon"),
+        # on the saw's band, above the saw's path
+        Fruits(block_size * 67 + 16, 300, 32, 32, "Strawberry"),
+        # pit 2: one above each of the two higher drop platforms
+        Fruits(block_size * 81 + 16, 300, 32, 32, "Orange"),
+        Fruits(block_size * 83 + 16, 190, 32, 32, "Pineapple"),
+    ]
+
+    fires = []
+    # 8 and 35 are the opening's; 66 guards the floor under the saw's band,
+    # 94/98 the floor under the top of the ice staircase
+    for base in (block_size * 8, block_size * 35, block_size * 94, block_size * 98):
+        for off in (0, 35):
+            f = Fire(base + off, HEIGHT - block_size - 64, 16, 32)
+            f.on()
+            fires.append(f)
+
+    rockheads = [
+        RockHead(block_size * 73, -200, 42, 42, 400),
+        RockHead(block_size * 101, -200, 42, 42, 400),
+    ]
+
+    # both patrol a runway with open sky above -- never under a band, where
+    # there'd be no room to jump them
+    spikeheads = [
+        Spikehead_x(block_size * 41, HEIGHT - block_size * 4 - 100, 54, 52, block_size * 48, block_size * 41, speed=5),
+        Spikehead_x(block_size * 120, HEIGHT - block_size * 2, 54, 52, block_size * 122, block_size * 120, speed=5),
+    ]
+
+    # rides the top of the band over the floor fire -- a hop over it, on ice
+    saws = [
+        Saw(block_size * 64, HEIGHT - block_size * 4 - 84, 38, 42, block_size * 69, block_size * 64, speed=5),
+    ]
+
+    # the opening's: right where the second pit lands
+    spikes = [
+        Spikes(block_size * 25, HEIGHT - block_size - 32),
+        Spikes(block_size * 25 + 32, HEIGHT - block_size - 32),
+    ]
+
+    # launches up to the summit band: the arc peaks a bit above it, so the
+    # player comes down onto its top instead of bonking the underside
+    trampolines = [
+        Trampoline(block_size * 40, HEIGHT - block_size - 56),
+    ]
+
+    # 7/15/20/30 are the opening's; one swings over the middle of pit 1 and
+    # one over the middle of pit 3
+    swinging_balls = [
+        SwingingBall(block_size * 7, 250, 400, max_angle=42, speed=0.035),
+        SwingingBall(block_size * 15, 250, 400, max_angle=42, speed=0.035),
+        SwingingBall(block_size * 20, 250, 400, max_angle=65, speed=0.045),
+        SwingingBall(block_size * 30, 250, 400, max_angle=60, speed=0.035),
+        SwingingBall(block_size * 35, 250, 400, max_angle=42, speed=0.035),
+        SwingingBall(block_size * 44, 10, 300, max_angle=45, speed=0.035),
+        SwingingBall(block_size * 55 + 5, 70, 400, max_angle=55, speed=0.045),
+        SwingingBall(block_size * 111, 50, 400, max_angle=42, speed=0.045),
+    ]
+
+    # the level's one moving platform: the only way across the middle of pit 3,
+    # a gap of 7 blocks between the drop platform at 108 and the one at 116 --
+    # wider than any jump
+    floating_platforms = [
+        FloatingPlatform(block_size * 110, HEIGHT - block_size * 3, block_size * 114, block_size * 110, speed=4, skin=2),
+    ]
+
+    # rising steps / zig-zags over each pit: 21 is the opening's; each pit
+    # after it is bigger than the last
+    drop_platforms = [
+        DropPlatform(block_size * 21, HEIGHT - block_size * 3),
+        # pit 1 (cols 52-58)
+        DropPlatform(block_size * 54, HEIGHT - block_size * 2),
+        DropPlatform(block_size * 56, HEIGHT - block_size * 3),
+        DropPlatform(block_size * 59, HEIGHT - block_size * 4),
+        # pit 2 (cols 77-85): three rising steps
+        DropPlatform(block_size * 79, HEIGHT - block_size * 2),
+        DropPlatform(block_size * 81, HEIGHT - block_size * 3),
+        DropPlatform(block_size * 83, HEIGHT - block_size * 4),
+        # pit 3 (cols 104-117): two, then the ferry, then one more
+        DropPlatform(block_size * 106, HEIGHT - block_size * 2),
+        DropPlatform(block_size * 108, HEIGHT - block_size * 3),
+        DropPlatform(block_size * 116, HEIGHT - block_size * 3),
+    ]
+
+    flag = Flag(level_end - (block_size * 4), HEIGHT - (block_size * 2 + 30), 64, 64)
+    flag.on()
+
+    pit_ranges = [
+        range(14, 17), range(19, 25), range(41, 51),  # the opening's
+        range(52, 74), range(77, 86), range(104, 118),
+    ]
+
+    # everything from block 0 on is ice; only the off-screen run-up to the
+    # left of the start stays plain terrain
+    floor = [
+        (IceBlock(i * block_size, HEIGHT - block_size))
+        for i in range(-WIDTH // block_size, level_end // block_size)
+        if not any(i in pit for pit in pit_ranges)
+    ]
+
+    # floating bands of ice, up off the floor
+    #   A: a shelf 3 up -- a double jump from the floor, walkable underneath
+    #   B: 4 up, with a floating step 3 up leading onto it
+    #   C/D/E: a staircase of three bands, each one block higher than the last
+    #   F: 4 up, the trampoline's summit
+    ice_bands = [
+        *ice_band(42, 46, 4), *ice_band(64, 69, 4), *ice_band(89, 91, 3), 
+        *ice_band(93, 95, 4), *ice_band(97, 99, 5), *ice_band(127, 130, 4),
+    ]
+
+    # stepping stones beside the flag
+    extra_blocks = [
+        IceBlock(level_end - block_size * 6, HEIGHT - block_size * 2),
+        IceBlock(level_end - block_size * 5, HEIGHT - block_size * 2),
+    ]
+
+    blocks = [*floor, *ice_bands, *extra_blocks]
+    objects = [*blocks, *fires, *rockheads, *spikeheads, *saws, *spikes, *trampolines,
+               *floating_platforms, *drop_platforms, *swinging_balls]
+
+    return {
+        "name": "Level 7",
+        "background": get_background("Blue.png"),
+        "objects": objects,
+        "fires": fires,
+        "rockheads": rockheads,
+        "spikeheads": spikeheads,
+        "saws": saws,
+        "trampolines": trampolines,
+        "floating_platforms": floating_platforms,
+        "drop_platforms": drop_platforms,
+        "swinging_balls": swinging_balls,
+        "fruits": fruits,
+        "flag": flag,
+        "start_pos": (100, 100),
+    }
+
+
 LEVELS = [
     {"title": "Level 1", "builder": build_level_1, "icon": "01.png"},
     {"title": "Level 2", "builder": build_level_2, "icon": "02.png"},
     {"title": "Level 3", "builder": build_level_3, "icon": "03.png"},
     {"title": "Level 4", "builder": build_level_4, "icon": "04.png"},
     {"title": "Level 5", "builder": build_level_5, "icon": "05.png"},
+    {"title": "Level 6", "builder": build_level_6, "icon": "06.png"},
+    {"title": "Level 7", "builder": build_level_7, "icon": "07.png", "music": "boss_loop.ogg"},
 ]
+
+MENU_MUSIC = "menu_loop.ogg"
+LEVEL_MUSIC = "upbeat_loop.ogg"
+_current_music = None
+
+
+def play_music(track):
+    """Start looping `track` unless it's already playing."""
+    global _current_music
+    if track == _current_music:
+        return
+    mixer.music.load(join("assets", track))
+    mixer.music.play(-1)
+    _current_music = track
 
 
 # ---------------------------------------------------------------------------
@@ -1484,7 +2154,7 @@ def draw_lives_hud(surface, icon_image, lives_left):
 
 
 class Button:
-    def __init__(self, image, center, scale=3, label=None):
+    def __init__(self, image, center, scale: float = 3, label=None):
         w, h = image.get_size()
         self.image = pygame.transform.scale(image, (int(w * scale), int(h * scale)))
         self.rect = self.image.get_rect(center=center)
@@ -1494,11 +2164,11 @@ class Button:
         draw_rect = self.rect.move(offset)
         hovered = draw_rect.collidepoint(mouse_pos)
         if hovered:
-            pygame.draw.rect(surface, BLACK, draw_rect.inflate(10, 10), 3, border_radius=8)
+            pygame.draw.rect(surface, BLACK, draw_rect.inflate(8, 8), 3, border_radius=8)
         surface.blit(self.image, draw_rect)
         if self.label:
             draw_text(surface, self.label, LABEL_FONT, BLACK,
-                      (draw_rect.centerx, draw_rect.bottom + 18))
+                      (draw_rect.centerx, draw_rect.bottom + 14))
         return hovered
 
     def clicked(self, mouse_pos, mouse_click):
@@ -1628,7 +2298,7 @@ def main_menu_screen(snapshot):
         window.blit(snapshot, (0, 0))
         draw_panel(window, panel.move(offset))
         draw_bitmap_text(window, "pyohmine ninjas", 3,
-                          (WIDTH // 2 + offset[0], panel.top + 52 + offset[1]))
+                          (WIDTH // 2 + offset[0], panel.top + 53 + offset[1]))
         for _, btn in buttons:
             btn.draw(window, mouse, offset=offset)
 
@@ -1652,13 +2322,15 @@ def main_menu_screen(snapshot):
 
 
 def level_select_screen(snapshot):
-    icon_scale = 5
     max_spacing = 195
-    panel_width = 645
+    max_panel_width = 705  # leaves a margin against WIDTH=1000 either side
     n = len(LEVELS)
-    # shrink icon spacing (instead of letting the panel grow past the
-    # screen) once there are enough levels that max_spacing would overflow it
-    spacing = min(max_spacing, (panel_width - 160) / (n - 1)) if n > 1 else 0
+    # grow the panel to fit more levels (up to the screen-width cap), then
+    # shrink icon spacing -- and finally icon scale -- once even the widest
+    # panel can't give every icon its full-size spacing
+    panel_width = min(max_panel_width, 120 + max_spacing * (n - 1)) if n > 1 else 225
+    spacing = min(max_spacing, (panel_width - 120) / (n - 1)) if n > 1 else 0
+    icon_scale = min(5, max(2, (spacing - 22) / 19)) if n > 1 else 5
     start_x = WIDTH // 2 - spacing * (n - 1) / 2
 
     level_buttons = []
@@ -1705,19 +2377,19 @@ def level_select_screen(snapshot):
                 return "back", None
 
 
-def character_select_screen(snapshot, preselected="NinjaFrog"):
-    selected = preselected
+def character_select_screen(snapshot, preselected: str | None = "NinjaFrog"):
+    selected = preselected if preselected is not None else "NinjaFrog"
     tile_size = 128
     spacing = 158
     start_x = WIDTH // 2 - spacing * (len(CHARACTERS) - 1) / 2
-    y = HEIGHT // 2 - 22
+    y = HEIGHT // 2 - 23
 
     portraits = {}
     for name in CHARACTERS:
         frame = ALL_CHARACTER_SPRITES[name]["idle_right"][0]
         portraits[name] = pygame.transform.scale(frame, (tile_size, tile_size))
 
-    play_btn = Button(BTN_IMAGES["play"], (WIDTH // 2, HEIGHT - 112), label="Start")
+    play_btn = Button(BTN_IMAGES["play"], (WIDTH // 2, HEIGHT - 113), label="Start")
     back_btn = Button(BTN_IMAGES["back"], (75, HEIGHT - 60), scale=2, label="Back")
 
     panel = pygame.Rect(0, 0, 615, 345)
@@ -1741,7 +2413,7 @@ def character_select_screen(snapshot, preselected="NinjaFrog"):
                 pygame.draw.rect(window, BLACK, draw_rect, 5, border_radius=10)
             portrait_rect = portraits[name].get_rect(center=draw_rect.center)
             window.blit(portraits[name], portrait_rect)
-            draw_text(window, name, LABEL_FONT, BLACK, (draw_rect.centerx, draw_rect.bottom + 22))
+            draw_text(window, name, LABEL_FONT, BLACK, (draw_rect.centerx, draw_rect.bottom + 17))
 
         draw_text(window, f"Selected: {selected}", LABEL_FONT, BLACK,
                   (WIDTH // 2 + offset[0], panel.top + 75 + offset[1]))
@@ -1933,14 +2605,37 @@ def play_level(level_index, character_name):
         for fp in level.get("floating_platforms", []):
             if fp.in_view(offset_x, WIDTH):
                 fp.loop()
+        for dp in level.get("drop_platforms", []):
+            if dp.in_view(offset_x, WIDTH):
+                dp.loop()
+        for sb in level.get("swinging_balls", []):
+            if sb.in_view(offset_x, WIDTH):
+                sb.loop()
+        for fan in level.get("fans", []):
+            if fan.in_view(offset_x, WIDTH):
+                fan.loop()
 
         objects_in_view = [obj for obj in objects if obj.in_view(offset_x, WIDTH)]
         fruits_in_view = [f for f in fruits if f.in_view(offset_x, WIDTH)]
+        fans_in_view = [f for f in level.get("fans", []) if f.in_view(offset_x, WIDTH)]
         checkpoints_in_view = [c for c in checkpoints if c.in_view(offset_x, WIDTH)]
 
-        reached_flag = handle_move(player, objects_in_view, checkpoints_in_view, flag, fruits_in_view)
+        reached_flag = handle_move(player, objects_in_view, checkpoints_in_view, flag, fruits)
 
-        draw(window, level["background"], player, [*objects_in_view, *fruits_in_view],
+        # Fans aren't solid, so they bypass handle_move/collision entirely --
+        # anyone standing in the updraft column just gets carried straight up.
+        # Deliberately NOT resetting fall_count here: it would keep the
+        # gravity-ramp (see Player.loop) pinned at zero for the whole ride, so
+        # the moment the player left the column they'd keep coasting upward
+        # for another full second before gravity caught up. Leaving fall_count
+        # alone lets it build up during the ride, so gravity is already
+        # engaged and pulls the player back down promptly once they exit.
+        for fan in fans_in_view:
+            if fan.in_column(player):
+                player.y_vel = fan.LIFT
+                player.jump_count = 1
+
+        draw(window, level["background"], player, [*objects_in_view, *fruits_in_view, *fans_in_view],
              checkpoints_in_view, offset_x)
         draw_collected_fruits(window, fruits)
         draw_lives_hud(window, lives_icon.image, max(0, LIVES_START - player.player_hit))
@@ -1974,9 +2669,6 @@ def play_level(level_index, character_name):
 # ---------------------------------------------------------------------------
 
 def main():
-    mixer.music.load(join("assets", "upbeat_loop.ogg"))
-    mixer.music.play(-1)
-
     snapshot = make_menu_background()
 
     state = "menu"
@@ -1984,6 +2676,11 @@ def main():
     pending_level_index = 0
 
     while True:
+        if isinstance(state, tuple) and state[0] == "playing":
+            play_music(LEVELS[state[1]].get("music", LEVEL_MUSIC))
+        else:
+            play_music(MENU_MUSIC)
+
         if state == "menu":
             result = main_menu_screen(snapshot)
             if result == "quit":
@@ -2010,7 +2707,7 @@ def main():
                 break
             elif result == "back":
                 state = "menu" if state == "characters_from_menu" else "levels"
-            elif result == "confirm" and character is not None:
+            elif result == "confirm":
                 selected_character = character
                 state = ("playing", pending_level_index)
 
