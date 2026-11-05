@@ -3,6 +3,7 @@ echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
 wallpp /home/anthony/Pictures/wallpaper/wall-03.webp
 cp ~/.config/kitty/archlinux ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/archlinux.lua ~/.config/hypr/hyprland.lua
+cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
 cp ~/Documents/starship/archlinux.toml ~/.config/starship.toml
 cp ~/Documents/zshrc/starship ~/.zshrc
 cp ~/.config/waybar/themes/archlinux_style.css ~/.config/waybar/style.css

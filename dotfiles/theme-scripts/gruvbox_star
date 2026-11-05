@@ -4,6 +4,7 @@ wallp1 /home/anthony/Pictures/wallpaper/gruvpenguin2_1440p.png
 wallp2 /home/anthony/Pictures/wallpaper/firefox.png
 cp ~/.config/kitty/gruvbox ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/gruvbox.lua ~/.config/hypr/hyprland.lua
+cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
 cp ~/Documents/starship/gruvbox_arch.toml ~/.config/starship.toml
 cp ~/Documents/zshrc/starship ~/.zshrc
 cp ~/.config/waybar/themes/gruvbox_style.css ~/.config/waybar/style.css

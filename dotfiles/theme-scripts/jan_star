@@ -3,6 +3,7 @@ echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
 wallpp /home/anthony/Pictures/wallpaper/gh0stzk/emilia/wall-11.webp
 cp ~/.config/kitty/jan ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/jan.lua ~/.config/hypr/hyprland.lua
+cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
 cp ~/Documents/starship/jan.toml ~/.config/starship.toml
 cp ~/Documents/zshrc/starship ~/.zshrc
 cp ~/.config/waybar/themes/jan_style.css ~/.config/waybar/style.css

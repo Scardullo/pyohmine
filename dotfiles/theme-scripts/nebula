@@ -7,7 +7,7 @@ echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
 wallpp "/home/anthony/Pictures/wallpaper/spaceman-blue.png"
 
 cp ~/.config/kitty/nebula ~/.config/kitty/kitty.conf
-cp ~/Documents/fastfetch-configs/arch3 ~/.config/fastfetch/config.jsonc
+cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
 cp ~/Documents/zshrc/p10k ~/.zshrc
 cp ~/.config/hypr/nebula.lua ~/.config/hypr/hyprland.lua
 hyprctl reload >/dev/null 2>&1 || true
