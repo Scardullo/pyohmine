@@ -80,12 +80,12 @@ hl.config({
         gaps_in  = 10,
         gaps_out = 20,
 
-        border_size = 0,
+        border_size = 2,
 
         col = {
             -- CyberPunk accent (gh0stzk Jan rice)
-            active_border   = "rgba(fb007aff)",
-            inactive_border = "rgba(626483ff)",
+            active_border   = "rgba(107ea7ff)",
+            inactive_border = "rgba(107ea7ff)",
         },
 
         resize_on_border = false,
@@ -95,7 +95,7 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 0,
+        rounding       = 10,
         rounding_power = 2,
 
         active_opacity   = 0.9,
