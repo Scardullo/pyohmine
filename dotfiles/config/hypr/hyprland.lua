@@ -83,9 +83,9 @@ hl.config({
         border_size = 2,
 
         col = {
-            -- CyberPunk accent (gh0stzk Jan rice)
-            active_border   = "rgba(107ea7ff)",
-            inactive_border = "rgba(107ea7ff)",
+            -- Catppuccin navy-blue gradient (top -> bottom)
+            active_border   = "rgba(d5c4a1ff)",
+            inactive_border = "rgba(a89984ff)",
         },
 
         resize_on_border = false,
@@ -110,8 +110,8 @@ hl.config({
 
         blur = {
             enabled  = true,
-            size     = 5,    -- medium radius
-            passes   = 2,    -- moderate number of blur passes
+            size     = 3,    -- medium radius
+            passes   = 1,    -- moderate number of blur passes
             vibrancy = 0.05, -- slightly noticeable background enhancement
         },
     },
@@ -269,7 +269,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/jan.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/elemental.rasi"))
 hl.bind("ALT + SPACE",      hl.dsp.exec_cmd("~/.local/bin/star-theme-switcher"))
 hl.bind("SUPER + O",       hl.dsp.exec_cmd("~/.local/bin/theme-switcher"))
 hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("~/.local/bin/wallpaper-switcher"))
@@ -305,7 +305,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/jan.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/gruvbox.sh"))
 
 
 --------------------------------

@@ -76,19 +76,19 @@ element normal.normal {
 element selected.normal {
     background-color: @selected;
     border-color: @selected;
-    text-color: #1e1e2e;
+    text-color: #cdd6f4;
 }
 
 element selected.active {
     background-color: @active;
     border-color: @active;
-    text-color: #1e1e2e;
+    text-color: #cdd6f4;
 }
 
 element selected.urgent {
     background-color: @urgent;
     border-color: @urgent;
-    text-color: #1e1e2e;
+    text-color: #cdd6f4;
 }
 
 element-icon {
