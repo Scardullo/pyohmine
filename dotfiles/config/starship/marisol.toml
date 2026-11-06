@@ -7,15 +7,15 @@ add_newline = true
 
 # Change the default prompt format
 format = """
-[](#7c61a4)\
+[](#3B4252)\
 $python\
 $username\
-[](bg:#bd93f9 fg:#7c61a4)\
+[](bg:#434C5E fg:#3B4252)\
 $directory\
-[](fg:#bd93f9 bg:#ff5555)\
+[](fg:#434C5E bg:#ff79c6)\
 $git_branch\
 $git_status\
-[](fg:#ff5555 bg:#f1fa8c)\
+[](fg:#ff79c6 bg:#f1fa8c)\
 $c\
 $elixir\
 $elm\
@@ -39,12 +39,12 @@ command_timeout = 5000
 # You can also replace your username with a neat symbol like  to save some space
 [username]
 show_always = true
-style_user = "fg:#ffffff bg:#7c61a4"
-style_root = "fg:#ffffff bg:#7c61a4"
+style_user = "fg:#ffffff bg:#3B4252"
+style_root = "fg:#ffffff bg:#3B4252"
 format = '[ ]($style)'
 
 [directory]
-style = "fg:#ffffff bg:#bd93f9"
+style = "fg:#ffffff bg:#434C5E"
 format = '[ $path ]($style)'
 truncation_length = 3
 truncation_symbol = "…/"
@@ -84,10 +84,10 @@ format = '[ $symbol ($version) ]($style)'
 
 [git_branch]
 symbol = ""
-format = '[ $symbol $branch ](fg:#ffffff bg:#ff5555)'
+format = '[ $symbol $branch ](fg:#ffffff bg:#ff79c6)'
 
 [git_status]
-format = '[$all_status$ahead_behind ](fg:#ffffff bg:#ff5555)'
+format = '[$all_status$ahead_behind ](fg:#ffffff bg:#ff79c6)'
 
 [golang]
 symbol = " "

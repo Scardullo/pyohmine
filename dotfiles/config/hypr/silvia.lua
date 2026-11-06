@@ -80,12 +80,12 @@ hl.config({
         gaps_in  = 10,
         gaps_out = 20,
 
-        border_size = 0,
+        border_size = 1,
 
         col = {
             -- Gruvbox accent (gh0stzk Silvia rice)
-            active_border   = "rgba(fbf1c7ff)",
-            inactive_border = "rgba(504945ff)",
+            active_border   = "rgba(ebdbb2ff)",
+            inactive_border = "rgba(ebdbb2ff)",
         },
 
         resize_on_border = false,
@@ -95,7 +95,7 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 0,
+        rounding       = 10,
         rounding_power = 2,
 
         active_opacity   = 0.95,

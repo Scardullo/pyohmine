@@ -1,23 +1,23 @@
 * {
-    font-family: "JetBrainsMono Nerd Font";
+    font-family: "JetBrainsMono Nerd Font", "Noto Sans Mono", "Noto Sans Symbols2";
     font-size: 12px;
     min-height: 0;
     border: none;
-    border-radius: 0px;
 }
 
 window#waybar {
-    background: rgba(33, 17, 5, 0.90);
-    color: #ebdbb2;
+    background: #1e1e2e;
+    color: #7a91f7;
 }
 
 /* Arch Logo */
 
 #custom-logo {
-    background: transparent;
-    color: #ebdbb2;
+    background: #1e1e2e;
+    color: #7a91f7;
     margin: 3px 3px 3px 6px;
     padding: 0 10px;
+    border-radius: 10px;
     font-size: 15px;
 }
 
@@ -29,17 +29,21 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #ebdbb2;
+    color: #7a91f7;
     margin: 0 2px;
     padding: 0 10px;
     border-radius: 8px;
     transition: all 0.2s ease;
 }
 
-#workspaces button.active,
+#workspaces button.active {
+    background: #7a91f7;
+    color: #1e1e2e;
+}
+
 #workspaces button:hover {
-    background: #ebdbb2;
-    color: rgb(33, 17, 5);
+    background: #313244;
+    color: #7a91f7;
 }
 
 /* Modules */
@@ -52,33 +56,61 @@ window#waybar {
 #pulseaudio,
 #tray {
     background: transparent;
-    color: #ebdbb2;
+    color: #7a91f7;
     margin: 3px 3px;
     padding: 0 10px;
+    border-radius: 10px;
 }
-
-/* Right spacing */
 
 #tray {
     margin-right: 6px;
 }
 
-#cpu,
-#memory,
-#pulseaudio,
-#clock,
-#custom-hypridle,
+#cpu {
+    background: #1e1e2e;
+    color: #7a91f7;
+    font-weight: bold;
+    border-radius: 0px;
+}
+
+/* MEMORY */
+
+#memory {
+    background: #1e1e2e;
+    color: #7a91f7;
+    font-weight: bold;
+    border-radius: 0px;
+}
+
+/* VOLUME */
+
+#pulseaudio {
+    background: #1e1e2e;
+    color: #7a91f7;
+    font-weight: bold;
+    border-radius: 0px;
+}
+
+#clock {
+    font-weight: bold;
+}
+
+/* Hypridle toggle */
+
+#custom-hypridle {
+    font-weight: bold;
+}
+
 #custom-weather {
     font-weight: bold;
 }
 
-/* Tooltip */
-
 tooltip {
-    background: rgb(33, 17, 5);
-    border: 2px solid #ebdbb2;
+    background: #1e1e2e;
+    border: 2px solid #313244;
+    border-radius: 10px;
 }
 
 tooltip label {
-    color: #ebdbb2;
+    color: #7a91f7;
 }

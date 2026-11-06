@@ -1,6 +1,6 @@
 mkdir -p "$HOME/.local/state"
 echo "$(basename "$0")" > "$HOME/.local/state/current-theme"
-wallpp /home/anthony/Pictures/wallpaper/gruvy_street.png
+wallpp /home/anthony/Pictures/wallpaper/3d_gruvbox.png
 cp ~/.config/kitty/silvia ~/.config/kitty/kitty.conf
 cp ~/.config/hypr/silvia.lua ~/.config/hypr/hyprland.lua
 cp ~/Documents/fastfetch-configs/anime ~/.config/fastfetch/config.jsonc
