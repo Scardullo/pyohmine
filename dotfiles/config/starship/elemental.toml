@@ -56,7 +56,7 @@ truncation_symbol = "…/"
 
 [c]
 symbol = " "
-style = "bg:#facb7f"
+style = "fg:#ffffff bg:#facb7f"
 format = '[ $symbol ($version) ]($style)'
 
 [docker_context]
