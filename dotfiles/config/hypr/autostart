@@ -15,6 +15,9 @@ done
 # Waybar
 waybar &
 
+# Volume overlay under waybar's volume module (shows on volume change / hover; ~/.local/src/volume-osd)
+~/.local/bin/volume-osd &
+
 # Idle daemon (retries if it exits early at login; output logged to ~/.cache/hypridle.log)
 # NOTE: hypridle must be backgrounded here (setsid -f), otherwise this loop blocks on its
 # lifetime instead of sleeping 5s between checks — which meant it kept respawning hypridle

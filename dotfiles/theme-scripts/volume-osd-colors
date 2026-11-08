@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Prints "background foreground accent radius" for volume-osd: the active theme's palette, picked
+# the same way theme-switcher picks its popup colors (keep the two in step), and the corner
+# radius (0 when the active hyprland template has rounding = 0).
+
+KITTY_DIR="$HOME/.config/kitty"
+HYPR_CONF="$HOME/.config/hypr/hyprland.lua"
+
+theme=$(cat "$HOME/.local/state/current-theme" 2>/dev/null)
+theme="${theme%_star}"
+
+declare -A KITTY_PALETTE_OVERRIDE=( [tokyo-night]="dracula" )
+declare -A ACCENT_IS_FG=( [gruvbox]=1 [silvia]=1 [elemental]=1 [everforest]=1 [brenda]=1 )
+
+kitty_conf="$KITTY_DIR/kitty.conf"
+[ -n "${KITTY_PALETTE_OVERRIDE[$theme]}" ] && kitty_conf="$KITTY_DIR/${KITTY_PALETTE_OVERRIDE[$theme]}"
+
+bg="#14141c"; fg="#e8e8f0"; accent="#8aadf4"
+if [ -n "$theme" ] && [ -f "$kitty_conf" ]; then
+  v=$(grep -m1 -E '^background[[:space:]]' "$kitty_conf" | awk '{print $2}'); [ -n "$v" ] && bg="$v"
+  v=$(grep -m1 -E '^foreground[[:space:]]' "$kitty_conf" | awk '{print $2}'); [ -n "$v" ] && fg="$v"
+  v=$(grep -m1 -E '^color12[[:space:]]' "$kitty_conf" | awk '{print $2}')
+  [ -z "$v" ] && v=$(grep -m1 -E '^color4[[:space:]]' "$kitty_conf" | awk '{print $2}')
+  [ -n "$v" ] && accent="$v"
+fi
+[ -n "$theme" ] && [ -n "${ACCENT_IS_FG[$theme]}" ] && accent="$fg"
+
+radius=12
+grep -qE '^[[:space:]]*rounding[[:space:]]*=[[:space:]]*0\b' "$HYPR_CONF" 2>/dev/null && radius=0
+
+printf '%s %s %s %s\n' "$bg" "$fg" "$accent" "$radius"
