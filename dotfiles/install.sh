@@ -18,8 +18,10 @@ BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 # Not explicitly installed on the source PC (pulled in as deps), but called directly by the
 # configs/scripts: playerctl (waybar/hypr media keys), wpctl (volume keys), brightnessctl
 # (brightness keys), curl (weather), python (pokefetch, rofi-name-popup), rsync (this script),
-# gtk-layer-shell (built into rofi-name-label below).
-EXTRA_PKGS=(playerctl wireplumber brightnessctl curl python rsync gtk-layer-shell)
+# gtk-layer-shell (built into rofi-name-label and volume-osd below), libpulse, json-glib and
+# at-spi2-core (volume-osd: volume events, Hyprland socket replies, waybar's module position).
+EXTRA_PKGS=(playerctl wireplumber brightnessctl curl python rsync gtk-layer-shell
+            libpulse json-glib at-spi2-core)
 
 # Scripts that live in /usr/local/bin so Hyprland can find them without ~/.local/bin on PATH.
 SYSTEM_BIN=(wallpp wallp1 wallp2)
@@ -137,7 +139,7 @@ install_dotfiles() {
 
   # config/starship only goes to ~/Documents/starship (placed below); the active theme is
   # ~/.config/starship.toml, which the theme scripts write.
-  msg "Installing ~/.config (hypr, waybar, kitty, rofi, nvim, cava, fastfetch)"
+  msg "Installing ~/.config (hypr, waybar, kitty, rofi, nvim, cava, fastfetch, gtk, qt6ct, btop)"
   place "$stage/config/" "$HOME/.config/" config --exclude=/starship/
 
   msg "Installing theme scripts"
@@ -164,15 +166,25 @@ install_dotfiles() {
     fi
   done
 
-  # The theme switchers' name label and color panel is a small C program, built here.
-  msg "Building rofi-name-label into ~/.local/bin"
+  # Small C programs, built here from ~/.local/src:
+  #   rofi-name-label  the theme switchers' name label and color panel
+  #   volume-osd       volume bar overlay under waybar's volume module (started by hypr/autostart)
+  msg "Building rofi-name-label and volume-osd into ~/.local/bin"
   place "$DOTS/src/" "$HOME/.local/src/" src
-  if command -v gcc >/dev/null && pkg-config --exists gtk-layer-shell-0 gtk+-3.0; then
-    gcc -O2 "$HOME/.local/src/rofi-name-label/rofi-name-label.c" -o "$HOME/.local/bin/rofi-name-label" \
-      $(pkg-config --cflags --libs gtk-layer-shell-0 gtk+-3.0)
-  else
-    warn "gcc or gtk-layer-shell missing: theme switchers will open without the name label"
-  fi
+  local -A build_libs=(
+    [rofi-name-label]="gtk-layer-shell-0 gtk+-3.0"
+    [volume-osd]="gtk-layer-shell-0 gtk+-3.0 atspi-2 json-glib-1.0 libpulse libpulse-mainloop-glib"
+  )
+  local prog
+  for prog in rofi-name-label volume-osd; do
+    # shellcheck disable=SC2086
+    if command -v gcc >/dev/null && pkg-config --exists ${build_libs[$prog]}; then
+      gcc -O2 "$HOME/.local/src/$prog/$prog.c" -o "$HOME/.local/bin/$prog" -lm \
+        $(pkg-config --cflags --libs ${build_libs[$prog]}) || warn "building $prog failed"
+    else
+      warn "gcc or the libraries for $prog are missing (${build_libs[$prog]}): skipping it"
+    fi
+  done
 
   msg "Installing wallpapers to ~/Pictures/wallpaper"
   place "$DOTS/wallpaper/" "$HOME/Pictures/wallpaper/" wallpaper

@@ -5,6 +5,7 @@
       "source": "/home/anthony/Pictures/fastfetch_pics/cat_340.png",
       "type": "auto",
       "padding": {
+	"top": 1,
 	"left": 2,
       }
     },

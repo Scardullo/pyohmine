@@ -2,3 +2,4 @@ nixos/theme-scripts/uv
 nixos/theme-scripts/uvx
 result
 dotfiles/theme-scripts/claude
+dotfiles/theme-scripts/volume-osd
