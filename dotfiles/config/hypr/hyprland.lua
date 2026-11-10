@@ -80,12 +80,12 @@ hl.config({
         gaps_in  = 10,
         gaps_out = 20,
 
-        border_size = 0,
+        border_size = 2,
 
         col = {
             -- Catppuccin navy-blue gradient (top -> bottom)
-            active_border   = "rgba(d5c4a1ff)",
-            inactive_border = "rgba(a89984ff)",
+            active_border   = "rgba(89b4faff)",
+            inactive_border = "rgba(6893d9ff)",
         },
 
         resize_on_border = false,
@@ -95,11 +95,11 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 0,
+        rounding       = 10,
         rounding_power = 2,
 
-        active_opacity   = 0.9,
-        inactive_opacity = 0.9,
+        active_opacity   = 0.95,
+        inactive_opacity = 0.95,
 
         shadow = {
             enabled      = true,
@@ -269,7 +269,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/everforest.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/catppuccin.rasi"))
 hl.bind("ALT + SPACE",      hl.dsp.exec_cmd("~/.local/bin/star-theme-switcher"))
 hl.bind("SUPER + O",       hl.dsp.exec_cmd("~/.local/bin/theme-switcher"))
 hl.bind("SUPER + U",       hl.dsp.exec_cmd("pkill -USR1 -x claude-osd"))   -- Claude usage overlay
@@ -306,7 +306,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/everforest.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/catppuccin.sh"))
 
 
 --------------------------------

@@ -18,6 +18,8 @@ ICON = "\ue4a0"   # Claude mascot, from ~/.local/share/fonts/ClaudeMascot.ttf (p
 # Pin the glyph to that font so GTK doesn't go looking for a fallback; its line metrics match a
 # normal 1em font, so the label stays level with the other modules.
 ICON_FONT = os.environ.get("CLAUDE_USAGE_ICON_FONT", "Claude Mascot")
+# Vertical nudge for the glyph (Pango "rise"; negative = lower). 1pt is about 1.33px.
+ICON_RISE = os.environ.get("CLAUDE_USAGE_ICON_RISE", "-1pt")
 MAX_AGE = 55      # waybar polls every 60s
 MIN_AGE = 20      # don't hammer the endpoint when the overlay is shown repeatedly
 CREDS = os.path.expanduser("~/.claude/.credentials.json")
@@ -143,7 +145,7 @@ def main():
     d = get(MAX_AGE)
     rows = d.get("rows") or []
     if not rows:
-        print(json.dumps({"text": f"{ICON} --", "class": "error", "tooltip": d.get("error", "")}))
+        print(json.dumps({"text": f"<span font_family='{ICON_FONT}' rise='{ICON_RISE}'>{ICON}</span> --", "class": "error", "tooltip": d.get("error", "")}))
         return
     pct = rows[0]["percent"]
     worst = max(r["percent"] for r in rows)
@@ -152,7 +154,7 @@ def main():
     if d.get("error"):
         cls += " stale"
     color = f" color='{theme_red()}'" if near else ""
-    icon = f"<span font_family='{ICON_FONT}'{color}>{ICON}</span>"
+    icon = f"<span font_family='{ICON_FONT}' rise='{ICON_RISE}'{color}>{ICON}</span>"
     print(json.dumps({"text": f"{icon} {pct}%", "class": cls, "percentage": pct, "tooltip": ""}))
 
 
