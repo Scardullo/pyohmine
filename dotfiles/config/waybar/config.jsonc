@@ -16,7 +16,7 @@
     ],
 
     "modules-right": [
-        "custom/weather",
+        "custom/claude",
         "pulseaudio",
         "network",
         "cpu",
@@ -43,6 +43,15 @@
 
     "clock": {
         "format": "{:%I:%M %p}"
+    },
+
+    // Claude plan usage; hover (or SUPER+U) shows the claude-osd overlay (~/.local/src/claude-osd)
+    "custom/claude": {
+        "exec": "/home/anthony/.local/bin/claude-usage",
+        "return-type": "json",
+        "interval": 60,
+        "tooltip": false,
+        "on-click": "pkill -USR1 -x claude-osd"
     },
 
     "custom/weather": {

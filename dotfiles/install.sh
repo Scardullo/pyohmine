@@ -17,9 +17,10 @@ BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 
 # Not explicitly installed on the source PC (pulled in as deps), but called directly by the
 # configs/scripts: playerctl (waybar/hypr media keys), wpctl (volume keys), brightnessctl
-# (brightness keys), curl (weather), python (pokefetch, rofi-name-popup), rsync (this script),
-# gtk-layer-shell (built into rofi-name-label and volume-osd below), libpulse, json-glib and
-# at-spi2-core (volume-osd: volume events, Hyprland socket replies, waybar's module position).
+# (brightness keys), curl (weather), python (pokefetch, rofi-name-popup, claude-usage), rsync
+# (this script), gtk-layer-shell (built into rofi-name-label, volume-osd and claude-osd below),
+# libpulse, json-glib and at-spi2-core (volume-osd / claude-osd: volume events, Hyprland socket
+# replies, waybar's module position).
 EXTRA_PKGS=(playerctl wireplumber brightnessctl curl python rsync gtk-layer-shell
             libpulse json-glib at-spi2-core)
 
@@ -169,14 +170,17 @@ install_dotfiles() {
   # Small C programs, built here from ~/.local/src:
   #   rofi-name-label  the theme switchers' name label and color panel
   #   volume-osd       volume bar overlay under waybar's volume module (started by hypr/autostart)
-  msg "Building rofi-name-label and volume-osd into ~/.local/bin"
+  #   claude-osd       Claude usage overlay under waybar's Claude module (hover / SUPER+U; started
+  #                    by hypr/autostart, data from ~/.local/bin/claude-usage)
+  msg "Building rofi-name-label, volume-osd and claude-osd into ~/.local/bin"
   place "$DOTS/src/" "$HOME/.local/src/" src
   local -A build_libs=(
     [rofi-name-label]="gtk-layer-shell-0 gtk+-3.0"
     [volume-osd]="gtk-layer-shell-0 gtk+-3.0 atspi-2 json-glib-1.0 libpulse libpulse-mainloop-glib"
+    [claude-osd]="gtk-layer-shell-0 gtk+-3.0 atspi-2 json-glib-1.0"
   )
   local prog
-  for prog in rofi-name-label volume-osd; do
+  for prog in rofi-name-label volume-osd claude-osd; do
     # shellcheck disable=SC2086
     if command -v gcc >/dev/null && pkg-config --exists ${build_libs[$prog]}; then
       gcc -O2 "$HOME/.local/src/$prog/$prog.c" -o "$HOME/.local/bin/$prog" -lm \
@@ -224,3 +228,4 @@ install_dotfiles() {
 
 msg "Done. Reboot, log in through sddm, and pick a theme with ALT+SPACE."
 echo "     SUPER+ALT+SPACE switches wallpaper, SUPER+/ lists all keybinds."
+echo "     The Claude usage module on waybar needs a Claude login: run claude once and sign in."

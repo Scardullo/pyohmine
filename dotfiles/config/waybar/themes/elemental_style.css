@@ -68,7 +68,8 @@ window#waybar {
 #pulseaudio,
 #clock,
 #custom-hypridle,
-#custom-weather {
+#custom-weather,
+#custom-claude {
     font-weight: bold;
 }
 
@@ -81,4 +82,10 @@ tooltip {
 
 tooltip label {
     color: #ebdbb2;
+}
+
+/* Claude usage: dimmed while the last fetch failed */
+
+#custom-claude.stale {
+    opacity: 0.6;
 }

@@ -8,6 +8,7 @@ SUPER + D       Rofi Launcher
 ALT + SPACE     Starship Theme Switcher
 SUPER + O       Theme Switcher
 SUPER + SPACE   Wallpaper Switcher
+SUPER + U       Claude Usage
 SUPER + E       Thunar
 SUPER + B       Firefox
 SUPER + C       VS Code

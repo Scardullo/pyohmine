@@ -272,6 +272,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/melissa.rasi"))
 hl.bind("ALT + SPACE",      hl.dsp.exec_cmd("~/.local/bin/star-theme-switcher"))
 hl.bind("SUPER + O",       hl.dsp.exec_cmd("~/.local/bin/theme-switcher"))
+hl.bind("SUPER + U",       hl.dsp.exec_cmd("pkill -USR1 -x claude-osd"))   -- Claude usage overlay
 hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("~/.local/bin/wallpaper-switcher"))
 
 -- Move current window to previous/next workspace (note: your original conf uses the

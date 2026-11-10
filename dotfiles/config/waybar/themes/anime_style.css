@@ -103,7 +103,8 @@ window#waybar {
     font-weight: bold;
 }
 
-#custom-weather {
+#custom-weather,
+#custom-claude {
     font-weight: bold;
 }
 
@@ -117,4 +118,10 @@ tooltip {
 
 tooltip label {
     color: #33b1ff;
+}
+
+/* Claude usage: dimmed while the last fetch failed */
+
+#custom-claude.stale {
+    opacity: 0.6;
 }

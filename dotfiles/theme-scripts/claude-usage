@@ -1,0 +1,160 @@
+#!/usr/bin/env python3
+"""Claude plan usage for waybar's custom/claude module and the claude-osd overlay.
+
+    claude-usage            print waybar JSON ("✻ 8%"), refetching if the cache is over MAX_AGE old
+    claude-usage --refresh  refetch if the cache is over MIN_AGE old (claude-osd runs this on show)
+
+Usage comes from the same endpoint Claude Code's /usage reads, with the OAuth token Claude Code keeps
+in ~/.claude/.credentials.json (Claude Code refreshes it whenever it runs; this never does). The result
+is cached in $XDG_RUNTIME_DIR/claude-usage.json, which claude-osd reads:
+
+    {"fetched_at": epoch, "plan": "pro", "error": "" | message,
+     "rows": [{"label": "Session", "percent": 8, "resets_at": epoch}, ...]}
+"""
+import fcntl, json, os, sys, time, urllib.request
+from datetime import datetime
+
+ICON = "✻"
+# JetBrainsMono has no ✻, and GTK's automatic fallback (Iosevka) is taller, which lifts the whole
+# label above the other modules; pin the glyph to a font whose metrics sit level with them.
+ICON_FONT = os.environ.get("CLAUDE_USAGE_ICON_FONT", "DejaVuSansM Nerd Font")
+MAX_AGE = 55      # waybar polls every 60s
+MIN_AGE = 20      # don't hammer the endpoint when the overlay is shown repeatedly
+CREDS = os.path.expanduser("~/.claude/.credentials.json")
+RUN = os.environ.get("XDG_RUNTIME_DIR", "/tmp")
+CACHE = os.path.join(RUN, "claude-usage.json")
+LOCK = os.path.join(RUN, "claude-usage.lock")
+URL = "https://api.anthropic.com/api/oauth/usage"
+NEAR_LIMIT = 80   # icon turns red once any limit (session or weekly) reaches this percent
+
+
+def theme_red():
+    """The active theme's red (kitty color1), picked the way volume-osd-colors picks its palette."""
+    try:
+        theme = open(os.path.expanduser("~/.local/state/current-theme")).read().strip().removesuffix("_star")
+    except OSError:
+        theme = ""
+    conf = "dracula" if theme == "tokyo-night" else "kitty.conf"
+    try:
+        for line in open(os.path.expanduser(f"~/.config/kitty/{conf}")):
+            parts = line.split()
+            if len(parts) >= 2 and parts[0] == "color1" and parts[1].startswith("#"):
+                return parts[1]
+    except OSError:
+        pass
+    return "#e06c75"
+
+
+def epoch(iso):
+    try:
+        return int(datetime.fromisoformat(iso).timestamp())
+    except (TypeError, ValueError):
+        return 0
+
+
+def load_cache():
+    try:
+        with open(CACHE) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def save_cache(d):
+    tmp = CACHE + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(d, f)
+    os.replace(tmp, CACHE)
+
+
+def rows_from(data):
+    rows = []
+    for lim in data.get("limits") or []:
+        kind, scope = lim.get("kind"), lim.get("scope") or {}
+        if kind == "session":
+            label = "Session"
+        elif kind == "weekly_all":
+            label = "Weekly · all models"
+        elif kind == "weekly_scoped":
+            name = ((scope.get("model") or {}).get("display_name")) or \
+                   ((scope.get("surface") or {}).get("display_name")) or "scoped"
+            label = f"Weekly · {name}"
+        else:
+            continue
+        rows.append({"label": label, "percent": round(lim.get("percent") or 0),
+                     "resets_at": epoch(lim.get("resets_at"))})
+    if not rows:   # older response shape
+        for key, label in (("five_hour", "Session"), ("seven_day", "Weekly · all models")):
+            w = data.get(key)
+            if w:
+                rows.append({"label": label, "percent": round(w.get("utilization") or 0),
+                             "resets_at": epoch(w.get("resets_at"))})
+    return rows
+
+
+def fetch(old):
+    out = dict(old)
+    out["fetched_at"] = int(time.time())
+    try:
+        with open(CREDS) as f:
+            oauth = json.load(f)["claudeAiOauth"]
+    except (OSError, ValueError, KeyError):
+        out["error"] = "Not signed in: run claude"
+        return out
+    out["plan"] = oauth.get("subscriptionType") or out.get("plan", "")
+    if oauth.get("expiresAt", 0) / 1000 < time.time():
+        out["error"] = "Token expired: open claude to refresh"
+        return out
+    req = urllib.request.Request(URL, headers={
+        "Authorization": f"Bearer {oauth['accessToken']}",
+        "anthropic-beta": "oauth-2025-04-20",
+        "User-Agent": "claude-usage-waybar",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=10) as r:
+            data = json.load(r)
+        out["rows"] = rows_from(data)
+        out["error"] = ""
+        out["ok_at"] = out["fetched_at"]
+    except Exception as e:   # keep the last good rows, flag them as stale
+        code = getattr(e, "code", None)
+        out["error"] = "Token rejected: open claude to refresh" if code == 401 else \
+                       f"Fetch failed ({code or type(e).__name__})"
+    return out
+
+
+def get(min_age):
+    d = load_cache()
+    if time.time() - d.get("fetched_at", 0) < min_age:
+        return d
+    with open(LOCK, "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        d = load_cache()   # another caller may have just fetched
+        if time.time() - d.get("fetched_at", 0) >= min_age:
+            d = fetch(d)
+            save_cache(d)
+    return d
+
+
+def main():
+    if "--refresh" in sys.argv:
+        get(MIN_AGE)
+        return
+    d = get(MAX_AGE)
+    rows = d.get("rows") or []
+    if not rows:
+        print(json.dumps({"text": f"{ICON} --", "class": "error", "tooltip": d.get("error", "")}))
+        return
+    pct = rows[0]["percent"]
+    worst = max(r["percent"] for r in rows)
+    near = worst >= NEAR_LIMIT or os.environ.get("CLAUDE_USAGE_FORCE_RED")
+    cls = "critical" if near else "warning" if worst >= 70 else "normal"
+    if d.get("error"):
+        cls += " stale"
+    color = f" color='{theme_red()}'" if near else ""
+    icon = f"<span font_family='{ICON_FONT}'{color}>{ICON}</span>"
+    print(json.dumps({"text": f"{icon} {pct}%", "class": cls, "percentage": pct, "tooltip": ""}))
+
+
+if __name__ == "__main__":
+    main()
