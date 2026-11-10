@@ -14,10 +14,10 @@ is cached in $XDG_RUNTIME_DIR/claude-usage.json, which claude-osd reads:
 import fcntl, json, os, sys, time, urllib.request
 from datetime import datetime
 
-ICON = "✻"
-# JetBrainsMono has no ✻, and GTK's automatic fallback (Iosevka) is taller, which lifts the whole
-# label above the other modules; pin the glyph to a font whose metrics sit level with them.
-ICON_FONT = os.environ.get("CLAUDE_USAGE_ICON_FONT", "DejaVuSansM Nerd Font")
+ICON = "\ue4a0"   # Claude mascot, from ~/.local/share/fonts/ClaudeMascot.ttf (private-use codepoint)
+# Pin the glyph to that font so GTK doesn't go looking for a fallback; its line metrics match a
+# normal 1em font, so the label stays level with the other modules.
+ICON_FONT = os.environ.get("CLAUDE_USAGE_ICON_FONT", "Claude Mascot")
 MAX_AGE = 55      # waybar polls every 60s
 MIN_AGE = 20      # don't hammer the endpoint when the overlay is shown repeatedly
 CREDS = os.path.expanduser("~/.claude/.credentials.json")

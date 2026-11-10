@@ -190,6 +190,12 @@ install_dotfiles() {
     fi
   done
 
+  # Claude Mascot: the Claude Code mascot at U+E4A0, the icon of waybar's Claude module and
+  # claude-osd (source: src/claude-mascot/build.py)
+  msg "Installing fonts to ~/.local/share/fonts"
+  place "$DOTS/fonts/" "$HOME/.local/share/fonts/" fonts
+  fc-cache -f "$HOME/.local/share/fonts" >/dev/null
+
   msg "Installing wallpapers to ~/Pictures/wallpaper"
   place "$DOTS/wallpaper/" "$HOME/Pictures/wallpaper/" wallpaper
   mkdir -p "$HOME/Pictures/ScreenShots"

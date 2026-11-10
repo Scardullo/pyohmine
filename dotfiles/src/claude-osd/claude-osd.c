@@ -40,7 +40,7 @@
 #define BAR_HEIGHT  16
 #define MAX_ROWS    4
 
-#define ICON "✻"           /* same glyph as the waybar module (claude-usage) */
+#define ICON "\uE4A0"      /* Claude mascot, same glyph as the waybar module (claude-usage) */
 
 typedef struct { char name[64]; int x, y, w, h, bar; gboolean focused; } Mon;
 typedef struct { int frame_w, x, w; } Mod;
@@ -299,7 +299,7 @@ static void load_theme(void) {
         "#osd { background: alpha(%s, 0.95); border: 4px solid %s; border-radius: %dpx;"
         " padding: 18px 26px; }"
         "label { color: %s; font: 13px \"JetBrainsMono Nerd Font\"; }"
-        "#icon { color: %s; font: 28px \"JetBrainsMono Nerd Font\", \"Noto Sans Symbols2\"; }"
+        "#icon { color: %s; font: 28px \"Claude Mascot\", \"JetBrainsMono Nerd Font\"; }"
         "#title { font-size: 16px; font-weight: bold; }"
         "#plan { color: %s; font-weight: bold; }"
         ".rowname { font-weight: bold; }"
