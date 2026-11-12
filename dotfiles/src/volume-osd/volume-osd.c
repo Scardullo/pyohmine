@@ -27,6 +27,7 @@
 #include <sys/un.h>
 #include <fcntl.h>
 #include <math.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -168,17 +169,40 @@ static void find_label(AtspiAccessible *a, int frame_w, int depth) {
     }
 }
 
+static int waybar_pids(guint *pids, int max) {
+    int n = 0;
+    GDir *d = g_dir_open("/proc", 0, NULL);
+    if (!d) return 0;
+    const char *e;
+    while ((e = g_dir_read_name(d)) && n < max) {
+        if (!g_ascii_isdigit(e[0])) continue;
+        g_autofree char *path = g_strdup_printf("/proc/%s/comm", e), *comm = NULL;
+        if (g_file_get_contents(path, &comm, NULL, NULL) && strcmp(g_strchomp(comm), "waybar") == 0)
+            pids[n++] = strtoul(e, NULL, 10);
+    }
+    g_dir_close(d);
+    return n;
+}
+
+/* Only waybar is ever queried. The PID comes from the a11y bus daemon, not the app itself, so
+ * other apps (Firefox in particular) never receive an AT-SPI call. Querying them would switch on
+ * their accessibility engines, and Firefox's is slow enough to freeze it. */
 static void load_modules(void) {
     nmods = 0;
     mods_at = g_get_monotonic_time();
+    guint pids[8];
+    int npids = waybar_pids(pids, 8);
+    if (!npids) return;
     AtspiAccessible *desk = atspi_get_desktop(0);
     if (!desk) return;
     int napps = atspi_accessible_get_child_count(desk, NULL);
     for (int i = 0; i < napps; i++) {
         AtspiAccessible *app = atspi_accessible_get_child_at_index(desk, i, NULL);
         if (!app) continue;
-        gchar *name = atspi_accessible_get_name(app, NULL);
-        if (name && strcmp(name, "waybar") == 0) {
+        guint pid = atspi_accessible_get_process_id(app, NULL);
+        gboolean is_waybar = FALSE;
+        for (int p = 0; p < npids; p++) if (pids[p] == pid) is_waybar = TRUE;
+        if (is_waybar) {
             int nf = atspi_accessible_get_child_count(app, NULL);
             for (int f = 0; f < nf; f++) {
                 AtspiAccessible *frame = atspi_accessible_get_child_at_index(app, f, NULL);
@@ -193,7 +217,6 @@ static void load_modules(void) {
                 g_object_unref(frame);
             }
         }
-        g_free(name);
         g_object_unref(app);
     }
     g_object_unref(desk);
