@@ -7,12 +7,12 @@ add_newline = true
 
 # Change the default prompt format
 format = """
-[](#82659c)\
+[](#3B4252)\
 $python\
 $username\
-[](bg:#c59aed fg:#82659c)\
+[](bg:#434C5E fg:#3B4252)\
 $directory\
-[](fg:#c59aed bg:#ff5555)\
+[](fg:#434C5E bg:#ff5555)\
 $git_branch\
 $git_status\
 [](fg:#ff5555 bg:#f1fa8c)\
@@ -39,12 +39,12 @@ command_timeout = 5000
 # You can also replace your username with a neat symbol like  to save some space
 [username]
 show_always = true
-style_user = "fg:#ffffff bg:#82659c"
-style_root = "fg:#ffffff bg:#82659c"
+style_user = "fg:#ffffff bg:#3B4252"
+style_root = "fg: #ffffff bg:#3B4252"
 format = '[ ]($style)'
 
 [directory]
-style = "fg:#ffffff bg:#c59aed"
+style = "#ffffff bg:#434C5E"
 format = '[ $path ]($style)'
 truncation_length = 3
 truncation_symbol = "…/"

@@ -3,8 +3,10 @@
 #   1. Installs every package from ../Documents/pacman_Qe (repo) and pacman_Qm (AUR, via yay)
 #   2. Copies these dotfiles into place (backing up anything it overwrites)
 #   3. Enables sddm / NetworkManager, sets the sddm theme, zram, and zsh as login shell
+#   4. If Hyprland is running, writes this PC's monitors (hyprctl monitors) into the hypr configs
 #
-# Usage: ./install.sh [--packages-only | --dotfiles-only | --save-packages]
+# Usage: ./install.sh [--packages-only | --dotfiles-only | --monitors-only | --save-packages]
+#   --monitors-only  only redo step 4 (run it from inside Hyprland, e.g. after the first login)
 #   --save-packages  save explicit repo (-Qqen) and AUR (-Qqem) packages, then exit
 # Run as your normal user (not root); sudo is used where needed. Safe to re-run.
 set -euo pipefail
@@ -25,21 +27,22 @@ EXTRA_PKGS=(playerctl wireplumber brightnessctl curl python rsync gtk-layer-shel
             libpulse json-glib at-spi2-core)
 
 # Scripts that live in /usr/local/bin so Hyprland can find them without ~/.local/bin on PATH.
-SYSTEM_BIN=(wallpp wallp1 wallp2)
+SYSTEM_BIN=(wallpp wallp1 wallp2 hypr-outputs)
 
 msg()  { printf '\n\033[1;34m==>\033[0m \033[1m%s\033[0m\n' "$*"; }
 warn() { printf '\033[1;33m  ->\033[0m %s\n' "$*"; }
 die()  { printf '\033[1;31merror:\033[0m %s\n' "$*" >&2; exit 1; }
 
-do_packages=1 do_dotfiles=1
+do_packages=1 do_dotfiles=1 do_monitors=1
 case "${1:-}" in
-  --packages-only) do_dotfiles=0 ;;
+  --packages-only) do_dotfiles=0 do_monitors=0 ;;
   --dotfiles-only) do_packages=0 ;;
+  --monitors-only) do_packages=0 do_dotfiles=0 ;;
   --save-packages)
     pacman -Qqen > "$PKG_QE" && pacman -Qqem > "$PKG_QM"
     msg "Saved $(wc -l < "$PKG_QE") explicit and $(wc -l < "$PKG_QM") foreign packages to $REPO/Documents"
     exit 0 ;;
-  -h|--help) sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+  -h|--help) sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
   "") ;;
   *) die "unknown option: $1 (try --help)" ;;
 esac
@@ -229,8 +232,131 @@ install_dotfiles() {
   fi
 }
 
+# configure_monitors [BACKUP_DIR] — the hypr configs ship with the source PC's two outputs
+# (DP-1 main, HDMI-A-1 second). Replace the hl.monitor blocks in ~/.config/hypr/hyprland.lua and
+# every theme template (*.lua) with what `hyprctl monitors` reports on this PC, and point the
+# workspace rules and the screenshot bind at the detected outputs. The main monitor is the one
+# with the most pixels; the next one from the left gets workspace 2 (the same order as
+# theme-scripts/hypr-outputs, which the wallpaper scripts use). If BACKUP_DIR is given,
+# files that change are copied there first.
+configure_monitors() {
+  msg "Detecting monitors with hyprctl"
+  local json
+  if ! command -v hyprctl >/dev/null || ! json="$(hyprctl monitors -j 2>/dev/null)" \
+     || [[ $json != \[* ]]; then
+    warn "Hyprland isn't running here, so the hypr configs keep the source PC's DP-1/HDMI-A-1 layout."
+    warn "After logging in to Hyprland, run: $DOTS/install.sh --monitors-only"
+    return 0
+  fi
+  command -v python3 >/dev/null || { warn "python3 is missing: skipping monitor setup"; return 0; }
+
+  local -a files=("$HOME"/.config/hypr/*.lua)
+  [[ -e ${files[0]} ]] || { warn "no ~/.config/hypr/*.lua configs found"; return 0; }
+
+  MONITORS_JSON="$json" python3 - "${1:-}" "${files[@]}" <<'PY' || warn "monitor setup failed"
+import datetime, json, os, re, shutil, socket, sys
+
+backup, files = sys.argv[1], sys.argv[2:]
+mons = [m for m in json.loads(os.environ["MONITORS_JSON"]) if not m.get("disabled")]
+if not mons:
+    sys.exit("hyprctl reported no monitors")
+
+by_area = sorted(mons, key=lambda m: (-m["width"] * m["height"], m["x"], m["y"]))
+main = by_area[0]
+others = sorted(by_area[1:], key=lambda m: (m["x"], m["y"]))
+second = others[0] if others else main
+
+def num(v, places):
+    return f"{v:.{places}f}".rstrip("0").rstrip(".")
+
+def desc(m):
+    return f'{m.get("make", "")} {m.get("model", "")}'.strip() or m["name"]
+
+def label(m):
+    return m["name"] if desc(m) == m["name"] else f'{desc(m)}, {m["name"]}'
+
+def role(m):
+    if len(mons) == 1:
+        return "main, all workspaces"
+    if m is main:
+        return "main: workspaces 1, 3-10"
+    if m is second:
+        return "workspace 2 only"
+    return "no pinned workspaces"
+
+stamp = datetime.date.today().isoformat()
+out = [f"-- Detected by install.sh from `hyprctl monitors` on {socket.gethostname()}, {stamp}.",
+       "-- Re-run `install.sh --monitors-only` from inside Hyprland after changing monitors.",
+       ""]
+for m in [main] + others:
+    out += [f"-- {desc(m)} ({role(m)})",
+            "hl.monitor({",
+            f'    output   = "{m["name"]}",',
+            f'    mode     = "{m["width"]}x{m["height"]}@{num(m["refreshRate"], 2)}",',
+            f'    position = "{m["x"]}x{m["y"]}",',
+            f'    scale    = "{num(m["scale"], 6)}",',
+            "})", ""]
+section = "\n".join(out).rstrip("\n") + "\n"
+
+BLOCK = re.compile(r"(?:^--[^\n]*\n)?^hl\.monitor\(\{.*?^\}\)\n", re.M | re.S)
+HEADER = re.compile(r"-- Detected by install\.sh[^\n]*\n-- Re-run[^\n]*\n\n\Z")
+
+changed = 0
+for path in files:
+    with open(path) as f:
+        text = f.read()
+    blocks = list(BLOCK.finditer(text))
+    if not blocks:
+        continue
+    if any(text[a.end():b.start()].strip() for a, b in zip(blocks, blocks[1:])):
+        print(f"  -> {path}: hl.monitor blocks aren't next to each other, skipped")
+        continue
+    start, end = blocks[0].start(), blocks[-1].end()
+    h = HEADER.search(text[:start])
+    if h:
+        start = h.start()
+
+    # The outputs this file used before (first block = main, second = workspace 2) become
+    # the detected ones everywhere else in the file: workspace rules, grim -o, comments.
+    old = re.findall(r'output\s*=\s*"([^"]+)"', text[blocks[0].start():end])
+    rename = {old[0]: main["name"]}
+    if len(old) > 1:
+        rename[old[1]] = second["name"]
+    rest = text[end:]
+    rest = re.sub(r"(?<![\w-])(" + "|".join(map(re.escape, rename)) + r")(?![\w-])",
+                  lambda mt: rename[mt[1]], rest)
+    rest = re.sub(r'(workspace_rule\(\{\s*workspace\s*=\s*"2",\s*monitor\s*=\s*")[^"]*"',
+                  lambda mt: mt[1] + second["name"] + '"', rest)
+    rest = re.sub(r"-- (?:RIGHT|SECOND) MONITOR \(.*\) ONLY workspace 2",
+                  f"-- SECOND MONITOR ({label(second)}) ONLY workspace 2", rest)
+    rest = re.sub(r"-- (?:LEFT|MAIN) MONITOR \(.*\) main workspaces",
+                  f"-- MAIN MONITOR ({label(main)}) main workspaces", rest)
+
+    new = text[:start] + section + rest
+    if new != text:
+        if backup:
+            os.makedirs(backup, exist_ok=True)
+            shutil.copy2(path, backup)
+        with open(path, "w") as f:
+            f.write(new)
+        changed += 1
+
+for m in [main] + others:
+    print(f'  -> {m["name"]}: {desc(m)}, {m["width"]}x{m["height"]}@{num(m["refreshRate"], 2)}'
+          f' at {m["x"]}x{m["y"]}, scale {num(m["scale"], 6)} ({role(m)})')
+print(f"  -> updated {changed} of {len(files)} hypr configs")
+PY
+}
+
 (( do_packages )) && install_packages && setup_system
 (( do_dotfiles )) && install_dotfiles
+if (( do_monitors && do_dotfiles )); then
+  configure_monitors   # the configs were just installed, so there's nothing of yours to back up
+elif (( do_monitors )); then
+  configure_monitors "$BACKUP/hypr-monitors"
+  [[ -d $BACKUP ]] && warn "overwritten files were backed up to $BACKUP"
+  exit 0
+fi
 
 msg "Done. Reboot, log in through sddm, and pick a theme with ALT+SPACE."
 echo "     SUPER+ALT+SPACE switches wallpaper, SUPER+/ lists all keybinds."
