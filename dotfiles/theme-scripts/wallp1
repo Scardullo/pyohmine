@@ -1,6 +1,6 @@
 #!/bin/bash
 # Usage: wallp1 /path/to/image
-# Sets wallpaper for DP-1 only and remembers it for the next login
+# Sets wallpaper for the main monitor only (line 1 of hypr-outputs) and remembers it for the next login
 
 if [ -z "$1" ]; then
     echo "Usage: $0 /path/to/wallpaper"
@@ -9,15 +9,17 @@ fi
 
 WALLPAPER=$(realpath "$1") || exit 1
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper"
+MON=$(hypr-outputs | sed -n 1p)
+[ -n "$MON" ] || { echo "No main monitor found"; exit 1; }
 
 # remember for autostart (restored after reboot)
 mkdir -p "$STATE_DIR"
-echo "$WALLPAPER" > "$STATE_DIR/DP-1"
+echo "$WALLPAPER" > "$STATE_DIR/$MON"
 
-# kill only the previous DP-1 wallpaper
-pkill -f "swaybg -o DP-1"
+# kill only the previous wallpaper on this monitor
+pkill -f "swaybg -o $MON "
 
 # small delay to ensure cleanup
 sleep 0.2
 
-swaybg -o DP-1 -i "$WALLPAPER" -m fill &
+swaybg -o "$MON" -i "$WALLPAPER" -m fill &

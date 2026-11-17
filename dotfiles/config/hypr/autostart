@@ -5,7 +5,7 @@ sleep 2 && pkill swaybg
 # Restore the last wallpaper set by wallpp/wallp1/wallp2 (falls back to the default)
 DEFAULT_WALL=/home/anthony/Pictures/wallpaper/boy-cat.webp
 WALL_STATE="${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper"
-for mon in DP-1 HDMI-A-1; do
+for mon in $(hypr-outputs); do
     wall=$(cat "$WALL_STATE/$mon" 2>/dev/null)
     [ -f "$wall" ] || wall=$DEFAULT_WALL
     swaybg -o "$mon" -i "$wall" -m fill &

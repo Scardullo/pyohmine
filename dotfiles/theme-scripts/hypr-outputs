@@ -1,0 +1,19 @@
+#!/bin/bash
+# Usage: hypr-outputs
+# Prints the active Hyprland outputs, one per line: the main monitor (most pixels) first,
+# then the rest from left to right. Same order install.sh uses for the monitor/workspace setup,
+# so line 1 is the main monitor (wallp1) and line 2 is the second monitor (wallp2).
+# Falls back to the source PC's DP-1/HDMI-A-1 if Hyprland can't be queried.
+
+json=$(hyprctl monitors -j 2>/dev/null)
+if [[ $json == \[* ]] && command -v python3 >/dev/null; then
+    MONITORS_JSON="$json" python3 -c '
+import json, os
+mons = [m for m in json.loads(os.environ["MONITORS_JSON"]) if not m.get("disabled")]
+by_area = sorted(mons, key=lambda m: (-m["width"] * m["height"], m["x"], m["y"]))
+rest = sorted(by_area[1:], key=lambda m: (m["x"], m["y"]))
+for m in by_area[:1] + rest:
+    print(m["name"])
+' && exit 0
+fi
+printf '%s\n' DP-1 HDMI-A-1

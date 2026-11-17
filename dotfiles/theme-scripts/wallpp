@@ -9,11 +9,13 @@ fi
 
 WALLPAPER=$(realpath "$1") || exit 1
 STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper"
+mapfile -t OUTPUTS < <(hypr-outputs)
 
 # remember for autostart (restored after reboot)
 mkdir -p "$STATE_DIR"
-echo "$WALLPAPER" > "$STATE_DIR/DP-1"
-echo "$WALLPAPER" > "$STATE_DIR/HDMI-A-1"
+for mon in "${OUTPUTS[@]}"; do
+    echo "$WALLPAPER" > "$STATE_DIR/$mon"
+done
 
 # kill previous wallpapers
 pkill swaybg
@@ -21,6 +23,7 @@ pkill swaybg
 # small delay to ensure cleanup
 sleep 0.2
 
-# apply per monitor (correct way)
-swaybg -o DP-1 -i "$WALLPAPER" -m fill &
-swaybg -o HDMI-A-1 -i "$WALLPAPER" -m fill &
+# apply per monitor
+for mon in "${OUTPUTS[@]}"; do
+    swaybg -o "$mon" -i "$WALLPAPER" -m fill &
+done

@@ -5,7 +5,7 @@
 
 BIN="$HOME/.local/bin"
 CACHE_DIR="$HOME/.cache/theme-switcher/thumbs"
-STATE_FILE="$HOME/.local/state/wallpaper/DP-1"
+STATE_FILE="$HOME/.local/state/wallpaper/$(hypr-outputs | head -n1)"
 CURRENT_THEME_FILE="$HOME/.local/state/current-theme"
 ROFI_THEME="$HOME/.config/rofi/theme-switcher.rasi"
 ROFI_TPL="$HOME/.config/rofi/theme-switcher.rasi.tpl"
