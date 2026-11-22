@@ -11,17 +11,20 @@
 ---- MONITORS ----
 ------------------
 
--- Samsung LS32AG55x (main): workspaces 1, 3-10
+-- Detected by install.sh from `hyprctl monitors` on archlinux, 2026-11-17.
+-- Re-run `install.sh --monitors-only` from inside Hyprland after changing monitors.
+
+-- Samsung Electric Company LS32AG55x (main: workspaces 1, 3-10)
 hl.monitor({
-    output   = "DP-1",
-    mode     = "2560x1440@164.84",
+    output   = "HDMI-A-1",
+    mode     = "2560x1440@59.95",
     position = "0x0",
     scale    = "1",
 })
 
--- Dell SE2422HX (right of the Samsung): workspace 2 only
+-- Dell Inc. DELL SE2422HX (workspace 2 only)
 hl.monitor({
-    output   = "HDMI-A-1",
+    output   = "HDMI-A-2",
     mode     = "1920x1080@60",
     position = "2560x0",
     scale    = "1",
@@ -80,12 +83,12 @@ hl.config({
         gaps_in  = 10,
         gaps_out = 20,
 
-        border_size = 0,
+        border_size = 2,
 
         col = {
-            -- Decay (decayce) accent (gh0stzk Z0mbi3 rice)
-            active_border   = "rgba(93cee9ff)",
-            inactive_border = "rgba(3d414fff)",
+            -- Catppuccin navy-blue gradient (top -> bottom)
+            active_border   = "rgba(89b4faff)",
+            inactive_border = "rgba(6893d9ff)",
         },
 
         resize_on_border = false,
@@ -95,7 +98,7 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 0,
+        rounding       = 10,
         rounding_power = 2,
 
         active_opacity   = 0.95,
@@ -111,7 +114,7 @@ hl.config({
         blur = {
             enabled  = true,
             size     = 5,    -- medium radius
-            passes   = 2,    -- moderate number of blur passes
+            passes   = 3,    -- moderate number of blur passes
             vibrancy = 0.05, -- slightly noticeable background enhancement
         },
     },
@@ -269,10 +272,11 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/z0mbi3.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/catppuccin.rasi"))
 hl.bind("ALT + SPACE",      hl.dsp.exec_cmd("~/.local/bin/star-theme-switcher"))
 hl.bind("SUPER + O",       hl.dsp.exec_cmd("~/.local/bin/theme-switcher"))
 hl.bind("SUPER + U",       hl.dsp.exec_cmd("pkill -USR1 -x claude-osd"))   -- Claude usage overlay
+hl.bind("SUPER + T",       hl.dsp.exec_cmd("pkill -USR1 -x clock-osd"))    -- Date/time overlay
 hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("~/.local/bin/wallpaper-switcher"))
 
 -- Move current window to previous/next workspace (note: your original conf uses the
@@ -303,29 +307,29 @@ hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "r" }))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 
 -- screenshot focused monitor
-hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
+hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o HDMI-A-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/z0mbi3.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/catppuccin.sh"))
 
 
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
 
--- RIGHT MONITOR (Dell, HDMI-A-1) ONLY workspace 2
-hl.workspace_rule({ workspace = "2", monitor = "HDMI-A-1" })
+-- SECOND MONITOR (Dell Inc. DELL SE2422HX, HDMI-A-2) ONLY workspace 2
+hl.workspace_rule({ workspace = "2", monitor = "HDMI-A-2" })
 
--- LEFT MONITOR (Samsung) main workspaces
-hl.workspace_rule({ workspace = "1",  monitor = "DP-1" })
-hl.workspace_rule({ workspace = "3",  monitor = "DP-1" })
-hl.workspace_rule({ workspace = "4",  monitor = "DP-1" })
-hl.workspace_rule({ workspace = "5",  monitor = "DP-1" })
-hl.workspace_rule({ workspace = "6",  monitor = "DP-1" })
-hl.workspace_rule({ workspace = "7",  monitor = "DP-1" })
-hl.workspace_rule({ workspace = "8",  monitor = "DP-1" })
-hl.workspace_rule({ workspace = "9",  monitor = "DP-1" })
-hl.workspace_rule({ workspace = "10", monitor = "DP-1" })
+-- MAIN MONITOR (Samsung Electric Company LS32AG55x, HDMI-A-1) main workspaces
+hl.workspace_rule({ workspace = "1",  monitor = "HDMI-A-1" })
+hl.workspace_rule({ workspace = "3",  monitor = "HDMI-A-1" })
+hl.workspace_rule({ workspace = "4",  monitor = "HDMI-A-1" })
+hl.workspace_rule({ workspace = "5",  monitor = "HDMI-A-1" })
+hl.workspace_rule({ workspace = "6",  monitor = "HDMI-A-1" })
+hl.workspace_rule({ workspace = "7",  monitor = "HDMI-A-1" })
+hl.workspace_rule({ workspace = "8",  monitor = "HDMI-A-1" })
+hl.workspace_rule({ workspace = "9",  monitor = "HDMI-A-1" })
+hl.workspace_rule({ workspace = "10", monitor = "HDMI-A-1" })
 
 -- Example window rules that are useful (unchanged from stock config)
 

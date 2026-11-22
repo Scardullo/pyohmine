@@ -41,8 +41,11 @@
         "interval": 2
     },
 
+    // hover (or SUPER+T) shows the clock-osd date/time overlay (~/.local/src/clock-osd)
     "clock": {
-        "format": "{:%I:%M %p}"
+        "format": "{:%I:%M %p}",
+        "tooltip": false,
+        "on-click": "pkill -USR1 -x clock-osd"
     },
 
     // Claude plan usage; hover (or SUPER+U) shows the claude-osd overlay (~/.local/src/claude-osd)

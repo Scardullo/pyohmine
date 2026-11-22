@@ -9,6 +9,7 @@ ALT + SPACE     Starship Theme Switcher
 SUPER + O       Theme Switcher
 SUPER + SPACE   Wallpaper Switcher
 SUPER + U       Claude Usage
+SUPER + T       Date & Time
 SUPER + E       Thunar
 SUPER + B       Firefox
 SUPER + C       VS Code

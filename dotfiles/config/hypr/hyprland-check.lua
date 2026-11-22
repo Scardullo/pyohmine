@@ -36,17 +36,20 @@
 
 -- See https://wiki.hypr.land/Configuring/Monitors/
 
--- Samsung LS32AG55x (main): workspaces 1, 3-10
+-- Detected by install.sh from `hyprctl monitors` on archlinux, 2026-11-17.
+-- Re-run `install.sh --monitors-only` from inside Hyprland after changing monitors.
+
+-- Samsung Electric Company LS32AG55x (main: workspaces 1, 3-10)
 hl.monitor({
-    output   = "DP-1",
-    mode     = "2560x1440@164.84",
+    output   = "HDMI-A-1",
+    mode     = "2560x1440@59.95",
     position = "0x0",
     scale    = "1",
 })
 
--- Dell SE2422HX (right of the Samsung): workspace 2 only
+-- Dell Inc. DELL SE2422HX (workspace 2 only)
 hl.monitor({
-    output   = "HDMI-A-1",
+    output   = "HDMI-A-2",
     mode     = "1920x1080@60",
     position = "2560x0",
     scale    = "1",
@@ -467,7 +470,7 @@ hl.bind(mainMod .. " + " .. "F", hl.dsp.window.fullscreen())
 
 -- screenshot focuded monitor
 
-hl.bind(mainMod .. " + " .. "PRINT", hl.dsp.exec_cmd("grim -o DP-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
+hl.bind(mainMod .. " + " .. "PRINT", hl.dsp.exec_cmd("grim -o HDMI-A-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
 
@@ -479,58 +482,58 @@ hl.bind(mainMod .. " + " .. "slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/pur
 
 --#############################
 
--- RIGHT MONITOR (Dell, HDMI-A-1) ONLY workspace 2
+-- SECOND MONITOR (Dell Inc. DELL SE2422HX, HDMI-A-2) ONLY workspace 2
 
 hl.workspace_rule({
     workspace = 2,
-    monitor = "HDMI-A-1",
+    monitor = "HDMI-A-2",
 })
 
--- LEFT MONITOR (Samsung) main workspaces
+-- MAIN MONITOR (Samsung Electric Company LS32AG55x, HDMI-A-1) main workspaces
 
 hl.workspace_rule({
     workspace = 1,
-    monitor = "DP-1",
+    monitor = "HDMI-A-1",
 })
 
 hl.workspace_rule({
     workspace = 3,
-    monitor = "DP-1",
+    monitor = "HDMI-A-1",
 })
 
 hl.workspace_rule({
     workspace = 4,
-    monitor = "DP-1",
+    monitor = "HDMI-A-1",
 })
 
 hl.workspace_rule({
     workspace = 5,
-    monitor = "DP-1",
+    monitor = "HDMI-A-1",
 })
 
 hl.workspace_rule({
     workspace = 6,
-    monitor = "DP-1",
+    monitor = "HDMI-A-1",
 })
 
 hl.workspace_rule({
     workspace = 7,
-    monitor = "DP-1",
+    monitor = "HDMI-A-1",
 })
 
 hl.workspace_rule({
     workspace = 8,
-    monitor = "DP-1",
+    monitor = "HDMI-A-1",
 })
 
 hl.workspace_rule({
     workspace = 9,
-    monitor = "DP-1",
+    monitor = "HDMI-A-1",
 })
 
 hl.workspace_rule({
     workspace = 10,
-    monitor = "DP-1",
+    monitor = "HDMI-A-1",
 })
 
 -- Add more if you need

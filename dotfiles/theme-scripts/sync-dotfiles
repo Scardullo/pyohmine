@@ -6,12 +6,12 @@
 # Usage: sync-dotfiles [-n|--dry-run] [-f|--force] [-a|--add]
 #   -n  show what would be copied, change nothing
 #   -f  copy even when the repo file is newer than the live one
-#   -a  also add new files found in ~/.config/<tracked dir>, ~/Documents/starship, ~/Pictures/wallpaper,
+#   -a  also add new files found in ~/.config/<tracked dir>, ~/Documents/starship, ~/Pictures/wallpaper, ~/.local/src,
 #       ~/Documents/fastfetch-configs and ~/Pictures/fastfetch_pics
 set -euo pipefail
 
 REPOS=("$HOME/pyohmine/dotfiles" "$HOME/py_oh_my/dotfiles")
-SYSTEM_BIN=" wallpp wallp1 wallp2 "   # installed to /usr/local/bin, the rest to ~/.local/bin
+SYSTEM_BIN=" wallpp wallp1 wallp2 hypr-outputs "   # installed to /usr/local/bin, the rest to ~/.local/bin
 SKIP=" install.sh theme-scripts/claude "
 
 # Theme assets kept beside dotfiles/, in the repo's Documents/ (install.sh places them from there):
@@ -97,6 +97,10 @@ for repo in "${REPOS[@]}"; do
         [[ -e $dest ]] || copy "$src" "$dest" new
       done < <(find "$live" -type f -not -path '*/.git/*' -print0 | sort -z)
     done
+    while IFS= read -r -d '' src; do
+      dest="$repo/src/${src#"$HOME/.local/src/"}"
+      [[ -e $dest ]] || copy "$src" "$dest" new
+    done < <(find "$HOME/.local/src" -type f -not -path '*/.git/*' -print0 2>/dev/null | sort -z)
     while IFS= read -r -d '' src; do
       dest="$repo/wallpaper/${src##*/}"
       [[ -e $dest ]] || copy "$src" "$dest" new

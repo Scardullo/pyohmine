@@ -15,11 +15,11 @@ configuration {
     bg-alt:        rgba(49, 50, 68, 0.75);
     fg:            #cdd6f4;
 
-    selected:      #9a7ae0;
+    selected:      #7a84e0;
     active:        #a6e3a1;
     urgent:        #f38ba8;
 
-    border-col:    #9a7ae0;
+    border-col:    #7a84e0;
 
     background-color: transparent;
     text-color: @fg;
@@ -29,7 +29,7 @@ window {
     width: 800px;
     border: 2px;
     border-color: @border-col;
-    border-radius: 0px;
+    border-radius: 12px;
     padding: 12px;
     background-color: @bg;
 }
@@ -42,7 +42,7 @@ inputbar {
     background-color: @bg-alt;
     border: 1.5px;
     border-color: @border-col;
-    border-radius: 0px;
+    border-radius: 8px;
     padding: 10px;
     margin: 0px 0px 12px 0px;
 }
@@ -64,9 +64,7 @@ listview {
 
 element {
     padding: 10px;
-    border: 1.5px;
-    border-color: transparent;
-    border-radius: 0px;
+    border-radius: 8px;
 }
 
 element normal.normal {
@@ -75,20 +73,17 @@ element normal.normal {
 
 element selected.normal {
     background-color: @selected;
-    border-color: @selected;
-    text-color: #cdd6f4;
+    text-color: #1e1e2e;
 }
 
 element selected.active {
     background-color: @active;
-    border-color: @active;
-    text-color: #cdd6f4;
+    text-color: #1e1e2e;
 }
 
 element selected.urgent {
     background-color: @urgent;
-    border-color: @urgent;
-    text-color: #cdd6f4;
+    text-color: #1e1e2e;
 }
 
 element-icon {
@@ -98,5 +93,4 @@ element-icon {
 
 element-text {
     vertical-align: 0.5;
-    text-color: inherit;
 }

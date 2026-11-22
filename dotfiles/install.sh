@@ -20,7 +20,7 @@ BACKUP="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 # Not explicitly installed on the source PC (pulled in as deps), but called directly by the
 # configs/scripts: playerctl (waybar/hypr media keys), wpctl (volume keys), brightnessctl
 # (brightness keys), curl (weather), python (pokefetch, rofi-name-popup, claude-usage), rsync
-# (this script), gtk-layer-shell (built into rofi-name-label, volume-osd and claude-osd below),
+# (this script), gtk-layer-shell (built into rofi-name-label, volume-osd, claude-osd and clock-osd below),
 # libpulse, json-glib and at-spi2-core (volume-osd / claude-osd: volume events, Hyprland socket
 # replies, waybar's module position).
 EXTRA_PKGS=(playerctl wireplumber brightnessctl curl python rsync gtk-layer-shell
@@ -175,15 +175,18 @@ install_dotfiles() {
   #   volume-osd       volume bar overlay under waybar's volume module (started by hypr/autostart)
   #   claude-osd       Claude usage overlay under waybar's Claude module (hover / SUPER+U; started
   #                    by hypr/autostart, data from ~/.local/bin/claude-usage)
-  msg "Building rofi-name-label, volume-osd and claude-osd into ~/.local/bin"
+  #   clock-osd        date/time overlay under waybar's clock module (hover / SUPER+T; started by
+  #                    hypr/autostart)
+  msg "Building rofi-name-label, volume-osd, claude-osd and clock-osd into ~/.local/bin"
   place "$DOTS/src/" "$HOME/.local/src/" src
   local -A build_libs=(
     [rofi-name-label]="gtk-layer-shell-0 gtk+-3.0"
     [volume-osd]="gtk-layer-shell-0 gtk+-3.0 atspi-2 json-glib-1.0 libpulse libpulse-mainloop-glib"
     [claude-osd]="gtk-layer-shell-0 gtk+-3.0 atspi-2 json-glib-1.0"
+    [clock-osd]="gtk-layer-shell-0 gtk+-3.0 atspi-2 json-glib-1.0"
   )
   local prog
-  for prog in rofi-name-label volume-osd claude-osd; do
+  for prog in rofi-name-label volume-osd claude-osd clock-osd; do
     # shellcheck disable=SC2086
     if command -v gcc >/dev/null && pkg-config --exists ${build_libs[$prog]}; then
       gcc -O2 "$HOME/.local/src/$prog/$prog.c" -o "$HOME/.local/bin/$prog" -lm \
