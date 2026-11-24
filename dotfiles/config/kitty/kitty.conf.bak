@@ -2,71 +2,59 @@
 # This work is licensed under the terms of the MIT license.
 # For a copy, see https://opensource.org/licenses/MIT.
 # font_family JetBrainsMono Nerd Font
-font_size 14.0
-
 confirm_os_window_close 0
+allow_remote_control yes
 
-# The basic colors
-foreground              #ffffff
-background              #1e1e2e
-selection_foreground    #181825
-selection_background    #cba6f7
+font_size 13.0
 
-# Cursor colors
-cursor                  #f5c2e7
-cursor_text_color       #ffffff
+foreground #a9b1d6
+background #1a1b26
 
-# URL underline color when hovering with mouse
-url_color               #89B4FA
+# Black
+color0 #414868
+color8 #414868
 
-# Kitty window border colors
-active_border_color     #cba6f7
-inactive_border_color   #89b4fa
-bell_border_color       #a6e3a1
+# Red
+color1 #f7768e
+color9 #f7768e
 
-# Tab bar colors
-active_tab_foreground   #181825
-active_tab_background   #F38ba8
-inactive_tab_foreground #cba6f7
-inactive_tab_background #45475A
-tab_bar_background      #181825
+# Green
+color2  #73daca
+color10 #73daca
 
-# The 16 terminal colors
+# Yellow
+color3  #e0af68
+color11 #e0af68
 
-# black
-color0 #45475A
-color8 #585B70
+# Blue
+color4  #7aa2f7
+color12 #7aa2f7
 
-# red
-color1 #F38ba8
-color9 #F38ba8
+# Magenta
+color5  #bb9af7
+color13 #bb9af7
 
-# green
-color2  #a6e3a1
-color10 #a6e3a1
+# Cyan
+color6  #7dcfff
+color14 #7dcfff
 
-# yellow
-color3  #f9e2af
-color11 #f9e2af
+# White
+color7  #c0caf5
+color15 #c0caf5
 
-# blue
-color4  #89B4FA
-color12 #89B4FA
+# Cursor
+cursor #c0caf5
+cursor_text_color #1a1b26
 
-# magenta
-color5  #cba6f7
-color13 #cba6f7
+# Selection highlight
+selection_foreground none
+selection_background #28344a
 
-# cyan
-color6  #74c7ec
-color14 #74c7ec
-
-# white
-color7  #ffffff
-color15 #A6ADC8
+# The color for highlighting URLs on mouse-over
+url_color #9ece6a
 
 # BEGIN_KITTY_FONTS
-font_family      family="Agave Nerd Font Mono"
+font_family      family="FantasqueSansM Nerd Font Mono"
 bold_font        auto
 italic_font      auto
 bold_italic_font auto
