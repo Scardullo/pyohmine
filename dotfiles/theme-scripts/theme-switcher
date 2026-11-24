@@ -108,6 +108,11 @@ declare -A ACCENT_IS_FG=(
   [brenda]=1
 )
 
+# Themes whose popup accent is a fixed color (matches that theme's rofi/waybar accent).
+declare -A ACCENT_OVERRIDE=(
+  [hacker]="#87a987"
+)
+
 # Sets bg_hex, fg_hex and accent_hex from a kitty config, for the theme named in $2.
 read_palette() {
   local kitty_conf="$1" theme="$2" v
@@ -120,6 +125,7 @@ read_palette() {
     [ -n "$v" ] && accent_hex="$v"
   fi
   [ -n "$theme" ] && [ -n "${ACCENT_IS_FG[$theme]}" ] && accent_hex="$fg_hex"
+  [ -n "$theme" ] && [ -n "${ACCENT_OVERRIDE[$theme]}" ] && accent_hex="${ACCENT_OVERRIDE[$theme]}"
 }
 
 gen_rofi_theme() {

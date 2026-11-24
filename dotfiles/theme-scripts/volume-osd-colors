@@ -11,6 +11,7 @@ theme="${theme%_star}"
 
 declare -A KITTY_PALETTE_OVERRIDE=( [tokyo-night]="dracula" )
 declare -A ACCENT_IS_FG=( [gruvbox]=1 [silvia]=1 [elemental]=1 [everforest]=1 [brenda]=1 )
+declare -A ACCENT_OVERRIDE=( [hacker]="#87a987" )
 
 kitty_conf="$KITTY_DIR/kitty.conf"
 [ -n "${KITTY_PALETTE_OVERRIDE[$theme]}" ] && kitty_conf="$KITTY_DIR/${KITTY_PALETTE_OVERRIDE[$theme]}"
@@ -24,6 +25,7 @@ if [ -n "$theme" ] && [ -f "$kitty_conf" ]; then
   [ -n "$v" ] && accent="$v"
 fi
 [ -n "$theme" ] && [ -n "${ACCENT_IS_FG[$theme]}" ] && accent="$fg"
+[ -n "$theme" ] && [ -n "${ACCENT_OVERRIDE[$theme]}" ] && accent="${ACCENT_OVERRIDE[$theme]}"
 
 radius=12
 grep -qE '^[[:space:]]*rounding[[:space:]]*=[[:space:]]*0\b' "$HYPR_CONF" 2>/dev/null && radius=0

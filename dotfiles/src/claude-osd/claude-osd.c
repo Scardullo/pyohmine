@@ -376,12 +376,26 @@ static GdkMonitor *gdk_monitor_for(Mon *m) {
     return NULL;
 }
 
-/* Put the overlay under the Claude module of monitor m (or top-right if waybar isn't found). */
-static void show_on(Mon *m, int ms) {
+/* Put the overlay under the Claude module of monitor m (or top-right if waybar isn't found).
+ * Long labels (an error in the footer, a weekday in a reset line) can make the overlay wider
+ * than OSD_WIDTH, so it's placed by the width its current content asks for. */
+static void place(Mon *m) {
+    int ow = 0;
+    gtk_widget_get_preferred_width(win, NULL, &ow);
+    ow = MAX(ow, OSD_WIDTH);
     Mod *md = module_for(m);
-    int left = md ? md->x + md->w / 2 - OSD_WIDTH / 2 : m->w - OSD_WIDTH - EDGE_MARGIN;
-    left = CLAMP(left, EDGE_MARGIN, MAX(EDGE_MARGIN, m->w - OSD_WIDTH - EDGE_MARGIN));
+    int left = md ? md->x + md->w / 2 - ow / 2 : m->w - ow - EDGE_MARGIN;
+    left = CLAMP(left, EDGE_MARGIN, MAX(EDGE_MARGIN, m->w - ow - EDGE_MARGIN));
+    if (gtk_layer_get_margin(GTK_WINDOW(win), GTK_LAYER_SHELL_EDGE_LEFT) != left)
+        gtk_layer_set_margin(GTK_WINDOW(win), GTK_LAYER_SHELL_EDGE_LEFT, left);
+}
 
+static Mon *monitor_named(const char *name) {
+    for (int i = 0; i < nmons; i++) if (strcmp(mons[i].name, name) == 0) return &mons[i];
+    return NULL;
+}
+
+static void show_on(Mon *m, int ms) {
     gboolean visible = gtk_widget_get_visible(win);
     if (visible && strcmp(cur_mon, m->name) != 0) { gtk_widget_hide(win); visible = FALSE; }
     if (!visible) {
@@ -391,7 +405,7 @@ static void show_on(Mon *m, int ms) {
         gtk_layer_set_monitor(GTK_WINDOW(win), gdk_monitor_for(m));
         g_strlcpy(cur_mon, m->name, sizeof cur_mon);
     }
-    gtk_layer_set_margin(GTK_WINDOW(win), GTK_LAYER_SHELL_EDGE_LEFT, left);
+    place(m);
     if (!visible) gtk_widget_show(win);
 
     gint64 until = g_get_monotonic_time() + (gint64)ms * 1000;
@@ -435,7 +449,11 @@ static gboolean tick(gpointer data) {
 
     if (gtk_widget_get_visible(win)) {
         if (now >= visible_until) hide();
-        else if (now - data_at > G_USEC_PER_SEC) load_data();
+        else if (now - data_at > G_USEC_PER_SEC) {
+            load_data();
+            Mon *m = monitor_named(cur_mon);
+            if (m) place(m);   /* new text may have changed the width */
+        }
     }
     return G_SOURCE_CONTINUE;
 }
