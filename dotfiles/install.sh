@@ -202,12 +202,12 @@ install_dotfiles() {
   place "$DOTS/fonts/" "$HOME/.local/share/fonts/" fonts
   fc-cache -f "$HOME/.local/share/fonts" >/dev/null
 
-  # Icon themes generated from installed ones (source: share/icons/). Gruvbox-Plus-CRT is
-  # Gruvbox-Plus-Dark's small icons recolored to the hacker_crt green, used by rofi's hacker_crt
-  # theme. Generated rather than committed because it's a ~125MB copy of the whole theme.
+  # Icon themes generated from installed ones (source: config/rofi/recolor-gruvbox.sh).
+  # Gruvbox-Plus-CRT is Gruvbox-Plus-Dark's small icons recolored to the hacker_crt green, used by
+  # rofi's hacker_crt theme. Generated rather than committed: it's a ~125MB copy of the whole theme.
   if [[ -d /usr/share/icons/Gruvbox-Plus-Dark ]]; then
     msg "Generating Gruvbox-Plus-CRT icons in ~/.local/share/icons"
-    bash "$DOTS/share/icons/recolor-gruvbox.sh" CRT 33ff33 0a2a0a >/dev/null \
+    bash "$DOTS/config/rofi/recolor-gruvbox.sh" CRT 33ff33 0a2a0a >/dev/null \
       || warn "generating Gruvbox-Plus-CRT failed"
   else
     warn "Gruvbox-Plus-Dark isn't installed (gruvbox-plus-icon-theme): skipping Gruvbox-Plus-CRT"
