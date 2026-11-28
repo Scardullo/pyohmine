@@ -132,11 +132,22 @@ require("lazy").setup({
 -- ============================================
 -- Colorscheme
 -- ============================================
-require("tokyonight").setup({
-    style = "moon",
+require("vscode").setup({
+    style = "dark",
+    transparent = false,
+    italic_comments = true,
+    -- Mimic VS Code "Dark High Contrast"
+    color_overrides = {
+        vscBack  = "#000000",  -- pure black background
+        vscFront = "#FFFFFF",  -- pure white text
+    },
+    group_overrides = {
+        WinSeparator = { fg = "#6FC3DF" },              -- HC cyan borders
+        CursorLineNr = { fg = "#F38518", bold = true }, -- HC orange accent
+        Visual       = { bg = "#264F78" },
+    },
 })
-
-vim.cmd.colorscheme("tokyonight")
+require("vscode").load()
 -- ============================================
 -- LSP Setup
 -- ============================================

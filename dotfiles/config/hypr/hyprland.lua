@@ -272,7 +272,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 -- anthonys binds
 -- rofi
 -- hl.bind("SUPER + D", hl.dsp.exec_cmd("rofi -show drun -theme ~/.config/rofi/config.rasi"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/hacker.rasi"))
+hl.bind("SUPER + D", hl.dsp.exec_cmd("~/.local/bin/rofi-slide top -show drun -theme ~/.config/rofi/themes/hacker_crt.rasi"))
 hl.bind("ALT + SPACE",      hl.dsp.exec_cmd("~/.local/bin/star-theme-switcher"))
 hl.bind("SUPER + O",       hl.dsp.exec_cmd("~/.local/bin/theme-switcher"))
 hl.bind("SUPER + U",       hl.dsp.exec_cmd("pkill -USR1 -x claude-osd"))   -- Claude usage overlay
@@ -310,7 +310,7 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + PRINT", hl.dsp.exec_cmd("grim -o HDMI-A-1 ~/Pictures/ScreenShots/$(date +'%Y-%m-%d_%H-%M-%S').png"))
 
 -- keybind cheatsheet
-hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/hacker.sh"))
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("~/.config/hypr/scripts/hacker_crt.sh"))
 
 
 --------------------------------
