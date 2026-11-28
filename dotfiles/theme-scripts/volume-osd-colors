@@ -7,11 +7,13 @@ KITTY_DIR="$HOME/.config/kitty"
 HYPR_CONF="$HOME/.config/hypr/hyprland.lua"
 
 theme=$(cat "$HOME/.local/state/current-theme" 2>/dev/null)
+# The p10k hacker theme uses its own CRT-green palette; hacker_star keeps the original.
+[ "$theme" = hacker ] && theme=hacker_crt
 theme="${theme%_star}"
 
 declare -A KITTY_PALETTE_OVERRIDE=( [tokyo-night]="dracula" )
 declare -A ACCENT_IS_FG=( [gruvbox]=1 [silvia]=1 [elemental]=1 [everforest]=1 [brenda]=1 )
-declare -A ACCENT_OVERRIDE=( [hacker]="#87a987" )
+declare -A ACCENT_OVERRIDE=( [hacker]="#87a987" [hacker_crt]="#33ff33" )
 
 kitty_conf="$KITTY_DIR/kitty.conf"
 [ -n "${KITTY_PALETTE_OVERRIDE[$theme]}" ] && kitty_conf="$KITTY_DIR/${KITTY_PALETTE_OVERRIDE[$theme]}"

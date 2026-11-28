@@ -1,0 +1,49 @@
+# Hacker -- CRT green phosphor (monochrome) colorscheme
+confirm_os_window_close 0
+
+foreground              #33ff33
+background              #050a05
+selection_foreground    #050a05
+selection_background    #33ff33
+
+cursor                  #33ff33
+cursor_text_color       #050a05
+cursor_shape            block
+
+url_color #33ff33
+
+active_border_color     #33ff33
+inactive_border_color   #0d3d0d
+bell_border_color       #99ff99
+
+active_tab_foreground   #050a05
+active_tab_background   #33ff33
+inactive_tab_foreground #33ff33
+inactive_tab_background #0a140a
+tab_bar_background      #050a05
+
+# The 16 terminal colors: all shades of phosphor green
+color0  #0a140a
+color8 #33ff33
+color1 #33ff33
+color9 #33ff33
+color2 #33ff33
+color10 #33ff33
+color3 #33ff33
+color11 #33ff33
+color4 #33ff33
+color12 #33ff33
+color5 #33ff33
+color13 #33ff33
+color6 #33ff33
+color14 #33ff33
+color7 #33ff33
+color15 #33ff33
+
+# BEGIN_KITTY_FONTS
+font_family      family="Terminess Nerd Font Mono" style="Bold"
+bold_font        family="Terminess Nerd Font Mono" style="Bold"
+italic_font      family="Terminess Nerd Font Mono" style="Italic"
+bold_italic_font family="Terminess Nerd Font Mono" style="Bold Italic"
+# END_KITTY_FONTS
+font_size 14.0

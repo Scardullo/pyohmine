@@ -111,6 +111,7 @@ declare -A ACCENT_IS_FG=(
 # Themes whose popup accent is a fixed color (matches that theme's rofi/waybar accent).
 declare -A ACCENT_OVERRIDE=(
   [hacker]="#87a987"
+  [hacker_crt]="#33ff33"   # p10k hacker theme only (CRT green)
 )
 
 # Sets bg_hex, fg_hex and accent_hex from a kitty config, for the theme named in $2.
@@ -186,11 +187,15 @@ build_rows() {
   local entry name script base label
   for entry in "${THEMES[@]}"; do
     name="${entry%%:*}"; script="${entry#*:}"; base="${script%_star}"
+    [ "$script" = hacker ] && base=hacker_crt
     label="$name"
     read_palette "$KITTY_DIR/${KITTY_PALETTE_OVERRIDE[$base]:-$base}" "$base"
     printf '%s\t%s\t%s\t%s\n' "$label" "$bg_hex" "$fg_hex" "$accent_hex"
   done
 }
+
+# The p10k hacker theme uses its own CRT-green palette; hacker_star keeps the original.
+[ "$ACTIVE_THEME" = hacker ] && PALETTE_THEME=hacker_crt
 
 gen_rofi_theme
 
