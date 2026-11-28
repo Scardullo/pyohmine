@@ -1,0 +1,90 @@
+configuration {
+    modi: "drun";
+    display-drun: "";
+    display-run: "";
+    display-window: "";
+    show-icons: true;
+    icon-theme: "Gruvbox-Plus-CRT";
+    font: "Agave Nerd Font Mono 11";
+    drun-display-format: "{icon} {name}";
+}
+
+* {
+    bg:     #050a05;
+    bg-alt: #0a220a;
+    fg:     #33ff33;
+
+    selected:#33ff33;
+    active: #33ff33;
+    urgent: #33ff33;
+
+    border-col: #33ff33;
+
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    width: 400px;
+    border: 2px;
+    border-color: @border-col;
+    border-radius: 0px;
+    padding: 12px;
+    background-color: @bg;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border: 1.5px;
+    border-color: @border-col;
+    border-radius: 0px;
+    padding: 10px;
+    margin: 0 0 12px 0;
+}
+
+prompt {
+    enabled: false;
+}
+
+entry {
+    placeholder: "Search...";
+}
+
+listview {
+    lines: 8;
+    spacing: 6px;
+}
+
+element {
+    padding: 10px;
+    border: 1.5px;
+    border-color: transparent;
+    border-radius: 0px;
+}
+
+element-text {
+    text-color: inherit;
+}
+
+element selected.normal {
+    background-color: transparent;
+    border-color: @selected;
+    text-color: @selected;
+}
+
+element selected.active {
+    background-color: transparent;
+    border-color: @active;
+    text-color: @active;
+}
+
+element selected.urgent {
+    background-color: transparent;
+    border-color: @urgent;
+    text-color: @urgent;
+}
+
+element-icon {
+    size: 27px;
+    margin: 0 12px 0 0;
+}
